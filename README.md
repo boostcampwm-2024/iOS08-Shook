@@ -43,5 +43,5 @@
 
 ## 📝 링크
 
-[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://glacier-clerk-ea2.notion.site/12d3e69869be8084b1a2ca866607aa81?v=12d3e69869be80108898000c1d413efd&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX)
-| -- | -- | -- | -- | -- | -- |
+[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://glacier-clerk-ea2.notion.site/12d3e69869be8084b1a2ca866607aa81?v=12d3e69869be80108898000c1d413efd&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [Figma](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
+| -- | -- | -- | -- | -- | -- | -- |
