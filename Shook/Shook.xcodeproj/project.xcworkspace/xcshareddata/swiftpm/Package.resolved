@@ -1,5 +1,5 @@
 {
-  "originHash" : "7d31c1d16b3eb90aa971f54d6f889f526c4ca80844738e93b00533eea26b4455",
+  "originHash" : "b6ed3e57e818cb3d708895fd2ebd551ff8e34cb331c0f9ff5d00b5639d89814b",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
         "version" : "5.10.1"
-      }
-    },
-    {
-      "identity" : "haishinkit.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shogo4405/HaishinKit.swift",
-      "state" : {
-        "revision" : "991dcab96a12c48c00861e5655ddab3c956cb7d3",
-        "version" : "1.9.6"
       }
     },
     {

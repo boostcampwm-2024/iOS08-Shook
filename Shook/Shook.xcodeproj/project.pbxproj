@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEBF2CD8AE68004CF7C3 /* HaishinKit */; };
 		2937CEC32CD8AF79004CF7C3 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEC22CD8AF79004CF7C3 /* Alamofire */; };
+		29559B2B2CD8E5FB00F1962E /* Logboard in Frameworks */ = {isa = PBXBuildFile; productRef = 29559B2A2CD8E5FB00F1962E /* Logboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */,
+				29559B2B2CD8E5FB00F1962E /* Logboard in Frameworks */,
 				2937CEC32CD8AF79004CF7C3 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,8 +85,8 @@
 			);
 			name = Shook;
 			packageProductDependencies = (
-				2937CEBF2CD8AE68004CF7C3 /* HaishinKit */,
 				2937CEC22CD8AF79004CF7C3 /* Alamofire */,
+				29559B2A2CD8E5FB00F1962E /* Logboard */,
 			);
 			productName = Shook;
 			productReference = 2933F0752CD8724C00FCA06A /* Shook.app */;
@@ -117,8 +117,8 @@
 			mainGroup = 2933F06C2CD8724C00FCA06A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */,
 				2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				29559B292CD8E5FB00F1962E /* XCRemoteSwiftPackageReference "Logboard" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2933F0762CD8724C00FCA06A /* Products */;
@@ -161,10 +161,13 @@
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shook/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -188,10 +191,13 @@
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Shook/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -348,14 +354,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shogo4405/HaishinKit.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.9.6;
-			};
-		};
 		2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -364,18 +362,26 @@
 				minimumVersion = 5.10.1;
 			};
 		};
+		29559B292CD8E5FB00F1962E /* XCRemoteSwiftPackageReference "Logboard" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/shogo4405/Logboard.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2937CEBF2CD8AE68004CF7C3 /* HaishinKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */;
-			productName = HaishinKit;
-		};
 		2937CEC22CD8AF79004CF7C3 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		29559B2A2CD8E5FB00F1962E /* Logboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29559B292CD8E5FB00F1962E /* XCRemoteSwiftPackageReference "Logboard" */;
+			productName = Logboard;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
