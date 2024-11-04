@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEBF2CD8AE68004CF7C3 /* HaishinKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		2933F0752CD8724C00FCA06A /* Shook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Shook;
 			packageProductDependencies = (
+				2937CEBF2CD8AE68004CF7C3 /* HaishinKit */,
 			);
 			productName = Shook;
 			productReference = 2933F0752CD8724C00FCA06A /* Shook.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = 2933F06C2CD8724C00FCA06A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2933F0762CD8724C00FCA06A /* Products */;
 			projectDirPath = "";
@@ -333,6 +342,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/shogo4405/HaishinKit.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2937CEBF2CD8AE68004CF7C3 /* HaishinKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */;
+			productName = HaishinKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2933F06D2CD8724C00FCA06A /* Project object */;
 }
