@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEBF2CD8AE68004CF7C3 /* HaishinKit */; };
+		2937CEC32CD8AF79004CF7C3 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEC22CD8AF79004CF7C3 /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2937CEC02CD8AE68004CF7C3 /* HaishinKit in Frameworks */,
+				2937CEC32CD8AF79004CF7C3 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +86,7 @@
 			name = Shook;
 			packageProductDependencies = (
 				2937CEBF2CD8AE68004CF7C3 /* HaishinKit */,
+				2937CEC22CD8AF79004CF7C3 /* Alamofire */,
 			);
 			productName = Shook;
 			productReference = 2933F0752CD8724C00FCA06A /* Shook.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */,
+				2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2933F0762CD8724C00FCA06A /* Products */;
@@ -352,6 +356,14 @@
 				minimumVersion = 1.9.6;
 			};
 		};
+		2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -359,6 +371,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2937CEBE2CD8AE68004CF7C3 /* XCRemoteSwiftPackageReference "HaishinKit" */;
 			productName = HaishinKit;
+		};
+		2937CEC22CD8AF79004CF7C3 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
