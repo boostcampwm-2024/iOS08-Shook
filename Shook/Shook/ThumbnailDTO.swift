@@ -7,14 +7,15 @@
 
 import Foundation
 
-struct ThumbnailDTO: Decodable {
-    let content: [ThumbnailContentDTO]
+struct ServiceURLDTO: Decodable {
+    let content: [Content]
 }
 
-struct ThumbnailContentDTO: Decodable {
+struct Content: Decodable {
     let name: String
     let url: String
-    let resizedUrl: [ResizedUrl]
+    let resolution, videoBitrate, audioBitrate: String?
+    let resizedUrl: [ResizedUrl]?
 }
 
 struct ResizedUrl: Decodable {
