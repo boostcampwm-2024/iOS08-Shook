@@ -9,15 +9,17 @@ import AVFoundation
 import UIKit
 
 class ViewController: UIViewController {
+    /// 방송에 필요한 타입들
     var mixer: MediaMixer!
     var connection: RTMPConnection!
     var stream: RTMPStream!
-    var hkView: MTHKView!
+    
     var isStreaming: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /// 권한 요청
         AVCaptureDevice.requestAccess(for: .video) { _ in }
         AVCaptureDevice.requestAccess(for: .audio) { _ in }
         
@@ -27,19 +29,16 @@ class ViewController: UIViewController {
         
         Task {
             do {
+                /// mixer 에 Device 추가
                 try await mixer.attachVideo(AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back))
                 try await mixer.attachAudio(AVCaptureDevice.default(for: .audio))
             } catch {
-                print("장치 연결 오류: \(error)")
+                print(error.localizedDescription)
             }
             
             await mixer.addOutput(stream)
         }
-        
-        hkView = MTHKView(frame: view.bounds)
-        hkView.videoGravity = .resizeAspectFill
-        view.addSubview(hkView)
-        
+
         let playButton = UIButton()
         playButton.setTitle("Start Streaming", for: .normal)
         playButton.backgroundColor = .systemBlue
@@ -51,28 +50,26 @@ class ViewController: UIViewController {
         view.addSubview(playButton)
     }
     
+    /// 방송 시작, 종료 toggle
     @objc func toggle(sender: UIButton) {
-        print("tapped")
-        
         if isStreaming {
             stopStreaming()
             sender.setTitle("Start Streaming", for: .normal)
             sender.backgroundColor = .systemBlue
         } else {
-            startStreaming(rtmpURL: "rtmp://rtmp-ls2-k1.video.media.ntruss.com:8080/relay", streamKey: "yddxaffb6tpcexw25ery143v71xoy2dj")
+            startStreaming(rtmpURL: "RTMP_URL", streamKey: "STREAM_KEY")
             sender.setTitle("Stop Streaming", for: .normal)
             sender.backgroundColor = .systemRed
         }
+
         isStreaming.toggle()
     }
     
     func startStreaming(rtmpURL: String, streamKey: String) {
         Task {
             do {
-                let response1 = try await connection.connect(rtmpURL)
-                let response2 = try await stream.publish(streamKey)
-                print(response1.status ?? "??")
-                print(response2.status ?? "??")
+                try await connection.connect(rtmpURL)
+                try await stream.publish(streamKey)
             } catch {
                 print(error.localizedDescription)
             }
@@ -82,13 +79,11 @@ class ViewController: UIViewController {
     func stopStreaming() {
         Task {
             do {
-                let response = try await stream.close()
+                try await stream.close()
                 try await connection.close()
-                print(response.status ?? "??")
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
 }
-
