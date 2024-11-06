@@ -23,15 +23,13 @@ class BroadcastViewController: UIViewController {
         
         AVCaptureDevice.requestAccess(for: .video) { _ in }
         AVCaptureDevice.requestAccess(for: .audio) { _ in }
-        
-        view.backgroundColor = .gray
-        
+                
         mixer = MediaMixer(multiCamSessionEnabled: false, multiTrackAudioMixingEnabled: true)
         connection = RTMPConnection()
         stream = RTMPStream(connection: connection)
         
         broadcastPicker = RPSystemBroadcastPickerView(frame: .init(x: UIScreen.main.bounds.width / 4, y: UIScreen.main.bounds.height / 3, width: 200, height: 60))
-        broadcastPicker.preferredExtension = "hyunjun.Shook.Sample"
+        broadcastPicker.preferredExtension = "kr.codesquad.boostcamp9.Shook.BroadcastUpload"
         view.addSubview(broadcastPicker)
         
         Task {
