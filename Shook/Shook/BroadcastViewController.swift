@@ -29,7 +29,7 @@ class BroadcastViewController: UIViewController {
         stream = RTMPStream(connection: connection)
         
         broadcastPicker = RPSystemBroadcastPickerView(frame: .init(x: UIScreen.main.bounds.width / 4, y: UIScreen.main.bounds.height / 3, width: 200, height: 60))
-        broadcastPicker.preferredExtension = "kr.codesquad.boostcamp9.Shook.BroadcastUpload"
+        broadcastPicker.preferredExtension = EXTENSION_BUNDLE_IDENTIFIER
         view.addSubview(broadcastPicker)
         
         Task {
@@ -68,7 +68,7 @@ class BroadcastViewController: UIViewController {
             sender.setTitle("Start Streaming", for: .normal)
             sender.backgroundColor = .systemBlue
         } else {
-            startStreaming(rtmpURL: "rtmp://rtmp-ls2-k1.video.media.ntruss.com:8080/relay", streamKey: "gpnxin0vvwq22c6vki3g144c9n1ysz60")
+            startStreaming(rtmpURL: RTMP_URL, streamKey: STREAM_KEY)
             startScreenRecording()
             sender.setTitle("Stop Streaming", for: .normal)
             sender.backgroundColor = .systemRed

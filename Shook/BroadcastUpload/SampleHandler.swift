@@ -24,8 +24,8 @@ final class SampleHandler: RPBroadcastSampleHandler, @unchecked Sendable {
                 await mixer.addOutput(stream)
                 
                 /// connection, stream 연결 및 배포
-                try await connection.connect("{rtmp_url}")
-                try await stream.publish("{strean_key}")
+                try await connection.connect(RTMP_URL)
+                try await stream.publish(STREAM_KEY)
                 print("스트리밍 시작")
             } catch {
                 print("스트리밍 오류: \(error.localizedDescription)")

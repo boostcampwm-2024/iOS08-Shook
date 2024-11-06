@@ -55,6 +55,7 @@
 		292AD2A62CDB099300FF41A1 /* Exceptions for "Shook" folder in "BroadcastUpload" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Environment.swift,
 				Sources/Codec/AudioCodec.swift,
 				Sources/Codec/AudioCodecSettings.swift,
 				Sources/Codec/Codec.swift,

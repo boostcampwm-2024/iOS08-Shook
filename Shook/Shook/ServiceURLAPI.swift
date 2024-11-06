@@ -11,16 +11,14 @@ import CommonCrypto
 enum ServiceURLAPI {
     case getThumbnail
     case getGeneral
-    static let accessKey = "{accessKey}"
-    static let secretKey = "{secretKey}"
     
     func makeSignature(serviceUrlType: String) -> String? {
         let space = " "
         let newLine = "\n"
         let method = "GET"
-        let url = "/api/v2/channels/ls-20241105131641-go2pN/serviceUrls?serviceUrlType=\(serviceUrlType)"
-        let accessKey = ServiceURLAPI.accessKey
-        let secretKey = ServiceURLAPI.secretKey
+        let url = "/api/v2/channels/\(CHANNEL_ID)/serviceUrls?serviceUrlType=\(serviceUrlType)"
+        let accessKey = ACCESS_KEY
+        let secretKey = SECRET_KEY
         let timestamp = String(Int(Date().timeIntervalSince1970 * 1000))  // 밀리초 단위 타임스탬프
 
         // 메시지 생성
@@ -52,7 +50,7 @@ extension ServiceURLAPI: RequestMessage {
     }
     
     var path: String {
-        "/api/v2/channels/ls-20241105131641-go2pN/serviceUrls"
+        "/api/v2/channels/\(CHANNEL_ID)/serviceUrls"
     }
     
     var headers: [String : String]? {
@@ -60,7 +58,7 @@ extension ServiceURLAPI: RequestMessage {
         case .getThumbnail:
             [
                 "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
-                "x-ncp-iam-access-key": ServiceURLAPI.accessKey,
+                "x-ncp-iam-access-key": ACCESS_KEY,
                 "x-ncp-apigw-signature-v2": makeSignature(serviceUrlType: "THUMBNAIL")!,
                 "Content-Type": "application/json",
                 "x-ncp-region_code": "KR"
@@ -68,7 +66,7 @@ extension ServiceURLAPI: RequestMessage {
         case .getGeneral:
             [
                 "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
-                "x-ncp-iam-access-key": ServiceURLAPI.accessKey,
+                "x-ncp-iam-access-key": ACCESS_KEY,
                 "x-ncp-apigw-signature-v2": makeSignature(serviceUrlType: "GENERAL")!,
                 "Content-Type": "application/json",
                 "x-ncp-region_code": "KR"
