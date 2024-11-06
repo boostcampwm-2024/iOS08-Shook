@@ -7,15 +7,184 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		292AD20F2CDB095B00FF41A1 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 292AD20E2CDB095B00FF41A1 /* ReplayKit.framework */; };
+		292AD2162CDB095B00FF41A1 /* BroadcastUpload.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 292AD20C2CDB095B00FF41A1 /* BroadcastUpload.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		292AD2A82CDB0A7100FF41A1 /* Logboard in Frameworks */ = {isa = PBXBuildFile; productRef = 292AD2A72CDB0A7100FF41A1 /* Logboard */; };
 		2937CEC32CD8AF79004CF7C3 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2937CEC22CD8AF79004CF7C3 /* Alamofire */; };
 		29559B2B2CD8E5FB00F1962E /* Logboard in Frameworks */ = {isa = PBXBuildFile; productRef = 29559B2A2CD8E5FB00F1962E /* Logboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		292AD2142CDB095B00FF41A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2933F06D2CD8724C00FCA06A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 292AD20B2CDB095B00FF41A1;
+			remoteInfo = BroadcastUpload;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		292AD21B2CDB095B00FF41A1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				292AD2162CDB095B00FF41A1 /* BroadcastUpload.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		292AD20C2CDB095B00FF41A1 /* BroadcastUpload.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = BroadcastUpload.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		292AD20E2CDB095B00FF41A1 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
 		2933F0752CD8724C00FCA06A /* Shook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		292AD21A2CDB095B00FF41A1 /* Exceptions for "BroadcastUpload" folder in "BroadcastUpload" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 292AD20B2CDB095B00FF41A1 /* BroadcastUpload */;
+		};
+		292AD2A62CDB099300FF41A1 /* Exceptions for "Shook" folder in "BroadcastUpload" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Sources/Codec/AudioCodec.swift,
+				Sources/Codec/AudioCodecSettings.swift,
+				Sources/Codec/Codec.swift,
+				Sources/Codec/VideoCodec.swift,
+				Sources/Codec/VideoCodecSettings.swift,
+				Sources/Codec/VTSessionConvertible.swift,
+				Sources/Codec/VTSessionMode.swift,
+				Sources/Codec/VTSessionOption.swift,
+				Sources/Codec/VTSessionOptionKey.swift,
+				"Sources/Extension/AVAudioBuffer+Extension.swift",
+				"Sources/Extension/AVAudioCompressedBuffer+Extension.swift",
+				"Sources/Extension/AVAudioPCMBuffer+Extension.swift",
+				"Sources/Extension/AVAudioTime+Extension.swift",
+				"Sources/Extension/AVCaptureDevice.Format+Extension.swift",
+				"Sources/Extension/AVCaptureDevice+Extension.swift",
+				"Sources/Extension/AVCaptureSession.Preset+Extension.swift",
+				"Sources/Extension/AVCaptureSession+Extension.swift",
+				"Sources/Extension/AVFrameRateRange+Extension.swift",
+				"Sources/Extension/AVLayerVideoGravity+Extension.swift",
+				"Sources/Extension/CGImage+Extension.swift",
+				"Sources/Extension/CMFormatDescription+Extension.swift",
+				"Sources/Extension/CMSampleBuffer+Extension.swift",
+				"Sources/Extension/CMTime+Extension.swift",
+				"Sources/Extension/CMVideoDimention+Extension.swift",
+				"Sources/Extension/CMVideoFormatDescription+Extension.swift",
+				"Sources/Extension/CVPixelBuffer+Extension.swift",
+				"Sources/Extension/CVPixelBufferPool+Extension.swift",
+				"Sources/Extension/Data+Extension.swift",
+				"Sources/Extension/ExpressibleByIntegerLiteral+Extension.swift",
+				"Sources/Extension/Mirror+Extension.swift",
+				"Sources/Extension/NSView+Extension.swift",
+				"Sources/Extension/URL+Extension.swift",
+				"Sources/Extension/vImage_Buffer+Extension.swift",
+				"Sources/Extension/VTCompressionSession+Extension.swift",
+				"Sources/Extension/VTDecompressionSession+Extension.swift",
+				"Sources/Extension/VTRotationSessionOption+Extension.swift",
+				Sources/HKStream/AudioPlayer.swift,
+				Sources/HKStream/AudioPlayerNode.swift,
+				Sources/HKStream/HKIncomingStream.swift,
+				Sources/HKStream/HKOutgoingStream.swift,
+				Sources/HKStream/HKStream.swift,
+				Sources/HKStream/HKStreamBitRateStrategy.swift,
+				Sources/HKStream/HKStreamOutput.swift,
+				Sources/HKStream/HKStreamReadyState.swift,
+				Sources/HKStream/HKStreamRecorder.swift,
+				Sources/HKStream/MediaLink.swift,
+				Sources/HKStream/SoundTransform.swift,
+				Sources/ISO/ADTS.swift,
+				Sources/ISO/AudioSpecificConfig.swift,
+				Sources/ISO/AVCDecoderConfigurationRecord.swift,
+				Sources/ISO/AVCNALUnit.swift,
+				Sources/ISO/CRC32.swift,
+				Sources/ISO/ESSpecificData.swift,
+				Sources/ISO/HEVCDecoderConfigurationRecord.swift,
+				Sources/ISO/HEVCNALUnit.swift,
+				Sources/ISO/ISOTypeBufferUtil.swift,
+				Sources/ISO/NALUnitReader.swift,
+				Sources/ISO/PacketizedElementaryStream.swift,
+				Sources/ISO/TSField.swift,
+				Sources/ISO/TSPacket.swift,
+				Sources/ISO/TSProgram.swift,
+				Sources/ISO/TSReader.swift,
+				Sources/ISO/TSWriter.swift,
+				Sources/Mixer/AudioCaptureUnit.swift,
+				Sources/Mixer/AudioDeviceUnit.swift,
+				Sources/Mixer/AudioMixer.swift,
+				Sources/Mixer/AudioMixerByMultiTrack.swift,
+				Sources/Mixer/AudioMixerBySingleTrack.swift,
+				Sources/Mixer/AudioMixerSettings.swift,
+				Sources/Mixer/AudioMixerTrack.swift,
+				Sources/Mixer/AudioMonitor.swift,
+				Sources/Mixer/AudioNode.swift,
+				Sources/Mixer/AudioRingBuffer.swift,
+				Sources/Mixer/CaptureSession.swift,
+				Sources/Mixer/CaptureUnit.swift,
+				Sources/Mixer/DeviceUnit.swift,
+				Sources/Mixer/MediaMixer.swift,
+				Sources/Mixer/MediaMixerOutput.swift,
+				Sources/Mixer/VideoCaptureUnit.swift,
+				Sources/Mixer/VideoDeviceUnit.swift,
+				Sources/Mixer/VideoMixer.swift,
+				Sources/Mixer/VideoMixerSettings.swift,
+				Sources/Network/NetworkConnection.swift,
+				Sources/Network/NetworkMonitor.swift,
+				Sources/Network/NetworkMonitorEvent.swift,
+				Sources/Network/NetworkMonitorReport.swift,
+				Sources/Network/NetworkTransportReport.swift,
+				Sources/Network/NetworkTransportReporter.swift,
+				Sources/RTMP/AMF0Serializer.swift,
+				Sources/RTMP/AMF3Serializer.swift,
+				Sources/RTMP/AMFFoundation.swift,
+				Sources/RTMP/FLVFoundation.swift,
+				Sources/RTMP/RTMPAuthenticator.swift,
+				Sources/RTMP/RTMPChunk.swift,
+				Sources/RTMP/RTMPConnection.swift,
+				Sources/RTMP/RTMPHandshake.swift,
+				Sources/RTMP/RTMPMessage.swift,
+				Sources/RTMP/RTMPObjectEncoding.swift,
+				Sources/RTMP/RTMPResponse.swift,
+				Sources/RTMP/RTMPSharedObject.swift,
+				Sources/RTMP/RTMPSocket.swift,
+				Sources/RTMP/RTMPStatus.swift,
+				Sources/RTMP/RTMPStream.swift,
+				Sources/RTMP/RTMPStreamInfo.swift,
+				Sources/RTMP/RTMPTimestamp.swift,
+				Sources/Screen/Choreographer.swift,
+				Sources/Screen/ChromaKeyProcessor.swift,
+				Sources/Screen/Screen.swift,
+				Sources/Screen/ScreenActor.swift,
+				Sources/Screen/ScreenObject.swift,
+				Sources/Screen/ScreenObjectContainer.swift,
+				Sources/Screen/ScreenRenderer.swift,
+				Sources/Screen/Shape.swift,
+				Sources/Screen/ShapeFactory.swift,
+				Sources/Screen/StreamScreenObject.swift,
+				Sources/Screen/VideoEffect.swift,
+				Sources/Screen/VideoRotator.swift,
+				Sources/Util/AudioTime.swift,
+				Sources/Util/AVAudioUtil.swift,
+				Sources/Util/ByteArray.swift,
+				Sources/Util/Constants.swift,
+				Sources/Util/DataConvertible.swift,
+				Sources/Util/DeviceUtil.swift,
+				Sources/Util/HKAtomic.swift,
+				Sources/Util/MD5.swift,
+				Sources/Util/Runner.swift,
+				Sources/Util/TypedBlockQueue.swift,
+			);
+			target = 292AD20B2CDB095B00FF41A1 /* BroadcastUpload */;
+		};
 		2933F0872CD8724E00FCA06A /* Exceptions for "Shook" folder in "Shook" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -26,10 +195,19 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		292AD2102CDB095B00FF41A1 /* BroadcastUpload */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				292AD21A2CDB095B00FF41A1 /* Exceptions for "BroadcastUpload" folder in "BroadcastUpload" target */,
+			);
+			path = BroadcastUpload;
+			sourceTree = "<group>";
+		};
 		2933F0772CD8724C00FCA06A /* Shook */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				2933F0872CD8724E00FCA06A /* Exceptions for "Shook" folder in "Shook" target */,
+				292AD2A62CDB099300FF41A1 /* Exceptions for "Shook" folder in "BroadcastUpload" target */,
 			);
 			path = Shook;
 			sourceTree = "<group>";
@@ -37,6 +215,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		292AD2092CDB095B00FF41A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				292AD2A82CDB0A7100FF41A1 /* Logboard in Frameworks */,
+				292AD20F2CDB095B00FF41A1 /* ReplayKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2933F0722CD8724C00FCA06A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -49,10 +236,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		292AD20D2CDB095B00FF41A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				292AD20E2CDB095B00FF41A1 /* ReplayKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2933F06C2CD8724C00FCA06A = {
 			isa = PBXGroup;
 			children = (
 				2933F0772CD8724C00FCA06A /* Shook */,
+				292AD2102CDB095B00FF41A1 /* BroadcastUpload */,
+				292AD20D2CDB095B00FF41A1 /* Frameworks */,
 				2933F0762CD8724C00FCA06A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				2933F0752CD8724C00FCA06A /* Shook.app */,
+				292AD20C2CDB095B00FF41A1 /* BroadcastUpload.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,6 +266,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		292AD20B2CDB095B00FF41A1 /* BroadcastUpload */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 292AD2172CDB095B00FF41A1 /* Build configuration list for PBXNativeTarget "BroadcastUpload" */;
+			buildPhases = (
+				292AD2082CDB095B00FF41A1 /* Sources */,
+				292AD2092CDB095B00FF41A1 /* Frameworks */,
+				292AD20A2CDB095B00FF41A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				292AD2102CDB095B00FF41A1 /* BroadcastUpload */,
+			);
+			name = BroadcastUpload;
+			packageProductDependencies = (
+				292AD2A72CDB0A7100FF41A1 /* Logboard */,
+			);
+			productName = BroadcastUpload;
+			productReference = 292AD20C2CDB095B00FF41A1 /* BroadcastUpload.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		2933F0742CD8724C00FCA06A /* Shook */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2933F0882CD8724E00FCA06A /* Build configuration list for PBXNativeTarget "Shook" */;
@@ -75,10 +296,12 @@
 				2933F0712CD8724C00FCA06A /* Sources */,
 				2933F0722CD8724C00FCA06A /* Frameworks */,
 				2933F0732CD8724C00FCA06A /* Resources */,
+				292AD21B2CDB095B00FF41A1 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				292AD2152CDB095B00FF41A1 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				2933F0772CD8724C00FCA06A /* Shook */,
@@ -102,6 +325,9 @@
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
+					292AD20B2CDB095B00FF41A1 = {
+						CreatedOnToolsVersion = 16.1;
+					};
 					2933F0742CD8724C00FCA06A = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -126,11 +352,19 @@
 			projectRoot = "";
 			targets = (
 				2933F0742CD8724C00FCA06A /* Shook */,
+				292AD20B2CDB095B00FF41A1 /* BroadcastUpload */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		292AD20A2CDB095B00FF41A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2933F0732CD8724C00FCA06A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -141,6 +375,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		292AD2082CDB095B00FF41A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2933F0712CD8724C00FCA06A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -150,7 +391,65 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		292AD2152CDB095B00FF41A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 292AD20B2CDB095B00FF41A1 /* BroadcastUpload */;
+			targetProxy = 292AD2142CDB095B00FF41A1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		292AD2182CDB095B00FF41A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BroadcastUpload/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BroadcastUpload;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.Shook.BroadcastUpload;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		292AD2192CDB095B00FF41A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = BroadcastUpload/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = BroadcastUpload;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.Shook.BroadcastUpload;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		2933F0892CD8724E00FCA06A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -333,6 +632,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		292AD2172CDB095B00FF41A1 /* Build configuration list for PBXNativeTarget "BroadcastUpload" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				292AD2182CDB095B00FF41A1 /* Debug */,
+				292AD2192CDB095B00FF41A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2933F0702CD8724C00FCA06A /* Build configuration list for PBXProject "Shook" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -373,6 +681,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		292AD2A72CDB0A7100FF41A1 /* Logboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29559B292CD8E5FB00F1962E /* XCRemoteSwiftPackageReference "Logboard" */;
+			productName = Logboard;
+		};
 		2937CEC22CD8AF79004CF7C3 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2937CEC12CD8AF79004CF7C3 /* XCRemoteSwiftPackageReference "Alamofire" */;
