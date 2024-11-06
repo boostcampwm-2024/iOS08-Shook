@@ -15,25 +15,49 @@ final class ResponseViewController: UIViewController {
         return imageView
     }()
     
+    let button: UIButton = {
+        var config = UIButton.Configuration.plain()
+        config.title = "재생"
+        config.baseForegroundColor = .white
+        
+        let button = UIButton(configuration: config)
+        button.backgroundColor = .systemBlue
+        button.setTitleColor(.white, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.layer.cornerRadius = 20
+        button.clipsToBounds = true
+        
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.addSubview(button)
         setUpLayout()
-        Task {
-            //await getThumbnail()
-            await getGeneral()
-        }
+        button.addAction(UIAction(handler: { [weak self] _ in
+            
+            guard let self else { return }
+            
+            Task {
+                await self.getGeneral()
+            }
+            
+        }), for: .primaryActionTriggered)
     }
     
     private func setUpLayout() {
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 200),
-            imageView.widthAnchor.constraint(equalToConstant: 500)
+            button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.heightAnchor.constraint(equalToConstant: 100),
+            button.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
+    
+    
     
     func getThumbnail() async {
         let decoder = JSONDecoder()
@@ -66,7 +90,7 @@ final class ResponseViewController: UIViewController {
                 playVideo(fileURL: videoURL)
             }
         } catch {
-            print("error: \(error.localizedDescription)")
+            showAlert()
         }
     }
     
@@ -79,5 +103,11 @@ final class ResponseViewController: UIViewController {
         self.present(playerController, animated: true) {
             player.play()
         }
+    }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "스트리밍 오류 발생", message: "현재 재생 중이 아닙니다.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }
