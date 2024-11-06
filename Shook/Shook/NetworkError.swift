@@ -33,7 +33,6 @@ enum NetworkError: LocalizedError {
     }
 }
 
-/// Github API document에서 제공되는 코드만 정의
 enum HTTPResponseStatusCode: Int {
     // 2xx: 성공
     case received = 200
