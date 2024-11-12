@@ -1,0 +1,15 @@
+# format options
+--swiftversion 6.0
+--indent 4
+
+# file options
+--exclude /Tuist
+
+# rules
+--enable blankLineAfterSwitchCase
+--enable blockComments
+--enable markTypes
+--enable noExplicitOwnership
+--enable redundantProperty
+--enable sortSwitchCases
+--enable wrapEnumCases
