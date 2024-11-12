@@ -1,4 +1,5 @@
 import ProjectDescription
+import ConfigurationPlugin
 
 let project = Project(
     name: "IOS08Shook",
