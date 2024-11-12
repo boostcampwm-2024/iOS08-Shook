@@ -29,6 +29,7 @@ public extension ModulePaths {
 public extension ModulePaths {
     enum Module: String, ModularPathConvertable {
         case ThirdPartyLibModule
+        
     }
 }
 
@@ -41,7 +42,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum UserInterface: String, ModularPathConvertable {
-        case DesignSystem
+
     }
 }
 

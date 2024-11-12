@@ -20,7 +20,8 @@ extension Target {
             scripts: generationEnvironment.scripts,
             dependencies: [
                 .feature(target: .BaseFeature),
-                .domain(target: .BaseDomain)
+                .domain(target: .BaseDomain),
+                .module(target: .ThirdPartyLibModule)
             ],
             settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
             environmentVariables: [:] // 환경변수 설정
