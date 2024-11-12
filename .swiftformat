@@ -9,6 +9,6 @@
 --enable blockComments
 --enable markTypes
 --enable noExplicitOwnership
---enable redundantProperty
+--enable redundantPattern
 --enable sortSwitchCases
 --enable wrapEnumCases

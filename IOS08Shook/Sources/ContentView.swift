@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - ContentView
+
 public struct ContentView: View {
     public init() {}
 
@@ -7,10 +9,12 @@ public struct ContentView: View {
         Text("Hello, World!")
             .padding()
             .onAppear {
-                            print("Hello world")
+                print("Hello world")
             }
     }
 }
+
+// MARK: - ContentView_Previews
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
