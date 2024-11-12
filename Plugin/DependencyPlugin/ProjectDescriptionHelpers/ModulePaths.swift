@@ -22,6 +22,7 @@ extension ModulePaths: ModularPathConvertable {
 
 public extension ModulePaths {
     enum Feature: String, ModularPathConvertable {
+        case BaseFeature
     }
 }
 
