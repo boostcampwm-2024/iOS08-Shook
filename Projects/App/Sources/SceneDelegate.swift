@@ -1,4 +1,5 @@
 import UIKit
+import ThirdPartyLibModule
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
