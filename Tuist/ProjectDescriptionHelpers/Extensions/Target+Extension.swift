@@ -19,7 +19,8 @@ extension Target {
             resources: .resources,
             scripts: generationEnvironment.scripts,
             dependencies: [
-                .feature(target: .BaseFeature)
+                .feature(target: .BaseFeature),
+                .domain(target: .BaseDomain)
             ],
             settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
             environmentVariables: [:] // 환경변수 설정
