@@ -42,6 +42,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum UserInterface: String, ModularPathConvertable {
+        case DesignSystem
 
     }
 }

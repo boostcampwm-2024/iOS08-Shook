@@ -21,7 +21,8 @@ extension Target {
             dependencies: [
                 .feature(target: .BaseFeature),
                 .domain(target: .BaseDomain),
-                .module(target: .ThirdPartyLibModule)
+                .module(target: .ThirdPartyLibModule),
+                .userInterface(target: .DesignSystem)
             ],
             settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
             environmentVariables: [:] // 환경변수 설정
