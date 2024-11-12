@@ -6,10 +6,8 @@
 --exclude /Tuist
 
 # rules
---enable blankLineAfterSwitchCase
 --enable blockComments
 --enable markTypes
 --enable noExplicitOwnership
---enable redundantProperty
 --enable sortSwitchCases
 --enable wrapEnumCases
