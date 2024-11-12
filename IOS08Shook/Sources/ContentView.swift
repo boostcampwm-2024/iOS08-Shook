@@ -9,7 +9,7 @@ public struct ContentView: View {
         Text("Hello, World!")
             .padding()
             .onAppear {
-                            print("Hello world")
+                print("Hello world")
             }
     }
 }
