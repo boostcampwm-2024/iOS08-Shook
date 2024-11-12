@@ -1,0 +1,23 @@
+disabled_rules:
+- trailing_whitespace
+- line_length
+  
+opt_in_rules:
+- empty_count
+- empty_string
+- sorted_imports
+- trailing_closure
+- vertical_whitespace_between_cases
+- yoda_condition
+
+included:
+
+excluded:
+- /Tuist
+
+custom_rules:
+  no_print_statements:
+    name: "나야 프린트..."
+    regex: "print\\s*\\(.*\\)"
+    message: "You should remove print statements."
+    severity: warning
