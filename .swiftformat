@@ -6,7 +6,6 @@
 --exclude /Tuist
 
 # rules
---enable blankLineAfterSwitchCase
 --enable blockComments
 --enable markTypes
 --enable noExplicitOwnership
