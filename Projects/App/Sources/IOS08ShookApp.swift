@@ -1,6 +1,6 @@
 import SwiftUI
 
-@main
+//@main
 struct IOS08ShookApp: App {
     var body: some Scene {
         WindowGroup {
