@@ -15,6 +15,7 @@ let project = Project(
             ),
             sources: ["IOS08Shook/Sources/**"],
             resources: ["IOS08Shook/Resources/**"],
+            scripts: [TargetScript.pre(path: Path.relativeToRoot("Scripts/SwiftLintRunScript.sh") , name: "SwiftLint", basedOnDependencyAnalysis: false)],
             dependencies: []
         ),
         .target(
