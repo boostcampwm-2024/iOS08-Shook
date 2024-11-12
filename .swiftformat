@@ -1,0 +1,13 @@
+# format options
+--swiftversion 6.0
+--indent 4
+
+# file options
+--exclude /Tuist
+
+# rules
+--enable blockComments
+--enable markTypes
+--enable noExplicitOwnership
+--enable sortSwitchCases
+--enable wrapEnumCases
