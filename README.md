@@ -1,0 +1,50 @@
+# 🌠 Shook
+잘하면 재밌고, 못하면 더 재밌는 실시간 게임 스트리밍!
+
+![main](https://github.com/user-attachments/assets/c1aecb44-8527-49b0-826e-4123def367a5)
+
+
+## 👀 서비스 소개
+언제 어디서든 모바일 게임 스트리밍을 할 수 있는 실시간 스트리밍 애플리케이션입니다.
+
+## 🧑🏻‍💻 팀원
+
+<table>
+  <tr align=center>
+    <td width="160px"><img src="https://avatars.githubusercontent.com/u/120548537?v=4"></td>
+    <td width="160px"><img src="https://avatars.githubusercontent.com/u/131857557?v=4"></td>
+    <td width="160px"><img src="https://avatars.githubusercontent.com/u/91936941?v=4"></td>
+    <td width="160px"><img src="https://avatars.githubusercontent.com/u/48616183?v=4"></td>
+  </tr>
+  <tr align=center>
+    <td width="160px"><a href="https://github.com/hyunjuntyler">hyunjuntyler</a></td>
+    <td width="160px"><a href="https://github.com/INYEKIM">INYEKIM</a></td>
+    <td width="160px"><a href="https://github.com/Siwon-L">Siwon-L</a></td>
+    <td width="160px"><a href="https://github.com/yongbeomkwak">yongbeomkwak</a></td>
+  </tr>
+  <tr align=center>
+    <td width="160px">김현준</td>
+    <td width="160px">김인예</td>
+    <td width="160px">이시원</td>
+    <td width="160px">곽용범</td>
+  </tr>
+</table>
+
+## ✨기능
+
+### Sprint 1
+- 모바일게임 실시간 스트리밍
+- 시청자 실시간 반응
+- 시청자 실시간 채팅
+
+### Sprint 2
+- RTMP 구현
+- PIP 모드 지원
+- 영상 리스트 검색, 필터
+- 채팅, 영상 분석 및 검열
+- AI 시청자 추가
+
+## 📝 링크
+
+[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://glacier-clerk-ea2.notion.site/12d3e69869be8084b1a2ca866607aa81?v=12d3e69869be80108898000c1d413efd&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [와이어프레임](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
+| -- | -- | -- | -- | -- | -- | -- |
