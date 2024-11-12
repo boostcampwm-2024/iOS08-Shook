@@ -1,5 +1,6 @@
 import ProjectDescription
 import ConfigurationPlugin
+import TemplatePlugin
 
 let project = Project(
     name: "IOS08Shook",
@@ -14,8 +15,8 @@ let project = Project(
                     "UILaunchStoryboardName": "LaunchScreen.storyboard",
                 ]
             ),
-            sources: ["IOS08Shook/Sources/**"],
-            resources: ["IOS08Shook/Resources/**"],
+            sources: .sources,
+            resources: .resources,
             scripts: [TargetScript.pre(path: Path.relativeToRoot("Scripts/SwiftLintRunScript.sh") , name: "SwiftLint", basedOnDependencyAnalysis: false)],
             dependencies: []
         ),
@@ -25,7 +26,7 @@ let project = Project(
             product: .unitTests,
             bundleId: "io.tuist.IOS08ShookTests",
             infoPlist: .default,
-            sources: ["IOS08Shook/Tests/**"],
+            sources: .unitTests,
             resources: [],
             dependencies: [.target(name: "IOS08Shook")]
         ),
