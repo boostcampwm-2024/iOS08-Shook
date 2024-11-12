@@ -19,7 +19,7 @@ extension SettingsDictionary {
     
     static func makeProjectSetting() -> SettingsDictionary {
         return baseSetting
-            .swiftVersion("6.0")
+//            .swiftVersion("6.0")
     }
     
      func merging(property: SettingProperty) -> SettingsDictionary  {
