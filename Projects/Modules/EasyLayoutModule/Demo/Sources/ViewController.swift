@@ -3,11 +3,10 @@ import UIKit
 import EasyLayoutModule
 
 final class EasyLayoutDemoViewController: UIViewController {
-    
     private let emptyView: UIView = {
         let view = UIView()
         view.backgroundColor = .red
-        view.frame.origin = .init(x: 0, y: 0)
+        view.frame.origin = CGPoint(x: 0, y: 0)
         return view
     }()
     
@@ -32,7 +31,7 @@ final class EasyLayoutDemoViewController: UIViewController {
         view.addSubview(emptyView)
         
         emptyView.ezl.makeConstraint {
-            $0.height(100).width(100)
+            $0.size(with: 200)
         }
     }
 }
