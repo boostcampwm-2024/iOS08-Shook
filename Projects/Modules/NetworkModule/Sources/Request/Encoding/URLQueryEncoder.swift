@@ -21,3 +21,9 @@ private extension String {
         self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     }
 }
+
+extension RequestParameterEncodable where Self == URLQueryEncoder {
+    static func query() -> URLQueryEncoder {
+        URLQueryEncoder()
+    }
+}
