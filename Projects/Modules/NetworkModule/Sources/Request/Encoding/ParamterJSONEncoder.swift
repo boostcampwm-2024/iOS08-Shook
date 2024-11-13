@@ -2,7 +2,7 @@ import Foundation
 
 public struct ParamterJSONEncoder: RequestParameterEncodable {
     
-    func encode(request: inout URLRequest, with parameters: Parameters) throws {
+    public func encode(request: inout URLRequest, with parameters: Parameters) throws {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
             request.httpBody = jsonData

@@ -3,7 +3,7 @@ import Foundation
 public struct URLQueryEncoder: RequestParameterEncodable {
     
 #warning("배열 query value는 추후 구현")
-    func encode(request: inout URLRequest, with parameters: Parameters) throws {
+    public func encode(request: inout URLRequest, with parameters: Parameters) throws {
         #warning("return을 에러로 교체")
         guard let url = request.url else { return }
         
@@ -22,7 +22,7 @@ private extension String {
     }
 }
 
-extension RequestParameterEncodable where Self == URLQueryEncoder {
+public extension RequestParameterEncodable where Self == URLQueryEncoder {
     static func query() -> URLQueryEncoder {
         URLQueryEncoder()
     }
