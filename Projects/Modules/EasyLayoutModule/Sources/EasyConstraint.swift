@@ -19,4 +19,9 @@ public struct EasyConstraint {
         view.heightAnchor.constraint(equalToConstant: height).isActive = true
         return self
     }
+    
+    @discardableResult
+    public func size(with size: CGFloat) -> Self {
+        width(size).height(size)
+    }
 }
