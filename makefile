@@ -22,3 +22,6 @@ reset:
 	tuist clean
 	rm -rf **/*.xcodeproj
 	rm -rf *.xcworkspace
+	
+graph: #외부 의존성 그래프에서 제거
+	tuist graph -d
