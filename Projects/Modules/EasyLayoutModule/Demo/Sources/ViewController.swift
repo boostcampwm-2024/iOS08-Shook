@@ -31,7 +31,7 @@ final class EasyLayoutDemoViewController: UIViewController {
         view.addSubview(emptyView)
         
         emptyView.ezl.makeConstraint {
-            $0.height(100).width(100)
+            $0.size(with: 200)
         }
     }
 }
