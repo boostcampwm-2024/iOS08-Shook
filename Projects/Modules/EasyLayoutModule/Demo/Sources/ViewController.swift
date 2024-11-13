@@ -3,11 +3,10 @@ import UIKit
 import EasyLayoutModule
 
 final class EasyLayoutDemoViewController: UIViewController {
-    
     private let emptyView: UIView = {
         let view = UIView()
         view.backgroundColor = .red
-        view.frame.origin = .init(x: 0, y: 0)
+        view.frame.origin = CGPoint(x: 0, y: 0)
         return view
     }()
     
