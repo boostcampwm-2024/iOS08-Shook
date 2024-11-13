@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ParamterJSONEncoder: RequestDataEncodable {
+public struct ParamterJSONEncoder: RequestParameterEncodable {
     
     func encode(request: inout URLRequest, with parameters: Parameters) throws {
         do {

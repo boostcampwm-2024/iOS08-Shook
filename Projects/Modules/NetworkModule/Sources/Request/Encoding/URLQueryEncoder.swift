@@ -1,6 +1,6 @@
 import Foundation
 
-public struct URLQueryEncoder: RequestDataEncodable {
+public struct URLQueryEncoder: RequestParameterEncodable {
     
 #warning("배열 query value는 추후 구현")
     func encode(request: inout URLRequest, with parameters: Parameters) throws {
