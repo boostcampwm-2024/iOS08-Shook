@@ -2,10 +2,9 @@ import Foundation
 
 public struct URLQueryEncoder: RequestParameterEncodable {
     
-#warning("배열 query value는 추후 구현")
+    #warning("배열 query value는 추후 구현")
     func encode(request: inout URLRequest, with parameters: Parameters) throws {
-        #warning("return을 에러로 교체")
-        guard let url = request.url else { return }
+        guard let url = request.url else { throw RequestError.missingURL }
         
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
             urlComponents.queryItems = parameters.map {
