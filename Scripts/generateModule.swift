@@ -83,7 +83,7 @@ func registerModuleDependency() {
     // MARK: - Tests
     if hasUnitTests {
         makeScaffold(target: .unitTest)
-        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString) : "\n")\(dependencyArrayClosed)"
+        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString)" : "\n")\(dependencyArrayClosed)"
     }
 
     // if hasUITests {
@@ -95,7 +95,7 @@ func registerModuleDependency() {
     if hasDemo {
         makeScaffold(target: .demo)
 
-        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString) : "\n")\(dependencyArrayClosed)"
+        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString)" : "\n")\(dependencyArrayClosed)"
     }
     targetString += "\n\(tab(1))]"
     makeProjectSwift(targetString: targetString)
