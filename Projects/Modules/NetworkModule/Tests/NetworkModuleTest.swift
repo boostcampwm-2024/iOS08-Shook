@@ -1,7 +1,7 @@
 import XCTest
 @testable import NetworkModule
 
-struct Body: Encodable {
+private struct Body: Encodable {
     let name: String
 }
 
