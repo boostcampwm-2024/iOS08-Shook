@@ -3,9 +3,9 @@ import Foundation
 import NetworkModuleInterface
 
 final class NetworkClient<E: Endpoint>: Requestable {
-    private let session: URLSessionProtocol
+    private let session: URLSession
     
-    init(session: URLSessionProtocol = URLSession.shared) {
+    init(session: URLSession = URLSession.shared) {
         self.session = session
     }
     
