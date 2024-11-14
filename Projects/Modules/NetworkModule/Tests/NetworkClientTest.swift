@@ -8,6 +8,7 @@ final class NetworkClientTest: XCTestCase {
     var session: URLSessionProtocol!
     var client: NetworkClient<MockEndpoint>!
 
+    // MARK: - Success
     func test_success_response() async throws {
         session = MockURLSession(data: mockData, response: mockSuccessResponse)
         client = NetworkClient(session: session)
@@ -20,6 +21,7 @@ final class NetworkClientTest: XCTestCase {
         XCTAssertEqual(response.data, mockData)
     }
     
+    // MARK: - BadGateway
     func test_bad_gateway_response() async throws {
         session = MockURLSession(data: mockData, response: mockBadGatewayResponse)
         client = NetworkClient(session: session)
@@ -36,6 +38,7 @@ final class NetworkClientTest: XCTestCase {
         XCTAssertEqual(result, expectation)
     }
     
+    // MARK: - BadRequest
     func test_bad_request_response() async throws {
         session = MockURLSession(data: mockData, response: mockBadRequestResponse)
         client = NetworkClient(session: session)
