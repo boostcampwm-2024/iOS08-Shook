@@ -8,7 +8,7 @@ public struct ParamterJSONEncoder: RequestParameterEncodable {
             request.httpBody = jsonData
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         } catch {
-            #warning("인코딩 에러")
+            throw RequestError.jsonEncodingFailed(error)
         }
     }
     
