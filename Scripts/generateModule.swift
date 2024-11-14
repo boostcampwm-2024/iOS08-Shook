@@ -54,7 +54,7 @@ func registerModuleDependency() {
 
     let interfaceDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .interface)"
     let implementsDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName))"
-    let testingDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .testing))"
+    let testingDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .testing)"
     let dependencyArrayClosed = "\n\(tab(2))])"
 
     var targetString = "[\n"
