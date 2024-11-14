@@ -54,13 +54,12 @@ final class EasyLayoutDemoViewController: UIViewController {
         
         secondView.ezl.makeConstraint {
             $0.top(to: firstView.ezl.bottom)
-                .horizontal(to: view)
+                .horizontal(to: view, padding: 40)
                 .height(200)
         }
         
         thirdView.ezl.makeConstraint {
-            $0.center(to: view)
-                .size(with: 200)
+            $0.diagonal(to: view.safeAreaLayoutGuide, padding: 50)
         }
     }
 }
