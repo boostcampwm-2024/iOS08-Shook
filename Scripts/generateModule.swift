@@ -76,7 +76,6 @@ func registerModuleDependency() {
     // MARK: - Testing
     if hasTesting {
         makeScaffold(target: .testing)
-        let interfaceDependency = ".\(layerPrefix)(target: .\(moduleName), type: .interface)"
         targetString += ",\n\(tab(2)).testing(module: \(moduleEnum), dependencies: [\n\(interfaceDependencyString)\(dependencyArrayClosed)"
     }
     
