@@ -9,6 +9,7 @@ public struct EasyConstraint {
         view.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    // MARK: About Size
     @discardableResult
     public func width(_ width: CGFloat) -> Self {
         baseView.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -26,6 +27,7 @@ public struct EasyConstraint {
         width(size).height(size)
     }
     
+    // MARK: About Position
     @discardableResult
     public func top(to anchor: YAnchor) -> Self {
         baseView.topAnchor.constraint(equalTo: anchor.standard).isActive = true
