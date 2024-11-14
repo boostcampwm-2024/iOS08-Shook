@@ -17,4 +17,6 @@ enum NetworkError: Error, LocalizedError {
             return "유효한 응답이 아닙니다."
         }
     }
+    
 }
+
