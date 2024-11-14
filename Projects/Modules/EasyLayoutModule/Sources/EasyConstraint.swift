@@ -79,4 +79,9 @@ public struct EasyConstraint {
         baseView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         return self
     }
+    
+    @discardableResult
+    public func center(to view: Anchorable) -> Self {
+        centerX(to: view).centerY(to: view)
+    }
 }
