@@ -1,6 +1,6 @@
 import Foundation
 
-enum HTTPError: String, Error, LocalizedError {
+enum HTTPError: String, LocalizedError {
     
     // MARK: 400..<500 , Client Error
     case badRequest /// 400
@@ -31,7 +31,7 @@ enum HTTPError: String, Error, LocalizedError {
         case 502: self = .badGateway
         default: self = .underlying
         }
-        
-        var errorDescription: String? { rawValue }
     }
+    
+    var errorDescription: String? { rawValue }
 }
