@@ -1,4 +1,4 @@
-import XCTest
+import Foundation
 
 final class MockURLProtocol: URLProtocol {
     override static func canInit(with request: URLRequest) -> Bool { true }
@@ -8,7 +8,8 @@ final class MockURLProtocol: URLProtocol {
     
     override func startLoading() {
         guard let handler = MockURLProtocol.requestHandler else {
-            return XCTFail("RequestHandler 가 없습니다.")
+            client?.urlProtocol(self, didFailWithError: URLError(.unknown))
+            return
         }
         
         do {
