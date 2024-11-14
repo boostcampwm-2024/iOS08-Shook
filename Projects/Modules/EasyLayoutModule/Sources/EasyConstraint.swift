@@ -9,6 +9,7 @@ public struct EasyConstraint {
         view.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    // MARK: About Size
     @discardableResult
     public func width(_ width: CGFloat) -> Self {
         baseView.widthAnchor.constraint(equalToConstant: width).isActive = true
@@ -26,6 +27,7 @@ public struct EasyConstraint {
         width(size).height(size)
     }
     
+    // MARK: About Position
     @discardableResult
     public func top(to anchor: YAnchor) -> Self {
         baseView.topAnchor.constraint(equalTo: anchor.standard).isActive = true
@@ -63,5 +65,23 @@ public struct EasyConstraint {
     @discardableResult
     public func diagonal(to view: Anchorable) -> Self {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
+    }
+    
+    // MARK: About Center
+    @discardableResult
+    public func centerX(to view: Anchorable) -> Self {
+        baseView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func centerY(to view: Anchorable) -> Self {
+        baseView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func center(to view: Anchorable) -> Self {
+        centerX(to: view).centerY(to: view)
     }
 }

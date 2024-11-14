@@ -17,6 +17,13 @@ final class EasyLayoutDemoViewController: UIViewController {
         return view
     }()
     
+    private let thirdView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blue
+        view.frame.origin = CGPoint(x: 0, y: 0)
+        return view
+    }()
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -36,8 +43,8 @@ final class EasyLayoutDemoViewController: UIViewController {
     
     private func setupSubViewsConstraints() {
         view.addSubview(firstView)
-        
         view.addSubview(secondView)
+        view.addSubview(thirdView)
         
         firstView.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide.ezl.top)
@@ -49,6 +56,11 @@ final class EasyLayoutDemoViewController: UIViewController {
             $0.top(to: firstView.ezl.bottom)
                 .horizontal(to: view)
                 .height(200)
+        }
+        
+        thirdView.ezl.makeConstraint {
+            $0.center(to: view)
+                .size(with: 200)
         }
     }
 }

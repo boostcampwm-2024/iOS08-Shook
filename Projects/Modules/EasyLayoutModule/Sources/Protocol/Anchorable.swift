@@ -7,6 +7,8 @@ public protocol Anchorable {
     var trailingAnchor: NSLayoutXAxisAnchor { get }
     var widthAnchor: NSLayoutDimension { get }
     var heightAnchor: NSLayoutDimension { get }
+    var centerXAnchor: NSLayoutXAxisAnchor { get }
+    var centerYAnchor: NSLayoutYAxisAnchor { get }
 }
 
 extension Anchorable {
