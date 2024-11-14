@@ -58,4 +58,9 @@ public struct EasyConstraint {
     public func vertical(to view: UIView) -> Self {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom)
     }
+    
+    @discardableResult
+    public func diagonal(to view: UIView) -> Self {
+        top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
+    }
 }
