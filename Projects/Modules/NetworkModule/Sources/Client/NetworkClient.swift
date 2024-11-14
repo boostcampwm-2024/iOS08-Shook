@@ -4,9 +4,8 @@ final class NetworkClient<E: Endpoint>: Requestable {
     func request(_ endpoint: E) async throws -> Response {
         let request = try configureURLRequest(from: endpoint)
         
-        return Response(request: request, data: Data(), response: URLResponse())
+        return try await requestNetworkTask(with: request, from: endpoint)
     }
-        
 }
 
 private extension NetworkClient {
@@ -34,11 +33,10 @@ private extension NetworkClient {
         
         let statusceCode = httpResponse.statusCode
         
-        if !(endpoint.validationCode ~= statusceCode)  {
+        if !(endpoint.validationCode ~= statusceCode) {
             throw HTTPError(statuscode: statusceCode)
         }
     
         return Response(request: request, data: data, response: response)
     }
-        
 }

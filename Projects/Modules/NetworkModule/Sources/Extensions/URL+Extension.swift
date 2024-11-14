@@ -1,7 +1,6 @@
 import Foundation
 
 public extension URL {
-    
     init(from endpoint: Endpoint) throws {
         var urlComponets = URLComponents()
         urlComponets.scheme = endpoint.scheme

@@ -1,7 +1,6 @@
 import Foundation
 
 public struct ParamterJSONEncoder: RequestParameterEncodable {
-    
     public func encode(request: inout URLRequest, with parameters: Parameters) throws {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
@@ -11,7 +10,6 @@ public struct ParamterJSONEncoder: RequestParameterEncodable {
             throw NetworkError.jsonEncodingFailed(error)
         }
     }
-    
 }
 
 public extension RequestParameterEncodable where Self == ParamterJSONEncoder {
