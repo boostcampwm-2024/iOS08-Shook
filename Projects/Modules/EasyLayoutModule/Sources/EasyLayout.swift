@@ -10,18 +10,18 @@ public struct EasyLayout {
     }
     
     public var top: YAnchor {
-        .top(constraint.view)
+        .top(constraint.baseView)
     }
     
     public var bottom: YAnchor {
-        .bottom(constraint.view)
+        .bottom(constraint.baseView)
     }
     
     public var leading: XAnchor {
-        .leading(constraint.view)
+        .leading(constraint.baseView)
     }
     
     public var trailing: XAnchor {
-        .trailing(constraint.view)
+        .trailing(constraint.baseView)
     }
 }
