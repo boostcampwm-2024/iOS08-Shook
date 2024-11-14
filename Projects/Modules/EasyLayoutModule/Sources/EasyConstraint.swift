@@ -67,9 +67,16 @@ public struct EasyConstraint {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
     }
     
+    // MARK: About Center
     @discardableResult
     public func centerX(to view: Anchorable) -> Self {
         baseView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func centerY(to view: Anchorable) -> Self {
+        baseView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         return self
     }
 }
