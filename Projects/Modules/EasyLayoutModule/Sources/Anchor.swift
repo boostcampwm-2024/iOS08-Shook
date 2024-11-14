@@ -7,8 +7,8 @@ public enum YAnchor {
     
     var standard: NSLayoutYAxisAnchor {
         switch self {
-        case .top(let view): view.topAnchor
-        case .bottom(let view): view.bottomAnchor
+        case let .top(view): view.topAnchor
+        case let .bottom(view): view.bottomAnchor
         }
     }
 }
@@ -20,8 +20,8 @@ public enum XAnchor {
     
     var standard: NSLayoutXAxisAnchor {
         switch self {
-        case .leading(let view): view.leadingAnchor
-        case .trailing(let view): view.trailingAnchor
+        case let .leading(view): view.leadingAnchor
+        case let .trailing(view): view.trailingAnchor
         }
     }
 }
