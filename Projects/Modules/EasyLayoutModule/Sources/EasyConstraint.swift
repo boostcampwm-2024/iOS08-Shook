@@ -1,7 +1,7 @@
 import UIKit
 
 public struct EasyConstraint {
-    private let view: UIView
+    let view: UIView
     
     init(_ view: UIView) {
         self.view = view
