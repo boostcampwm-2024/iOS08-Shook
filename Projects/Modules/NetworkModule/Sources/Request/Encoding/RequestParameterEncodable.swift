@@ -1,5 +1,4 @@
 import Foundation
-import UIKit
 
 public typealias Parameters = [String: Any]
 

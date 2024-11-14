@@ -23,7 +23,7 @@ private extension NetworkClient {
         #warning("캐싱 정책 나중에 설정")
         var request = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: endpoint.timeout)
         
-        request.httpMethod = endpoint.method.rawValue
+        request.httpMethod = endpoint.method.description
         
         try endpoint.requestTask.configureRequest(request: &request)
         request.allHTTPHeaderFields = endpoint.header

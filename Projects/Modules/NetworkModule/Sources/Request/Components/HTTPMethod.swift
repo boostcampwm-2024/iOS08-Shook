@@ -1,13 +1,13 @@
-import Foundation
-
-public enum HTTPMethod: String {
-    case get = "GET"
-    case head = "HEAD"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-    case connect = "CONNECT"
-    case options = "OPTIONS"
-    case trace = "TRACE"
-    case patch = "PATCH"
+public enum HTTPMethod: String, CustomStringConvertible {
+    case get
+    case head
+    case post
+    case put
+    case delete
+    case connect
+    case options
+    case trace
+    case patch
+    
+    public var description: String { rawValue.uppercased() }
 }
