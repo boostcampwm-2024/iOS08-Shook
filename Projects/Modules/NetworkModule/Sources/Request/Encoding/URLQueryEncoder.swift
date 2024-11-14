@@ -20,3 +20,9 @@ private extension String {
         self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     }
 }
+
+public extension RequestParameterEncodable where Self == URLQueryEncoder {
+    static var query: URLQueryEncoder {
+        URLQueryEncoder()
+    }
+}
