@@ -34,9 +34,11 @@ private extension NetworkClient {
     }
     
     func requestNetworkTask(with request: URLRequest, from endpoint: E) async throws -> Response {
-        let (data, response) = try await session.data(for: request)
+        let (data, urlResponse) = try await session.data(for: request)
+        let response = Response(request: request, data: data, response: urlResponse)
+        try interceptResponse(with: response, from: endpoint)
         
-        guard let httpResponse = response as? HTTPURLResponse else { throw NetworkError.invaildResponse }
+        guard let httpResponse = urlResponse as? HTTPURLResponse else { throw NetworkError.invaildResponse }
         
         let statusceCode = httpResponse.statusCode
         
@@ -44,7 +46,7 @@ private extension NetworkClient {
             throw HTTPError(statuscode: statusceCode)
         }
     
-        return Response(request: request, data: data, response: response)
+        return response
     }
     
     func interceptRequest(with request: URLRequest, from endpoint: E) throws -> URLRequest {

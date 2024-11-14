@@ -14,9 +14,11 @@ public final class DefaultLoggingInterceptor: Interceptor {
         var log = "====================\n\n[\(method)] \(url)\n\n====================\n"
         log.append("✅ Endpoint: \(endpoint)\n")
         
+        log.append( "------------------- Header -------------------\n")
         if let header = endpoint.header, !header.isEmpty {
             log.append("✅ Header: \(header)\n")
         }
+        log.append( "------------------- Header END -------------------\n")
         
         if let body = request.httpBody, !body.isEmpty, let bodyString = String(bytes: body, encoding: .utf8) {
             log.append("✅ Body: \(bodyString)\n")
@@ -59,10 +61,13 @@ private extension DefaultLoggingInterceptor {
         httpResponse.allHeaderFields.forEach {
             log.append("\($0): \($1)\n")
         }
+        log.append( "------------------- Header END -------------------\n")
         
+        log.append( "------------------- Body -------------------\n")
         if let resDataString = String(bytes: result.data, encoding: String.Encoding.utf8) {
             log.append("\(resDataString)\n")
         }
+        log.append( "------------------- Body END -------------------\n")
         
         log.append("------------------- END HTTP (\(result.data.count)-byte body) -------------------\n")
         logger.log(level: .debug, "\(log)")
