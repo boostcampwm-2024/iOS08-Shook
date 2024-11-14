@@ -1,11 +1,12 @@
 import UIKit
 
 public struct EasyConstraint {
-    let baseView: UIView
+    let baseView: Anchorable
     
-    init(_ baseView: UIView) {
+    init(_ baseView: Anchorable) {
         self.baseView = baseView
-        baseView.translatesAutoresizingMaskIntoConstraints = false
+        guard let view = baseView as? UIView else { return }
+        view.translatesAutoresizingMaskIntoConstraints = false
     }
     
     @discardableResult
@@ -50,17 +51,17 @@ public struct EasyConstraint {
     }
     
     @discardableResult
-    public func horizontal(to view: UIView) -> Self {
+    public func horizontal(to view: Anchorable) -> Self {
         leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
     }
     
     @discardableResult
-    public func vertical(to view: UIView) -> Self {
+    public func vertical(to view: Anchorable) -> Self {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom)
     }
     
     @discardableResult
-    public func diagonal(to view: UIView) -> Self {
+    public func diagonal(to view: Anchorable) -> Self {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
     }
 }
