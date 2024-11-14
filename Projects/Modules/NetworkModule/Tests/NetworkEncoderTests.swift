@@ -6,13 +6,8 @@ private struct Body: Encodable {
     let name: String
 }
 
-final class NetworkModuleTests: XCTestCase {
-    
+final class NetworkEncoderTests: XCTestCase {
     let jsonEncoder: JSONEncoder = .init()
-    
-    override func setUpWithError() throws {}
-    
-    override func tearDownWithError() throws {}
     
     func test_query_encoder() throws {
         var request = URLRequest(url: URL(string: "https://example.com")!)

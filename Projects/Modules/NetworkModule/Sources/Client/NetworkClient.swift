@@ -1,6 +1,14 @@
 import Foundation
 
+import NetworkModuleInterface
+
 final class NetworkClient<E: Endpoint>: Requestable {
+    private let session: URLSessionProtocol
+    
+    init(session: URLSessionProtocol = URLSession.shared) {
+        self.session = session
+    }
+    
     func request(_ endpoint: E) async throws -> Response {
         let request = try configureURLRequest(from: endpoint)
         
@@ -24,9 +32,6 @@ private extension NetworkClient {
     }
     
     func requestNetworkTask(with request: URLRequest, from endpoint: E) async throws -> Response {
-        
-        let session = URLSession.shared
-        
         let (data, response) = try await session.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else { throw NetworkError.invaildResponse }

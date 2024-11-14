@@ -13,10 +13,12 @@ let project = Project.module(
             .module(target: .NetworkModule, type: .interface)
         ]),
         .tests(module: .module(.NetworkModule), dependencies: [
-            .module(target: .NetworkModule)
+            .module(target: .NetworkModule),
+            .module(target: .NetworkModule, type: .testing)
         ]),
         .demo(module: .module(.NetworkModule), dependencies: [
-            .module(target: .NetworkModule)
+            .module(target: .NetworkModule),
+            .module(target: .NetworkModule, type: .testing)
         ])
     ]
 )
