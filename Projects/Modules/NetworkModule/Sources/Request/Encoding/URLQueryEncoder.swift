@@ -4,7 +4,7 @@ public struct URLQueryEncoder: RequestParameterEncodable {
     
     #warning("배열 query value는 추후 구현")
     public func encode(request: inout URLRequest, with parameters: Parameters) throws {
-        guard let url = request.url else { throw RequestError.invaildURL }
+        guard let url = request.url else { throw NetworkError.invaildURL }
         
         if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false), !parameters.isEmpty {
             urlComponents.queryItems = parameters.map {
