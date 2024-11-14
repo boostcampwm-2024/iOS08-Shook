@@ -64,4 +64,10 @@ public struct EasyConstraint {
     public func diagonal(to view: Anchorable) -> Self {
         top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
     }
+    
+    @discardableResult
+    public func centerX(to view: Anchorable) -> Self {
+        baseView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        return self
+    }
 }
