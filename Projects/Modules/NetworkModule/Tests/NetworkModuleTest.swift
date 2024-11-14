@@ -1,4 +1,5 @@
 import XCTest
+
 @testable import NetworkModule
 
 private struct Body: Encodable {
@@ -42,4 +43,5 @@ final class NetworkModuleTests: XCTestCase {
         
         XCTAssertEqual(request1, request2)
     }
+    
 }
