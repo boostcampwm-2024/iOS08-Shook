@@ -6,7 +6,7 @@ private struct Body: Encodable {
     let name: String
 }
 
-final class NetworkModuleTests: XCTestCase {
+final class NetworkEncoderTests: XCTestCase {
     
     let jsonEncoder: JSONEncoder = .init()
     
