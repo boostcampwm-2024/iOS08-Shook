@@ -90,7 +90,7 @@ func registerModuleDependency() {
     //     // TODO: - ui test 타겟 설정 로직 추가
     // }
 
-    // MARK: -Deom
+    // MARK: -Demo
     if hasDemo {
         makeScaffold(target: .demo)
 
