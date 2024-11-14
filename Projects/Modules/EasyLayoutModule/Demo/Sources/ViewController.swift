@@ -3,9 +3,16 @@ import UIKit
 import EasyLayoutModule
 
 final class EasyLayoutDemoViewController: UIViewController {
-    private let emptyView: UIView = {
+    private let firstView: UIView = {
         let view = UIView()
         view.backgroundColor = .red
+        view.frame.origin = CGPoint(x: 0, y: 0)
+        return view
+    }()
+    
+    private let secondView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
         view.frame.origin = CGPoint(x: 0, y: 0)
         return view
     }()
@@ -28,10 +35,15 @@ final class EasyLayoutDemoViewController: UIViewController {
     private func setupAttribute() {}
     
     private func setupSubViewsConstraints() {
-        view.addSubview(emptyView)
+        view.addSubview(firstView)
+        view.addSubview(secondView)
         
-        emptyView.ezl.makeConstraint {
-            $0.size(with: 200)
+        firstView.ezl.makeConstraint {
+            $0.size(with: 100)
+        }
+        secondView.ezl.makeConstraint {
+            $0.size(with: 100)
+            $0.top(to: firstView.ezl.bottom)
         }
     }
 }

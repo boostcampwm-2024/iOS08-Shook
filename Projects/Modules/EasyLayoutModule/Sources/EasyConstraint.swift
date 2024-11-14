@@ -1,7 +1,7 @@
 import UIKit
 
 public struct EasyConstraint {
-    private let view: UIView
+    let view: UIView
     
     init(_ view: UIView) {
         self.view = view
@@ -23,5 +23,29 @@ public struct EasyConstraint {
     @discardableResult
     public func size(with size: CGFloat) -> Self {
         width(size).height(size)
+    }
+    
+    @discardableResult
+    public func top(to anchor: YAnchor) -> Self {
+        view.topAnchor.constraint(equalTo: anchor.standard).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func bottom(to anchor: YAnchor) -> Self {
+        view.bottomAnchor.constraint(equalTo: anchor.standard).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func leading(to anchor: XAnchor) -> Self {
+        view.leadingAnchor.constraint(equalTo: anchor.standard).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func trailing(to anchor: XAnchor) -> Self {
+        view.trailingAnchor.constraint(equalTo: anchor.standard).isActive = true
+        return self
     }
 }
