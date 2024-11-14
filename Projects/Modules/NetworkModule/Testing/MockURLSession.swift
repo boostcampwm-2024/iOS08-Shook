@@ -1,6 +1,5 @@
 import Foundation
 
-import NetworkModule
 import NetworkModuleInterface
 
 final class MockURLSession: URLSessionProtocol {

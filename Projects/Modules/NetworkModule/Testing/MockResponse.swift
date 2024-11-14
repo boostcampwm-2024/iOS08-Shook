@@ -1,5 +1,4 @@
 import Foundation
-import NetworkModule
 
 let mockSuccessResponse = HTTPURLResponse(
     url: URL(string: "www.example.com")!,
