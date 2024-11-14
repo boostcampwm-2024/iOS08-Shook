@@ -13,7 +13,7 @@ extension MockEndpoint: Endpoint {
         }
     }
     
-    var header: [String : String]? {
+    var header: [String: String]? {
         switch self {
         case .fetch: nil
         }
@@ -32,4 +32,6 @@ extension MockEndpoint: Endpoint {
         case .fetch: .empty
         }
     }
+    
+    var validationCode: ClosedRange<Int> { 200...299 }
 }

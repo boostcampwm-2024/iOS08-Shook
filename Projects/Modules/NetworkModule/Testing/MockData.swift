@@ -1,6 +1,7 @@
 import Foundation
 
-let mockData = """
+let mockData = Data(
+"""
 [
   {
     "title": "Black Coffee",
@@ -22,4 +23,5 @@ let mockData = """
     "id": 2
   }
 ]
-"""
+""".utf8
+)
