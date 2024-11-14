@@ -2,8 +2,8 @@ import UIKit
 
 // MARK: YAnchor
 public enum YAnchor {
-    case top(UIView)
-    case bottom(UIView)
+    case top(Anchorable)
+    case bottom(Anchorable)
     
     var standard: NSLayoutYAxisAnchor {
         switch self {
@@ -15,8 +15,8 @@ public enum YAnchor {
 
 // MARK: XAnchor
 public enum XAnchor {
-    case leading(UIView)
-    case trailing(UIView)
+    case leading(Anchorable)
+    case trailing(Anchorable)
     
     var standard: NSLayoutXAxisAnchor {
         switch self {

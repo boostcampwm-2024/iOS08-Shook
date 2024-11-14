@@ -1,22 +1,23 @@
 import UIKit
 
 public struct EasyConstraint {
-    let view: UIView
+    let baseView: Anchorable
     
-    init(_ view: UIView) {
-        self.view = view
+    init(_ baseView: Anchorable) {
+        self.baseView = baseView
+        guard let view = baseView as? UIView else { return }
         view.translatesAutoresizingMaskIntoConstraints = false
     }
     
     @discardableResult
     public func width(_ width: CGFloat) -> Self {
-        view.widthAnchor.constraint(equalToConstant: width).isActive = true
+        baseView.widthAnchor.constraint(equalToConstant: width).isActive = true
         return self
     }
     
     @discardableResult
     public func height(_ height: CGFloat) -> Self {
-        view.heightAnchor.constraint(equalToConstant: height).isActive = true
+        baseView.heightAnchor.constraint(equalToConstant: height).isActive = true
         return self
     }
     
@@ -27,25 +28,40 @@ public struct EasyConstraint {
     
     @discardableResult
     public func top(to anchor: YAnchor) -> Self {
-        view.topAnchor.constraint(equalTo: anchor.standard).isActive = true
+        baseView.topAnchor.constraint(equalTo: anchor.standard).isActive = true
         return self
     }
     
     @discardableResult
     public func bottom(to anchor: YAnchor) -> Self {
-        view.bottomAnchor.constraint(equalTo: anchor.standard).isActive = true
+        baseView.bottomAnchor.constraint(equalTo: anchor.standard).isActive = true
         return self
     }
     
     @discardableResult
     public func leading(to anchor: XAnchor) -> Self {
-        view.leadingAnchor.constraint(equalTo: anchor.standard).isActive = true
+        baseView.leadingAnchor.constraint(equalTo: anchor.standard).isActive = true
         return self
     }
     
     @discardableResult
     public func trailing(to anchor: XAnchor) -> Self {
-        view.trailingAnchor.constraint(equalTo: anchor.standard).isActive = true
+        baseView.trailingAnchor.constraint(equalTo: anchor.standard).isActive = true
         return self
+    }
+    
+    @discardableResult
+    public func horizontal(to view: Anchorable) -> Self {
+        leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
+    }
+    
+    @discardableResult
+    public func vertical(to view: Anchorable) -> Self {
+        top(to: view.ezl.top).bottom(to: view.ezl.bottom)
+    }
+    
+    @discardableResult
+    public func diagonal(to view: Anchorable) -> Self {
+        top(to: view.ezl.top).bottom(to: view.ezl.bottom).leading(to: view.ezl.leading).trailing(to: view.ezl.trailing)
     }
 }

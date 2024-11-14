@@ -36,14 +36,19 @@ final class EasyLayoutDemoViewController: UIViewController {
     
     private func setupSubViewsConstraints() {
         view.addSubview(firstView)
+        
         view.addSubview(secondView)
         
         firstView.ezl.makeConstraint {
-            $0.size(with: 100)
+            $0.top(to: view.safeAreaLayoutGuide.ezl.top)
+                .horizontal(to: view)
+                .height(200)
         }
+        
         secondView.ezl.makeConstraint {
-            $0.size(with: 100)
             $0.top(to: firstView.ezl.bottom)
+                .horizontal(to: view)
+                .height(200)
         }
     }
 }
