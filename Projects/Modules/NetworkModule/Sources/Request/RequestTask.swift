@@ -5,13 +5,13 @@ public enum RequestTask {
     case withParamteres(
         body: Parameters? = nil,
         query: Parameters? = nil,
-        bodyEncoder: any RequestParameterEncodable = .json(),
-        urlqueryEncoder: any RequestParameterEncodable = .query()
+        bodyEncoder: any RequestParameterEncodable = .json,
+        urlqueryEncoder: any RequestParameterEncodable = .query
     )
     case withObject(
         body: any Encodable,
         query: Parameters? = nil,
-        urlqueryEncoder: any RequestParameterEncodable = .query()
+        urlqueryEncoder: any RequestParameterEncodable = .query
     )
 }
 

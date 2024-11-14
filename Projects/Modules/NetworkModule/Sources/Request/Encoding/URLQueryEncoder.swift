@@ -23,7 +23,7 @@ private extension String {
 }
 
 public extension RequestParameterEncodable where Self == URLQueryEncoder {
-    static func query() -> URLQueryEncoder {
+    static var query: URLQueryEncoder {
         URLQueryEncoder()
     }
 }

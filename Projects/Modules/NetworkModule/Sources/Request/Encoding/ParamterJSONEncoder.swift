@@ -15,7 +15,7 @@ public struct ParamterJSONEncoder: RequestParameterEncodable {
 }
 
 public extension RequestParameterEncodable where Self == ParamterJSONEncoder {
-    static func json() -> ParamterJSONEncoder {
+    static var json: ParamterJSONEncoder {
         ParamterJSONEncoder()
     }
 }
