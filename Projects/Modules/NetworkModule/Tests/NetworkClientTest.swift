@@ -4,12 +4,14 @@ import XCTest
 @testable import NetworkModuleTesting
 
 final class NetworkClientTest: XCTestCase {
+    private var interceptors: [any Interceptor]!
     private var client: NetworkClient<MockEndpoint>!
     
     override func setUp() {
         super.setUp()
         URLProtocol.registerClass(MockURLProtocol.self)
-        client = NetworkClient()
+        interceptors = [DefaultLoggingInterceptor()]
+        client = NetworkClient(interceptors: interceptors)
     }
     
     override func tearDown() {
@@ -65,5 +67,17 @@ final class NetworkClientTest: XCTestCase {
 
         let expectation = HTTPError.badRequest
         XCTAssertEqual(result, expectation)
+    }
+    
+    func test_query_and_body_withParams() async throws {
+        MockURLProtocol.mockData = mockData
+        MockURLProtocol.mockResponse = mockSuccessResponse
+        let mockEndpoint = MockEndpoint.getwithParameters(queryParams: ["sort": "asc"], bodyParams: ["age": 1])
+        
+        let response = try await client.request(mockEndpoint)
+        guard let httpResponse = response.response as? HTTPURLResponse else { return XCTFail("HTTP 응답이 아닙니다.") }
+        
+        XCTAssertEqual(httpResponse.statusCode, 200)
+        XCTAssertEqual(response.data, mockData)
     }
 }

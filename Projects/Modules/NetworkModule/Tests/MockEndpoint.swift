@@ -4,18 +4,22 @@ import NetworkModule
 
 enum MockEndpoint {
     case fetch
+    case getwithParameters(queryParams: [String: Any], bodyParams: [String: Any])
 }
 
 extension MockEndpoint: Endpoint {
     var method: NetworkModule.HTTPMethod {
         switch self {
-        case .fetch: .get
+        case .fetch, .getwithParameters: .get
         }
     }
     
     var header: [String: String]? {
         switch self {
         case .fetch: nil
+        
+        case .getwithParameters:
+            ["임시 헤더" : "shookHeader"]
         }
     }
     
@@ -23,13 +27,15 @@ extension MockEndpoint: Endpoint {
     
     var path: String {
         switch self {
-        case .fetch: return "/fetch"
+        case .fetch, .getwithParameters: return "/fetch"
         }
     }
     
     var requestTask: NetworkModule.RequestTask {
         switch self {
         case .fetch: .empty
+        case let .getwithParameters(queryParams, bodyParams):
+                .withParamteres(body: bodyParams, query: queryParams)
         }
     }
     
