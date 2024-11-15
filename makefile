@@ -14,6 +14,9 @@ tp:
 module:
 	swift Scripts/generateModule.swift
 
+test:
+	TUIST_ENV=CI TUIST_ROOT_DIR=${PWD} tuist test --platform ios
+
 clean:
 	rm -rf **/*.xcodeproj
 	rm -rf *.xcworkspace
