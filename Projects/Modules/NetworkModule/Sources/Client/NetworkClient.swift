@@ -3,10 +3,10 @@ import Foundation
 import NetworkModuleInterface
 
 final class NetworkClient<E: Endpoint>: Requestable {
-    private let session: URLSessionProtocol
+    private let session: URLSession
     private var interceptors: [any Interceptor]
     
-    init(session: URLSessionProtocol = URLSession.shared, interceptors: [any Interceptor] = [] ) {
+    init(session: URLSession = URLSession.shared, interceptors: [any Interceptor] = [] ) {
         self.session = session
         self.interceptors = interceptors
     }
@@ -22,7 +22,7 @@ private extension NetworkClient {
     func configureURLRequest(from endpoint: E) throws -> URLRequest {
         let requestURL = try URL(from: endpoint)
         
-#warning("캐싱 정책 나중에 설정")
+        #warning("캐싱 정책 나중에 설정")
         var request = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: endpoint.timeout)
         
         request.httpMethod = endpoint.method.description

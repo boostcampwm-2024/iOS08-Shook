@@ -18,7 +18,7 @@ extension MockEndpoint: Endpoint {
         switch self {
         case .fetch: nil
         
-        case let .getwithParameters(_,_):
+        case .getwithParameters:
             ["임시 헤더" : "shookHeader"]
         }
     }
