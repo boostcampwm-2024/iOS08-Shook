@@ -1,0 +1,89 @@
+name: CI
+
+
+on:
+    pull_request: 
+        paths: # PR에 CI 파일이 변경되었거나 , 어떤 디렉토리건 swift 확장자 파일이 변겨되었을 경우 돌아간다.
+        - ".github/workflows/CI.yml"
+        - "**/**.swift"
+    push:
+        branches: [ develop, "epic/**", "story/**" ]
+
+env:
+  CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/.build
+
+jobs:
+    prepare-ci: # job 생성 , 캐시 설정 
+        name: 🚧 Prepare CI # job 이름 설정
+        runs-os: macos-latest # 가상환경 설정
+
+        steps: # steps 키를 통해 순차적인 수행할 작업 명시
+            - uses: actions/checkout@v3 # 원격 저장소에서 CI서버로 코드 내려받기
+
+            - name: Select Xcode 16.0
+            run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+
+            # 의존성 캐싱 key 계싼
+            - name: Compute package dependency cache key
+            id: compute_package_hash
+            run: echo "package_hash=${{ hashFiles('Tuist/Package.swift') }}" >> $GITHUB_OUTPUT 
+            # hashFiles(path):  일치하는 hashSet 반환 ,그 값을 outpus에 담음, 그러면 steps.[step_id].outputs.[담을 변수]로 접근가능
+            # steps.cache_package_dependencies.outputs.package_hash = hash 값
+            # steps.cache_package_dependencies.outputs.package_hash.cache-hit = cache-hit 여부 조장
+
+            # key에 해당하는 값이 path에 있을경우 , 그 파일을 가져오고 , 없다면 key를 해당 path에 저장하여 캐싱
+            - name: Check package dependency cache
+            uses: actions/cache@v3
+            id: cache_package_dependencies
+            with: #cache@v3에 사용할 파라미터 명시
+            path: ${{ env.CACHED_PACKAGE_DEPENDENCY_PATHS }} 
+            key: ${{ steps.compute_package_hash.outputs.package_hash }}
+
+            - name: Echo dependency cache hit
+            run: |
+                echo "package cache hit = ${{ steps.cache_package_dependencies.outputs.cache-hit }}" # 
+
+            - uses: jdx/mise-action@v2 # mise 설치
+
+            - name: "🛜 Install Tuist..."
+            run: mise install tuist
+
+            - name: Install dependencies needs
+            if: steps.cache_package_dependencies.outputs.cache-hit != 'true' 
+            run: make install
+
+        outputs: # 다른 job에서 접근할 수 있게 output 값을 job 수준으로 끌어올림
+            package_dependency_cache_key: ${{ steps.compute_package_hash.outputs.package_hash }}
+            # needs.[job name].outputs.변수명
+            # needs.prepare-ci.outputs.package_dependency_cache_key
+    
+    # prepare - ci 종료
+
+    test: # test job 생성
+        name: 🧪 Test
+        runs-os: macos-latest # 가상환경 설정
+        needs: prepare-ci # 선행작업
+
+        steps: # steps 키를 통해 순차적인 수행할 작업 명시
+            - uses: actions/checkout@v3 # 원격 저장소에서 CI서버로 코드 내려받기
+
+            - name: Select Xcode 16.0
+            run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+
+            - uses: jdx/mise-action@v2 # mise 설치
+
+            - name: "🛜 Install Tuist..."
+            run: mise install tuist
+
+            - name: "💪 Start Test"
+            run: make test
+
+
+    
+    
+
+
+
+
+
+        
