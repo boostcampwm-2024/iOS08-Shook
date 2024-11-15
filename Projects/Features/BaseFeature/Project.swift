@@ -13,10 +13,12 @@ let project = Project.module(
             .feature(target: .BaseFeature, type: .interface)
         ]),
         .tests(module: .feature(.BaseFeature), dependencies: [
-            .feature(target: .BaseFeature)
+            .feature(target: .BaseFeature),
+            .feature(target: .BaseFeature, type: .testing)
         ]),
         .demo(module: .feature(.BaseFeature), dependencies: [
-            .feature(target: .BaseFeature)
+            .feature(target: .BaseFeature),
+            .feature(target: .BaseFeature, type: .testing)
         ])
     ]
 )

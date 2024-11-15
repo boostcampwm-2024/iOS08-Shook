@@ -13,7 +13,8 @@ let project = Project.module(
             .domain(target: .BaseDomain, type: .interface)
         ]),
         .tests(module: .domain(.BaseDomain), dependencies: [
-            .domain(target: .BaseDomain)
+            .domain(target: .BaseDomain),
+            .domain(target: .BaseDomain, type: .testing)
         ])
     ]
 )

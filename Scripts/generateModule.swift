@@ -51,33 +51,50 @@ func registerModuleDependency() {
 
     let layerPrefix = layer == .userInterface ? "userInterface" : layer.rawValue.lowercased()
     let moduleEnum =  layer == .userInterface ? ".userInterface(.\(moduleName))"  :".\(layerPrefix)(.\(moduleName))"
+
+    let interfaceDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .interface)"
+    let implementsDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName))"
+    let testingDependencyString = "\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .testing)"
+    let dependencyArrayClosed = "\n\(tab(2))])"
+
     var targetString = "[\n"
+
+    // MARK: -- interface
     if hasInterface {
         makeScaffold(target: .interface)
         targetString += "\(tab(2)).interface(module: \(moduleEnum)),\n"
     }
+
+    // MARK: - implements
     targetString += "\(tab(2)).implements(module: \(moduleEnum)"
     if hasInterface {
-        targetString += ", dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName), type: .interface)\n\(tab(2))])"
+        targetString += ", dependencies: [\n\(interfaceDependencyString)\(dependencyArrayClosed)"
     } else {
         targetString += ")"
     }
+
+    // MARK: - Testing
     if hasTesting {
         makeScaffold(target: .testing)
-        let interfaceDependency = ".\(layerPrefix)(target: .\(moduleName), type: .interface)"
-        targetString += ",\n\(tab(2)).testing(module: \(moduleEnum), dependencies: [\n\(tab(3))\(interfaceDependency)\n\(tab(2))])"
+        targetString += ",\n\(tab(2)).testing(module: \(moduleEnum), dependencies: [\n\(interfaceDependencyString)\(dependencyArrayClosed)"
     }
+    
+    // MARK: - Tests
     if hasUnitTests {
         makeScaffold(target: .unitTest)
-        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(tab(2))])"
+        targetString += ",\n\(tab(2)).tests(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString)" : "\n")\(dependencyArrayClosed)"
     }
+
     // if hasUITests {
     //     makeScaffold(target: .uiTest)
     //     // TODO: - ui test 타겟 설정 로직 추가
     // }
+
+    // MARK: -Demo
     if hasDemo {
         makeScaffold(target: .demo)
-        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(tab(3)).\(layerPrefix)(target: .\(moduleName))\n\(tab(2))])"
+
+        targetString += ",\n\(tab(2)).demo(module: \(moduleEnum), dependencies: [\n\(implementsDependencyString)\(hasTesting ? ",\n\(testingDependencyString)" : "\n")\(dependencyArrayClosed)"
     }
     targetString += "\n\(tab(1))]"
     makeProjectSwift(targetString: targetString)
