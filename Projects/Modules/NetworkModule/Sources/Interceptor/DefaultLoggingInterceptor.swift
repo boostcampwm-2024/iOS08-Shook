@@ -4,7 +4,6 @@ import OSLog
 #if DEBUG
 
 public final class DefaultLoggingInterceptor: Interceptor {
-    
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NETWORK")
         
     public func willRequest(_ request: URLRequest, from endpoint: any Endpoint) throws {
@@ -28,29 +27,27 @@ public final class DefaultLoggingInterceptor: Interceptor {
         logger.log(level: .debug, "\(log)")
     }
     
-    public func didRecieve(_ result: Response, from endpoint: any Endpoint) throws {
+    public func didRecieve(_ response: Response, from endpoint: any Endpoint) throws {
         
-        guard let httpResponse = result.response as? HTTPURLResponse else {
+        guard let httpResponse = response.response as? HTTPURLResponse else {
             throw NetworkError.invaildResponse
         }
         
         switch httpResponse.statusCode {
         case endpoint.validationCode:
-            onSucceded(result, from: endpoint)
+            onSucceded(response, from: endpoint)
             
         default:
-            onFail(result, from: endpoint)
+            onFail(response, from: endpoint)
         }
-        
     }
-    
 }
 
 private extension DefaultLoggingInterceptor {
-    func onSucceded(_ result: Response, from endpoint: any Endpoint) {
-        let request = result.request
+    func onSucceded(_ response: Response, from endpoint: any Endpoint) {
+        let request = response.request
         let url = request.url?.absoluteString ?? "nil"
-        guard let httpResponse = result.response as? HTTPURLResponse else { return }
+        guard let httpResponse = response.response as? HTTPURLResponse else { return }
         let statusCode = httpResponse.statusCode
         
         var log = "------------------- 네트워크 통신 성공 -------------------"
@@ -64,17 +61,17 @@ private extension DefaultLoggingInterceptor {
         log.append( "------------------- Header END -------------------\n")
         
         log.append( "------------------- Body -------------------\n")
-        if let resDataString = String(bytes: result.data, encoding: String.Encoding.utf8) {
+        if let resDataString = String(bytes: response.data, encoding: String.Encoding.utf8) {
             log.append("\(resDataString)\n")
         }
         log.append( "------------------- Body END -------------------\n")
         
-        log.append("------------------- END HTTP (\(result.data.count)-byte body) -------------------\n")
+        log.append("------------------- END HTTP (\(response.data.count)-byte body) -------------------\n")
         logger.log(level: .debug, "\(log)")
     }
     
-    func onFail(_ result: Response, from endpoint: any Endpoint) {
-        guard let httpResponse = result.response as? HTTPURLResponse else { return }
+    func onFail(_ response: Response, from endpoint: any Endpoint) {
+        guard let httpResponse = response.response as? HTTPURLResponse else { return }
         let statusCode = httpResponse.statusCode
         let error = HTTPError(statuscode: statusCode)
         

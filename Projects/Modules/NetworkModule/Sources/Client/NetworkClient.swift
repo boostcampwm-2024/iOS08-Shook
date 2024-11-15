@@ -22,7 +22,7 @@ private extension NetworkClient {
     func configureURLRequest(from endpoint: E) throws -> URLRequest {
         let requestURL = try URL(from: endpoint)
         
-        #warning("캐싱 정책 나중에 설정")
+#warning("캐싱 정책 나중에 설정")
         var request = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: endpoint.timeout)
         
         request.httpMethod = endpoint.method.description
@@ -45,19 +45,19 @@ private extension NetworkClient {
         if !(endpoint.validationCode ~= statusceCode) {
             throw HTTPError(statuscode: statusceCode)
         }
-    
+        
         return response
     }
     
     func interceptRequest(with request: URLRequest, from endpoint: E) throws -> URLRequest {
-        var requst = request
+        var request = request
         
         for interceptor in self.interceptors {
-            try interceptor.willRequest(requst, from: endpoint)
-            requst = try interceptor.prepare(requst, from: endpoint)
+            try interceptor.willRequest(request, from: endpoint)
+            request = try interceptor.prepare(request, from: endpoint)
         }
         
-        return requst
+        return request
     }
     
     func interceptResponse(with response: Response, from endpoint: E) throws {
