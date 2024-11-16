@@ -8,12 +8,16 @@ import PackageDescription
         // Customize the product types for specific package product
         // Default is .staticFramework
         // productTypes: ["Alamofire": .framework,] 
-        productTypes: [:]
+        productTypes: [:],
+        baseSettings: .settings(configurations: [
+            .debug(name: .debug),
+            .release(name: .release)
+        ])
     )
 #endif
 
 let package = Package(
-    name: "IOS08Shook",
+    name: "ShookPackage",
     dependencies: [
         // Add your own dependencies here:
         // .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
