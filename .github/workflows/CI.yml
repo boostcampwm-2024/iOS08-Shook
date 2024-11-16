@@ -77,4 +77,6 @@ jobs:
         run: make install
 
       - name: "🧪 Start Test"
-        run: make test
+        run: |
+          tuist generate
+          make test
