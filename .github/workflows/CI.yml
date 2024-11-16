@@ -51,9 +51,9 @@ jobs:
         run: make install
 
     outputs: # 다른 job에서 접근할 수 있게 output 값을 job 수준으로 끌어올림
-      package_dependency_cache_key: ${{ steps.compute_package_hash.outputs.package_hash }}
+      package_dependency_cache-hit: ${{ steps.cache_package_dependencies.outputs.cache-hit }}
       # needs.[job name].outputs.변수명
-      # needs.prepare-ci.outputs.package_dependency_cache_key
+      # needs.prepare-ci.outputs.package_dependency_cache-hit
 
   test: # test job 생성
     name: 🧪 Test
@@ -70,16 +70,10 @@ jobs:
 
       - name: 🛜 Install Tuist
         run: mise install tuist
-
-      - name: Check package dependency cache
-        uses: actions/cache@v3
-        id: cache_package_dependencies
-        with:
-          path: ${{ env.CACHED_PACKAGE_DEPENDENCY_PATHS }}
-          key: ${{ needs.prepare-ci.outputs.package_dependency_cache_key }}
+        
 
       - name: 📦 Install dependencies needs
-        if: steps.cache_package_dependencies.outputs.cache-hit != 'true'
+        if: needs.prepare-ci.outputs.package_dependency_cache-hit != 'true'
         run: make install
 
       - name: "🧪 Start Test"
