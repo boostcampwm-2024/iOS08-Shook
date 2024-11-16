@@ -9,7 +9,7 @@ on:
     branches: [ develop, "epic/**", "story/**" ,"task/**" ]
 
 env:
-  CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/.build
+  CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/Tuist/.build
 
 jobs:
   prepare-ci: # job 생성, 캐시 설정
@@ -29,7 +29,7 @@ jobs:
         # hashFiles(path):  일치하는 hashSet 반환 ,그 값을 outpus에 담음
         # steps.cache_package_dependencies.outputs.package_hash = hash 값
 
-      # key에 해당하는 값이 path에 있을 경우, 그 파일을 가져오고 없다면 key를 해당 path에 저장하여 캐싱
+      # key에 해당하는 값이 path에 있을 경우, 그 파일을 가져오고 없다면 key에 해당 path를 저장하여 캐싱
       - name: Check package dependency cache
         uses: actions/cache@v3
         id: cache_package_dependencies
