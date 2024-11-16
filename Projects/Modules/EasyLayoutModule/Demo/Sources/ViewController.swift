@@ -47,7 +47,7 @@ final class EasyLayoutDemoViewController: UIViewController {
         view.addSubview(thirdView)
         
         firstView.ezl.makeConstraint {
-            $0.top(to: view.safeAreaLayoutGuide.ezl.top)
+            $0.top(to: view.safeAreaLayoutGuide)
                 .horizontal(to: view)
                 .height(200)
         }
