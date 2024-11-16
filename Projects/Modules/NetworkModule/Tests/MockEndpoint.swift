@@ -36,7 +36,7 @@ extension MockEndpoint: Endpoint {
         case .fetch: .empty
             
         case let .getwithParameters(queryParams, bodyParams):
-                .withParamteres(body: bodyParams, query: queryParams)
+                .withParameters(body: bodyParams, query: queryParams)
         }
     }
     

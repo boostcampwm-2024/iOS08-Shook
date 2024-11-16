@@ -40,10 +40,10 @@ private extension NetworkClient {
         
         guard let httpResponse = urlResponse as? HTTPURLResponse else { throw NetworkError.invaildResponse }
         
-        let statusceCode = httpResponse.statusCode
+        let statusCode = httpResponse.statusCode
         
-        if !(endpoint.validationCode ~= statusceCode) {
-            throw HTTPError(statuscode: statusceCode)
+        if !(endpoint.validationCode ~= statusCode) {
+            throw HTTPError(statuscode: statusCode)
         }
         
         return response
@@ -62,7 +62,7 @@ private extension NetworkClient {
     
     func interceptResponse(with response: Response, from endpoint: E) throws {
         for interceptor in self.interceptors {
-            try interceptor.didRecieve(response, from: endpoint)
+            try interceptor.didReceive(response, from: endpoint)
         }
     }
 }

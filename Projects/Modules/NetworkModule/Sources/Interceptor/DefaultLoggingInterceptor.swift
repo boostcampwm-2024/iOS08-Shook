@@ -27,7 +27,7 @@ public final class DefaultLoggingInterceptor: Interceptor {
         logger.log(level: .debug, "\(log)")
     }
     
-    public func didRecieve(_ response: Response, from endpoint: any Endpoint) throws {
+    public func didReceive(_ response: Response, from endpoint: any Endpoint) throws {
         
         guard let httpResponse = response.response as? HTTPURLResponse else {
             throw NetworkError.invaildResponse
@@ -35,7 +35,7 @@ public final class DefaultLoggingInterceptor: Interceptor {
         
         switch httpResponse.statusCode {
         case endpoint.validationCode:
-            onSucceded(response, from: endpoint)
+            onSucceed(response, from: endpoint)
             
         default:
             onFail(response, from: endpoint)
@@ -44,7 +44,7 @@ public final class DefaultLoggingInterceptor: Interceptor {
 }
 
 private extension DefaultLoggingInterceptor {
-    func onSucceded(_ response: Response, from endpoint: any Endpoint) {
+    func onSucceed(_ response: Response, from endpoint: any Endpoint) {
         let request = response.request
         let url = request.url?.absoluteString ?? "nil"
         guard let httpResponse = response.response as? HTTPURLResponse else { return }

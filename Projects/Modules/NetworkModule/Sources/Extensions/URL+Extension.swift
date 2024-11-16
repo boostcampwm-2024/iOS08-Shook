@@ -2,12 +2,12 @@ import Foundation
 
 public extension URL {
     init(from endpoint: Endpoint) throws {
-        var urlComponets = URLComponents()
-        urlComponets.scheme = endpoint.scheme
-        urlComponets.host = endpoint.host
-        urlComponets.path = endpoint.path
+        var urlComponents = URLComponents()
+        urlComponents.scheme = endpoint.scheme
+        urlComponents.host = endpoint.host
+        urlComponents.path = endpoint.path
         
-        guard let url = urlComponets.url else {
+        guard let url = urlComponents.url else {
             throw NetworkError.invaildURL
         }
         
