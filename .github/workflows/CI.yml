@@ -9,7 +9,7 @@ on:
     branches: [ develop, "epic/**", "story/**" ,"task/**" ]
 
 env:
-  CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/Tuist/.build
+  CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/.build
 
 jobs:
   prepare-ci: # job 생성, 캐시 설정
