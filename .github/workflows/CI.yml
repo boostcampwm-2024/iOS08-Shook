@@ -25,7 +25,7 @@ jobs:
       # 의존성 캐싱 key 계산
       - name: Compute package dependency cache key
         id: compute_package_hash
-        run: echo "package_hash=${{ hashFiles('Tuist/Package.swift') }}" >> $GITHUB_OUTPUT
+        run: echo "package_hash=${{ hashFiles('Package.swift') }}" >> $GITHUB_OUTPUT
         # hashFiles(path):  일치하는 hashSet 반환 ,그 값을 outpus에 담음
         # steps.cache_package_dependencies.outputs.package_hash = hash 값
 
