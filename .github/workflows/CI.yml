@@ -43,10 +43,10 @@ jobs:
 
       - uses: jdx/mise-action@v2 # mise 설치
 
-      - name: "🛜 Install Tuist..."
+      - name: 🛜 Install Tuist
         run: mise install tuist
 
-      - name: Install dependencies needs
+      - name: 📦 Install dependencies needs
         if: steps.cache_package_dependencies.outputs.cache-hit != 'true'
         run: make install
 
@@ -64,14 +64,17 @@ jobs:
       - uses: actions/checkout@v3 # 원격 저장소에서 CI서버로 코드 내려받기
 
       - name: Select lastest Xcode 
-        run: sudo xcode-select -s /Applications/Xcode.app
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app
+          xcode-select --reset
+        
 
       - uses: jdx/mise-action@v2 # mise 설치
 
-      - name: "🛜 Install Tuist..."
+      - name: 🛜 Install Tuist
         run: mise install tuist
 
-      - name: Install dependencies needs
+      - name: 📦 Install dependencies needs
         if: needs.prepare-ci.outputs.package_dependency_cache_key.cache-hit != 'true'
         run: make install
 
