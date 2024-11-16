@@ -2,7 +2,7 @@ import UIKit
 
 // MARK: YAnchor
 public struct YAnchor {
-    enum `Type` {
+    enum Edge {
         case top(Anchorable)
         case bottom(Anchorable)
         
@@ -14,20 +14,20 @@ public struct YAnchor {
         }
     }
     
-    let type: `Type`
+    let edge: Edge
     
     static func top(_ view: Anchorable) -> Self {
-        YAnchor(type: .top(view))
+        YAnchor(edge: .top(view))
     }
     
     static func bottom(_ view: Anchorable) -> Self {
-        YAnchor(type: .bottom(view))
+        YAnchor(edge: .bottom(view))
     }
 }
 
 // MARK: XAnchor
 public struct XAnchor {
-    enum `Type` {
+    enum Edge {
         case leading(Anchorable)
         case trailing(Anchorable)
         
@@ -39,13 +39,13 @@ public struct XAnchor {
         }
     }
     
-    let type: `Type`
+    let edge: Edge
     
     static func leading(_ view: Anchorable) -> Self {
-        XAnchor(type: .leading(view))
+        XAnchor(edge: .leading(view))
     }
     
     static func trailing(_ view: Anchorable) -> Self {
-        XAnchor(type: .trailing(view))
+        XAnchor(edge: .trailing(view))
     }
 }
