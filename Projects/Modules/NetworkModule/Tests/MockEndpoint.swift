@@ -19,7 +19,7 @@ extension MockEndpoint: Endpoint {
         case .fetch: nil
         
         case .getwithParameters:
-            ["임시 헤더" : "shookHeader"]
+            ["임시 헤더": "shookHeader"]
         }
     }
     
@@ -34,6 +34,7 @@ extension MockEndpoint: Endpoint {
     var requestTask: NetworkModule.RequestTask {
         switch self {
         case .fetch: .empty
+            
         case let .getwithParameters(queryParams, bodyParams):
                 .withParamteres(body: bodyParams, query: queryParams)
         }
