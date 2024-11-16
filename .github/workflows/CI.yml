@@ -66,7 +66,6 @@ jobs:
       - name: Select lastest Xcode 
         run: |
           sudo xcode-select -s /Applications/Xcode.app
-          xcode-select --reset
         
 
       - uses: jdx/mise-action@v2 # mise 설치
