@@ -14,7 +14,7 @@ env:
 jobs:
   prepare-ci: # job 생성, 캐시 설정
     name: 🚧 Prepare CI # job 이름 설정
-    runs-on: macos-latest # 가상환경 설정
+    runs-on: macos-14 # 가상환경 설정
 
     steps: # steps 키를 통해 순차적인 수행할 작업 명시
       - uses: actions/checkout@v3 # 원격 저장소에서 CI서버로 코드 내려받기
@@ -57,7 +57,7 @@ jobs:
 
   test: # test job 생성
     name: 🧪 Test
-    runs-on: macos-latest # 가상환경 설정
+    runs-on: macos-14 # 가상환경 설정
     needs: prepare-ci # 선행작업
 
     steps: # steps 키를 통해 순차적인 수행할 작업 명시
