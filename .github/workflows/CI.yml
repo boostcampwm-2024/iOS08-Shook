@@ -64,9 +64,10 @@ jobs:
       - uses: actions/checkout@v3 # 원격 저장소에서 CI서버로 코드 내려받기
 
       - name: Select Xcode 16.0
-        run: |
-          sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
-          xcrun simctl delete 71F9AE03-9F28-4831-80C9-3E13C1CAE46D 
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
+
+      - name: Siumulator list
+        run: sudo xcrun simctl list
 
       - uses: jdx/mise-action@v2 # mise 설치
 
