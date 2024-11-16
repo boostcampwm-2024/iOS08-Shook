@@ -78,5 +78,5 @@ jobs:
         if: needs.prepare-ci.outputs.package_dependency_cache_key.cache-hit != 'true'
         run: make install
 
-      - name: "💪 Start Test"
+      - name: "🧪 Start Test"
         run: make test
