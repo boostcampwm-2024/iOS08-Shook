@@ -66,16 +66,20 @@ jobs:
       - name: Select Xcode 16.0
         run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
 
-      - name: Siumulator list
-        run: sudo xcrun simctl list
-
       - uses: jdx/mise-action@v2 # mise 설치
 
       - name: 🛜 Install Tuist
         run: mise install tuist
 
+      - name: Check package dependency cache
+        uses: actions/cache@v3
+        id: cache_package_dependencies
+        with:
+          path: ${{ env.CACHED_PACKAGE_DEPENDENCY_PATHS }}
+          key: ${{ needs.prepare-ci.outputs.package_dependency_cache_key }}
+
       - name: 📦 Install dependencies needs
-        if: needs.prepare-ci.outputs.package_dependency_cache_key.cache-hit != 'true'
+        if: steps.cache_package_dependencies.outputs.cache-hit != 'true'
         run: make install
 
       - name: "🧪 Start Test"
