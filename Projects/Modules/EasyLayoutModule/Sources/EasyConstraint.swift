@@ -31,7 +31,7 @@ public struct EasyConstraint {
     @discardableResult
     public func top(to anchor: YAnchor, offset: CGFloat = 0) -> Self {
         baseView.topAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
@@ -45,7 +45,7 @@ public struct EasyConstraint {
     @discardableResult
     public func bottom(to anchor: YAnchor, offset: CGFloat = 0) -> Self {
         baseView.bottomAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
@@ -59,7 +59,7 @@ public struct EasyConstraint {
     @discardableResult
     public func leading(to anchor: XAnchor, offset: CGFloat = 0) -> Self {
         baseView.leadingAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
@@ -73,7 +73,7 @@ public struct EasyConstraint {
     @discardableResult
     public func trailing(to anchor: XAnchor, offset: CGFloat = 0) -> Self {
         baseView.trailingAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
