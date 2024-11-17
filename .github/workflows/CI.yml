@@ -6,7 +6,7 @@ on:
       - ".github/workflows/CI.yml"
       - "**/**.swift"
   push:
-    branches: [ develop, "epic/**", "story/**" ,"task/**" ]
+    branches: [ develop, "epic/**", "story/**" ]
 
 env:
   CACHED_PACKAGE_DEPENDENCY_PATHS: ${{ github.workspace }}/.build
