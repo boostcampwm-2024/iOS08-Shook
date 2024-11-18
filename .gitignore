@@ -63,6 +63,7 @@ DerivedData/
 *.xcworkspace
 
 ### Tuist derived files ###
+graph.png
 graph.dot
 Derived/
 
