@@ -19,10 +19,10 @@ extension Target {
         resources: .resources,
         scripts: generationEnvironment.scripts,
         dependencies: [
-            .feature(target: .BaseFeature),
             .domain(target: .BaseDomain),
-            .module(target: .ThirdPartyLibModule),
-            .userInterface(target: .DesignSystem)
+            .userInterface(target: .DesignSystem),
+            .feature(target: .MainFeature),
+            .feature(target: .LiveStreamFeature)
         ],
         settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
         environmentVariables: [:] // 환경변수 설정
