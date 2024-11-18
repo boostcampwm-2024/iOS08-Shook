@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeatureInterface
 
-open class ViewController: UIViewController {
+open class BaseViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -16,7 +16,7 @@ open class ViewController: UIViewController {
     }
 }
 
-extension ViewController: ViewLifeCycle {
+extension BaseViewController: ViewLifeCycle {
     open func setupViews() { }
     
     open func setupStyles() { }

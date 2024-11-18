@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeatureInterface
 
-open class TableViewCell: UITableViewCell {
+open class BaseTableViewCell: UITableViewCell {
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -23,7 +23,7 @@ open class TableViewCell: UITableViewCell {
     }
 }
 
-extension TableViewCell: ViewLifeCycle {
+extension BaseTableViewCell: ViewLifeCycle {
     open func setupViews() { }
 
     open func setupLayouts() { }

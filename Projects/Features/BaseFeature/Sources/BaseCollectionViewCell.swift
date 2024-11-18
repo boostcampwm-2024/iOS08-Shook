@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeatureInterface
 
-open class CollectionViewCell: UICollectionViewCell {
+open class BaseCollectionViewCell: UICollectionViewCell {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -23,7 +23,7 @@ open class CollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension CollectionViewCell: ViewLifeCycle {
+extension BaseCollectionViewCell: ViewLifeCycle {
     open func setupViews() { }
     
     open func setupStyles() { }

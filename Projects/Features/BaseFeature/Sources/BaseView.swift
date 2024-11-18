@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeatureInterface
 
-open class View: UIView {
+open class BaseView: UIView {
     public init() {
         super.init(frame: .zero)
         setupViews()
@@ -30,7 +30,7 @@ open class View: UIView {
     }
 }
 
-extension View: ViewLifeCycle {
+extension BaseView: ViewLifeCycle {
     open func setupViews() { }
     
     open func setupLayouts() { }
