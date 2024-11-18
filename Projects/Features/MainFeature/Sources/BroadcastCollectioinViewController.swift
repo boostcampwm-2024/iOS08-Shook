@@ -4,10 +4,7 @@ import BaseFeature
 import BaseFeatureInterface
 import EasyLayoutModule
 
-final class VM: ViewModel {
-    typealias Input = String
-    typealias Output = String
-    
+final class BroadcastCollectionViewModel: ViewModel {
     func transform(input: String) -> String { "" }
 }
 
@@ -18,7 +15,7 @@ struct Item: Hashable {
     var subtitle2: String
 }
 
-final class BroadcastCollectioinViewController: BaseViewController<VM> {    
+final class BroadcastCollectioinViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
         case big
         case small
@@ -36,6 +33,7 @@ final class BroadcastCollectioinViewController: BaseViewController<VM> {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDataSource()
+        setupBind()
     }
     
     override func setupViews() {
@@ -51,6 +49,8 @@ final class BroadcastCollectioinViewController: BaseViewController<VM> {
             $0.diagonal(to: view)
         }
     }
+    
+    override func setupBind() { }
 }
 
 extension BroadcastCollectioinViewController {
