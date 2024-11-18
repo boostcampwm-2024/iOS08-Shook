@@ -12,9 +12,10 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
     private let subtitle = UILabel()
     
     override func setupViews() {
-        contentView.addSubview(thumnail)
-        contentView.addSubview(title)
-        contentView.addSubview(subtitle)
+        addSubview(thumnail)
+        addSubview(thumnail)
+        addSubview(title)
+        addSubview(subtitle)
     }
     
     override func setupLayouts() {

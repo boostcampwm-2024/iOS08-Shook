@@ -15,8 +15,8 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     private let subtitle2 = UILabel()
     
     override func setupViews() {
-        contentView.addSubview(thumnail)
-        contentView.addSubview(stack)
+        addSubview(thumnail)
+        addSubview(stack)
         
         stack.addArrangedSubview(title)
         stack.addArrangedSubview(subtitle1)
