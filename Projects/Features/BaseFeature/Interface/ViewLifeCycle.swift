@@ -1,6 +1,5 @@
 import Foundation
 
-@objc
 public protocol ViewLifeCycle {
     /// 뷰 초기화
     func setupViews()

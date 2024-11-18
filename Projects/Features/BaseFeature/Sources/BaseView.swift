@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeatureInterface
 
-open class BaseView: UIView {
+open class BaseView: UIView, ViewLifeCycle {
     public init() {
         super.init(frame: .zero)
         setupViews()
@@ -28,18 +28,16 @@ open class BaseView: UIView {
         super.layoutSubviews()
         setupStyles()
     }
-}
-
-extension BaseView: ViewLifeCycle {
+    
     open func setupViews() { }
-    
-    open func setupLayouts() { }
-    
-    open func updateLayouts() { }
     
     open func setupStyles() { }
     
     open func updateStyles() { }
+    
+    open func setupLayouts() { }
+    
+    open func updateLayouts() { }
     
     open func setupActions() { }
 }
