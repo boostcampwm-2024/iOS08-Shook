@@ -31,37 +31,57 @@ public struct EasyConstraint {
     @discardableResult
     public func top(to anchor: YAnchor, offset: CGFloat = 0) -> Self {
         baseView.topAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
+    }
+    
+    @discardableResult
+    public func top(to view: Anchorable, offset: CGFloat = 0) -> Self {
+        top(to: view.ezl.top, offset: offset)
     }
     
     @discardableResult
     public func bottom(to anchor: YAnchor, offset: CGFloat = 0) -> Self {
         baseView.bottomAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
+    }
+    
+    @discardableResult
+    public func bottom(to view: Anchorable, offset: CGFloat = 0) -> Self {
+        bottom(to: view.ezl.bottom, offset: offset)
     }
     
     @discardableResult
     public func leading(to anchor: XAnchor, offset: CGFloat = 0) -> Self {
         baseView.leadingAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
     }
     
     @discardableResult
+    public func leading(to view: Anchorable, offset: CGFloat = 0) -> Self {
+        leading(to: view.ezl.leading, offset: offset)
+    }
+    
+    @discardableResult
     public func trailing(to anchor: XAnchor, offset: CGFloat = 0) -> Self {
         baseView.trailingAnchor.constraint(
-            equalTo: anchor.standard,
+            equalTo: anchor.edge.standard,
             constant: offset
         ).isActive = true
         return self
+    }
+    
+    @discardableResult
+    public func trailing(to view: Anchorable, offset: CGFloat = 0) -> Self {
+        trailing(to: view.ezl.trailing, offset: offset)
     }
     
     @discardableResult
