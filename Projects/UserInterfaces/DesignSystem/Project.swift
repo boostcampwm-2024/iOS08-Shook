@@ -11,7 +11,9 @@ let project = Project.module(
             product: .framework,
             spec: .init(
                 resources: .resources,
-                dependencies: []
+                dependencies: [
+                    .userInterface(target: .DesignSystem, type: .interface)
+                ]
             )
         ),
         .interface(module: .userInterface(.DesignSystem)),
