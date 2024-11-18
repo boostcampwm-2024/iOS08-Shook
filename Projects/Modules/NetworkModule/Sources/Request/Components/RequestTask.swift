@@ -2,7 +2,7 @@ import Foundation
 
 public enum RequestTask {
     case empty
-    case withParamteres(
+    case withParameters(
         body: Parameters? = nil,
         query: Parameters? = nil,
         bodyEncoder: any RequestParameterEncodable = .json,
@@ -21,7 +21,7 @@ extension RequestTask {
         case .empty:
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        case let .withParamteres(body, query, bodyEncoder, urlQueryEncoder):
+        case let .withParameters(body, query, bodyEncoder, urlQueryEncoder):
             try configureParam(
                 request: &request,
                 body: body,
