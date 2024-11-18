@@ -29,6 +29,7 @@ public extension ModulePaths {
 public extension ModulePaths {
     enum Module: String, ModularPathConvertable {
         case NetworkModule
+        case EasyLayoutModule
         case ThirdPartyLibModule
     }
 }
