@@ -8,7 +8,8 @@ let project = Project.module(
         .interface(module: .module(.ThirdPartyLibModule)),
         .implements(module: .module(.ThirdPartyLibModule), dependencies: [
             .module(target: .ThirdPartyLibModule, type: .interface),
-            .SPM.HaishinKit
+            .SPM.HaishinKit,
+            .module(target: .EasyLayoutModule)
         ]),
         .tests(module: .module(.ThirdPartyLibModule), dependencies: [
             .module(target: .ThirdPartyLibModule)
