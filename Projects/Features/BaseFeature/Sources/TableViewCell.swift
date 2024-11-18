@@ -24,15 +24,15 @@ open class TableViewCell: UITableViewCell {
 }
 
 extension TableViewCell: ViewLifeCycle {
-    public func setupViews() { }
+    open func setupViews() { }
 
-    public func setupLayouts() { }
+    open func setupLayouts() { }
     
-    public func updateLayouts() { }
+    open func updateLayouts() { }
     
-    public func setupStyles() { }
+    open func setupStyles() { }
     
-    public func updateStyles() { }
+    open func updateStyles() { }
     
-    public func setupActions() { }
+    open func setupActions() { }
 }
