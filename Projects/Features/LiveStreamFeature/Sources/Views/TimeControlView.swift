@@ -20,7 +20,6 @@ final class TimeControlView: BaseView {
     private let liveStringLabel: UILabel = UILabel()
     private let slider: UISlider = UISlider()
     
-    
     override func setupViews() {
         self.addSubview(liveStringLabel)
         self.addSubview(slider)
@@ -57,7 +56,7 @@ final class TimeControlView: BaseView {
 extension TimeControlView {
     private func renderThumbImage(size: CGSize) -> UIImage? {
         let renderer = UIGraphicsImageRenderer(size: size)
-        return renderer.image { context in
+        return renderer.image { _ in
             let rect = CGRect(origin: .zero, size: size)
             let path = UIBezierPath(ovalIn: rect) // 원형 경로 생성
             DesignSystemAsset.Color.mainGreen.color.setFill()

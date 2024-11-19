@@ -5,12 +5,10 @@ import DesignSystem
 import EasyLayoutModule
 import UIKit
 
-
 protocol ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> { get }
     var isBuffering: AnyPublisher<Bool, Never> { get }
 }
-
 
 final class ShookPlayerView: BaseView {
     
@@ -21,7 +19,7 @@ final class ShookPlayerView: BaseView {
     private var timeControlView: TimeControlView = TimeControlView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
-
+    
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
         let layer = AVPlayerLayer(player: player)
@@ -56,7 +54,7 @@ final class ShookPlayerView: BaseView {
         removeObserver()
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         
         guard let keyPath = keyPath else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -70,9 +68,11 @@ final class ShookPlayerView: BaseView {
                 player.play()
                 timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
                 print("\(#function) \(#line) readToplay")
+                
             case.failed, .unknown:
                 isPlayingState = false
                 print("\(#function) \(#line) failed")
+                
             @unknown default:
                 fatalError()
             }
@@ -87,11 +87,12 @@ final class ShookPlayerView: BaseView {
                 indicatorView.stopAnimating()
                 isBufferingState = false
                 print("\(#function) \(#line) buffering enough")
+                
             default:
                 return
             }
             
-        } else if let player = object as? AVPlayer  {
+        } else if let player = object as? AVPlayer {
             switch player.timeControlStatus {
             case .playing:
                 playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
@@ -105,7 +106,7 @@ final class ShookPlayerView: BaseView {
                 
             case .waitingToPlayAtSpecifiedRate:
                 print("\(#function) \(#line) waitingToPlayAtSpecifiedRate")
-                break
+                
             @unknown default:
                 fatalError()
             }
@@ -122,7 +123,7 @@ final class ShookPlayerView: BaseView {
     
     override func setupLayouts() {
         super.setupLayouts()
-
+        
         videoContainerView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
@@ -134,7 +135,7 @@ final class ShookPlayerView: BaseView {
         indicatorView.ezl.makeConstraint {
             $0.width(30).height(30).center(to: videoContainerView)
         }
-    
+        
         timeControlView.ezl.makeConstraint {
             $0.height(10)
                 .horizontal(to: self, padding: 15)
@@ -150,27 +151,29 @@ final class ShookPlayerView: BaseView {
         playButton.configuration = playButtonConfig
         playButton.isHidden = true
         
+        timeControlView.isHidden = true
+        
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
-        indicatorView.hidesWhenStopped = true 
+        indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
-        playButton.addAction(UIAction(handler: { [weak self] _ in
+        
+        playButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
             if self.isPlayingState {
                 self.player.pause()
             } else {
                 self.player.play()
             }
-        }), for: .touchUpInside)
+        }, for: .touchUpInside)
         
         videoContainerView.addGestureRecognizer(tapGesture)
-        
         
         timeControlView.$currentValue.sink { [weak self] currentValue in
             guard let self else { return }
             self.player.seek(to: CMTime(seconds: Double(currentValue), preferredTimescale: Int32(NSEC_PER_SEC))) { _ in
-                 print("completion")
+                print("completion")
             }
         }
         .store(in: &subscription)
@@ -226,12 +229,16 @@ extension ShookPlayerView {
     }
     
     @objc func toggleControlPannel() {
-        playButton.isHidden = !playButton.isHidden
+        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
+            self.playButton.isHidden = !self.playButton.isHidden
+            self.timeControlView.isHidden = !self.timeControlView.isHidden
+        }
+        
     }
     
 }
 
-extension ShookPlayerView : ShookPlayerViewState {
+extension ShookPlayerView: ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> {
         $isPlayingState.eraseToAnyPublisher()
     }
