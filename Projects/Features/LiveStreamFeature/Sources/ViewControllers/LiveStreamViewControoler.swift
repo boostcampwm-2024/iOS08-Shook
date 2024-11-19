@@ -1,4 +1,5 @@
 import BaseFeature
+import DesignSystem
 import EasyLayoutModule
 import UIKit
 
@@ -17,5 +18,9 @@ public final class LiveStreamViewControoler: BaseViewController<LiveStreamViewMo
                 .height(200)
         }
         
+    }
+    
+    public override func setupStyles() {
+        view.backgroundColor = DesignSystemAsset.Color.gray.color
     }
 }
