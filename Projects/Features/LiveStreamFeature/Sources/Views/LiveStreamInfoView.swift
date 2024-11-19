@@ -20,7 +20,7 @@ final class LiveStreamInfoView: BaseView {
     
     override func setupViews() {
         self.addSubview(stackView)
-        self.backgroundColor = .black
+        self.backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
     
     override func setupLayouts() {

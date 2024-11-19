@@ -20,8 +20,10 @@ final class ShookPlayerView: BaseView {
     private var infoView: LiveStreamInfoView = LiveStreamInfoView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
-    private var temp1: NSLayoutConstraint?
-    private var temp2: NSLayoutConstraint?
+    private var unfoldedConstraint: NSLayoutConstraint?
+    private var foldedConstraint: NSLayoutConstraint?
+    private var isFolded = false
+    private var isInitialized = false
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -39,9 +41,8 @@ final class ShookPlayerView: BaseView {
     private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
     
     // MARK: - @Published
-    @Published private var isPlayingState: Bool = false
-    @Published private var isBufferingState: Bool = false
-    private var isFold = false
+    @Published private var playingState: Bool = false
+    @Published private var bufferingState: Bool = false
     
     init(with url: URL) {
         playerItem = AVPlayerItem(url: url)
@@ -66,54 +67,10 @@ final class ShookPlayerView: BaseView {
         }
         
         if let playerItem = object as? AVPlayerItem {
-            
-            switch playerItem.status {
-            case .readyToPlay: // 성공
-                player.play()
-                timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
-                print("\(#function) \(#line) readToplay")
-                
-            case.failed, .unknown:
-                isPlayingState = false
-                print("\(#function) \(#line) failed")
-                
-            @unknown default:
-                fatalError()
-            }
-            
-            switch keyPath {
-            case "playbackBufferEmpty":
-                indicatorView.startAnimating()
-                isBufferingState = true
-                print("\(#function) \(#line) buffering Empty")
-                
-            case "playbackLikelyToKeepUp", "playbackBufferFull":
-                indicatorView.stopAnimating()
-                isBufferingState = false
-                print("\(#function) \(#line) buffering enough")
-                
-            default:
-                return
-            }
-            
+            handlePlayItemStatus(playerItem.status)
+            hanldePlayItemBufferString(keyPath)
         } else if let player = object as? AVPlayer {
-            switch player.timeControlStatus {
-            case .playing:
-                playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
-                isPlayingState = true
-                print("\(#function) \(#line) playing")
-                
-            case.paused:
-                playButton.configuration?.image = DesignSystemAsset.Image.play48.image
-                isPlayingState = false
-                print("\(#function) \(#line) pause")
-                
-            case .waitingToPlayAtSpecifiedRate:
-                print("\(#function) \(#line) waitingToPlayAtSpecifiedRate")
-                
-            @unknown default:
-                fatalError()
-            }
+            handlePlayerTimeControlStatus(player.timeControlStatus)
         }
     }
     
@@ -134,17 +91,12 @@ final class ShookPlayerView: BaseView {
             $0.diagonal(to: self)
         }
         
-        temp1 = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
-        temp1?.isActive = true
-        temp2 = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
+        unfoldedConstraint = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
+        unfoldedConstraint?.isActive = true
+        foldedConstraint = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
         
         infoView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         infoView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        
-        //        infoView.ezl.makeConstraint {
-        //            $0.top(to: videoContainerView.ezl.bottom)
-        //                .horizontal(to: self)
-        //        }
         
         playButton.ezl.makeConstraint {
             $0.center(to: videoContainerView)
@@ -164,13 +116,14 @@ final class ShookPlayerView: BaseView {
     
     override func setupStyles() {
         playerLayer.frame = videoContainerView.bounds
+        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
         
         var playButtonConfig = UIButton.Configuration.plain()
         playButtonConfig.image = DesignSystemAsset.Image.play48.image
         playButton.configuration = playButtonConfig
-        playButton.isHidden = true
+        playButton.alpha = .zero
         
-        timeControlView.isHidden = true
+        timeControlView.alpha = .zero
         
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
@@ -180,7 +133,7 @@ final class ShookPlayerView: BaseView {
         
         playButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
-            if self.isPlayingState {
+            if self.playingState {
                 self.player.pause()
             } else {
                 self.player.play()
@@ -191,9 +144,7 @@ final class ShookPlayerView: BaseView {
         
         timeControlView.$currentValue.sink { [weak self] currentValue in
             guard let self else { return }
-            self.player.seek(to: CMTime(seconds: Double(currentValue), preferredTimescale: Int32(NSEC_PER_SEC))) { _ in
-                print("completion")
-            }
+            self.player.seek(to: CMTime(seconds: Double(currentValue), preferredTimescale: Int32(NSEC_PER_SEC)))
         }
         .store(in: &subscription)
         
@@ -210,6 +161,7 @@ extension ShookPlayerView {
         case playbackBufferFull
     }
     
+    // MARK: - register / remove observer
     private func addObserver() {
         addObserverPlayerItem()
         addObserverPlayer()
@@ -249,28 +201,115 @@ extension ShookPlayerView {
         }
     }
     
-    @objc func toggleControlPannel() {
-        
-        UIView.transition(with: videoContainerView, duration: 0.3, options: .curveEaseInOut) {
-
-            if self.isFold {
-                self.temp1?.isActive = true
-                self.temp2?.isActive = false
-            } else {
-                self.temp1?.isActive = false
-                self.temp2?.isActive = true
-            
+    // MARK: - observeValue Handler
+    func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
+        switch status {
+        case .readyToPlay: // 성공
+            if !isInitialized {
+                player.play()
+                isInitialized = true
             }
-            self.isFold = !self.isFold
-            self.layoutIfNeeded()
-           
+            timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
+            print("\(#function) \(#line) readToplay ")
+            
+        case.failed, .unknown:
+            playingState = false
+            print("\(#function) \(#line) failed")
+            
+        @unknown default:
+            fatalError()
         }
+    }
+    
+    func hanldePlayItemBufferString(_ bufferString: String) {
+        switch bufferString {
+        case "playbackBufferEmpty":
+            indicatorView.startAnimating()
+            bufferingState = true
+            print("\(#function) \(#line) buffering Empty")
+            
+        case "playbackLikelyToKeepUp", "playbackBufferFull":
+            indicatorView.stopAnimating()
+            bufferingState = false
+            print("\(#function) \(#line) buffering enough")
+            
+        default:
+            return
+        }
+    }
+    
+    func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
+        switch status {
+        case .playing:
+            playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
+            playingState = true
+            print("\(#function) \(#line) playing")
+            
+        case.paused:
+            playButton.configuration?.image = DesignSystemAsset.Image.play48.image
+            playingState = false
+            print("\(#function) \(#line) pause")
+            
+        case .waitingToPlayAtSpecifiedRate:
+            print("\(#function) \(#line) waitingToPlayAtSpecifiedRate")
+            
+        @unknown default:
+            fatalError()
+        }
+    }
+    
+    
+    // MARK: - @objc
+    @objc func toggleControlPannel() {
+        let buttonAnimator = UIViewPropertyAnimator(
+            duration: 0.2,
+            curve: .easeIn,
+            animations: {
+                self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
+                self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
+            }
+        )
+        
+        let constraintsAnimator = UIViewPropertyAnimator(
+            duration: 0.3,
+            curve: .easeInOut,
+            animations: {
+                if self.isFolded {
+                    self.unfoldedConstraint?.isActive = true
+                    self.foldedConstraint?.isActive = false
+                } else {
+                    self.unfoldedConstraint?.isActive = false
+                    self.foldedConstraint?.isActive = true
+                    
+                }
+                self.isFolded = !self.isFolded
+                self.layoutIfNeeded()
+            }
+        )
+        
+        [buttonAnimator, constraintsAnimator].forEach {
+            $0.startAnimation()
+        }
+        
 #warning("현재 위 트랜지션 때문에 씹힘, play , pasue도 적용이 안됨")
-        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
-            self.playButton.isHidden = !self.playButton.isHidden
-            self.timeControlView.isHidden = !self.timeControlView.isHidden
-           
-        }
+        
+//        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
+//            self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
+//            self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
+//        }
+//        
+//        UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
+//            if self.isFolded {
+//                self.unfoldedConstraint?.isActive = true
+//                self.foldedConstraint?.isActive = false
+//            } else {
+//                self.unfoldedConstraint?.isActive = false
+//                self.foldedConstraint?.isActive = true
+//                
+//            }
+//            self.isFolded = !self.isFolded
+//            self.layoutIfNeeded()
+//        }
         
     }
     
@@ -278,11 +317,11 @@ extension ShookPlayerView {
 
 extension ShookPlayerView: ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> {
-        $isPlayingState.eraseToAnyPublisher()
+        $playingState.eraseToAnyPublisher()
     }
     
     var isBuffering: AnyPublisher<Bool, Never> {
-        $isBufferingState.eraseToAnyPublisher()
+        $bufferingState.eraseToAnyPublisher()
     }
     
 }

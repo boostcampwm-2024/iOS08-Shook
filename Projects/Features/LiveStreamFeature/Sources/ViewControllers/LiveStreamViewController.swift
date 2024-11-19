@@ -21,6 +21,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupStyles() {
-        view.backgroundColor = DesignSystemAsset.Color.gray.color
+        view.backgroundColor = .black
     }
 }
