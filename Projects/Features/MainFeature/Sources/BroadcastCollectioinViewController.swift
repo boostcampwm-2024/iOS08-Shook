@@ -35,7 +35,6 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupDataSource()
-        setupBind()
         input.fetch.send()
     }
     
