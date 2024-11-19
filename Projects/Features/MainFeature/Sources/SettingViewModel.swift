@@ -35,6 +35,8 @@ public final class SettingViewModel: ViewModel {
     /// - Parameter _:  방송 이름
     /// - Returns: 유효하면 true
     private func valid(_ value: String) -> Bool {
-        3...20 ~= value.count
+        let isLengthValid = 3...20 ~= value.count
+        let isCharactersValid = value.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" }
+        return isLengthValid && isCharactersValid
     }
 }

@@ -68,7 +68,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     }
     
     @objc
-    func willEndButtonTapped() {
+    private func willEndButtonTapped() {
     }
 }
 
