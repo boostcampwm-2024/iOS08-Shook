@@ -7,7 +7,7 @@ import EasyLayoutModule
 final class SmallCollectionViewCell: BaseCollectionViewCell {
     static let identifier = "SmallCollectionViewCell"
     
-    private let thumnail = UIImageView()
+    private let thumbnail = UIImageView()
     private let stack = UIStackView()
     
     private let title = UILabel()
@@ -15,7 +15,7 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     private let subtitle2 = UILabel()
     
     override func setupViews() {
-        addSubview(thumnail)
+        addSubview(thumbnail)
         addSubview(stack)
         
         stack.addArrangedSubview(title)
@@ -24,8 +24,8 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     }
     
     override func setupLayouts() {
-        thumnail.ezl.makeConstraint {
-            $0.leading(to: contentView.ezl.leading)
+        thumbnail.ezl.makeConstraint {
+            $0.leading(to: contentView)
                 .vertical(to: contentView)
                 .width(164)
                 .height(103)
@@ -34,14 +34,14 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
         stack.axis = .vertical
         stack.spacing = 4
         stack.ezl.makeConstraint {
-            $0.trailing(to: thumnail.ezl.trailing, offset: 8)
-                .centerY(to: thumnail)
+            $0.trailing(to: thumbnail, offset: 8)
+                .centerY(to: thumbnail)
         }
     }
     
     override func setupStyles() {
-        thumnail.contentMode = .scaleAspectFill
-        thumnail.clipsToBounds = true
+        thumbnail.contentMode = .scaleAspectFill
+        thumbnail.clipsToBounds = true
         
         title.font = .setFont(.body2())
         title.numberOfLines = 2
@@ -51,7 +51,7 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     }
     
     func configure(image: UIImage?, title: String, subtitle1: String, subtitle2: String) {
-        self.thumnail.image = image
+        self.thumbnail.image = image
         self.title.text = title
         self.subtitle1.text = subtitle1
         self.subtitle2.text = subtitle2

@@ -2,20 +2,10 @@ import UIKit
 
 import BaseFeature
 import BaseFeatureInterface
+import Combine
+
 import DesignSystem
 import EasyLayoutModule
-
-public class BroadcastCollectionViewModel: ViewModel {
-    public init() { }
-    public func transform(input: String) -> String { "" }
-}
-
-struct Item: Hashable {
-    var image: UIImage?
-    var title: String
-    var subtitle1: String
-    var subtitle2: String
-}
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
@@ -25,6 +15,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    private typealias Input = BroadcastCollectionViewModel.Input
+    
+    private let input = PassthroughSubject<Input, Never>()
+    private var cancellables = Set<AnyCancellable>()
     
     private let layout = setupCollectionViewCompositionalLayout()
     private let refreshControl = UIRefreshControl()
@@ -44,6 +38,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         super.viewDidLoad()
         setupDataSource()
         setupBind()
+        input.send(.fetch)
     }
     
     public override func setupViews() {
@@ -60,7 +55,15 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         }
     }
     
-    public override func setupBind() { }
+    public override func setupBind() {
+        let output = viewModel.transform(input: input.eraseToAnyPublisher())
+        output.sink { [weak self] event in
+            switch event {
+            case .data(items: let items):
+                self?.applySnapshot(with: items)
+            }
+        }.store(in: &cancellables)
+    }
 }
 
 extension BroadcastCollectionViewController {
@@ -158,7 +161,7 @@ extension BroadcastCollectionViewController {
             if indexPath.section == 1 {
                 let label = UILabel()
                 label.font = .setFont(.body1())
-                label.text = "어떤걸 해야하지?"
+                label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
                     $0.diagonal(to: header)
@@ -176,10 +179,12 @@ extension BroadcastCollectionViewController {
         snapshot.appendSections([.big])
         snapshot.appendItems(bigSectionItems, toSection: .big)
         
-        let smallSectionItems = Array(items.suffix(from: 3))
-        snapshot.appendSections([.small])
-        snapshot.appendItems(smallSectionItems, toSection: .small)
-        
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        if items.count > 3 {
+            let smallSectionItems = Array(items.suffix(from: 3))
+            snapshot.appendSections([.small])
+            snapshot.appendItems(smallSectionItems, toSection: .small)
+            
+            dataSource?.apply(snapshot, animatingDifferences: true)
+        }
     }
 }
