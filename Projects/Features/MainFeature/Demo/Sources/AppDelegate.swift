@@ -14,10 +14,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let fetcher = MockFetcher()
         let viewModel = BroadcastCollectionViewModel(fetcher: fetcher)
         let viewController = BroadcastCollectionViewController(viewModel: viewModel)
-        viewController.view.backgroundColor = .yellow
-        window?.rootViewController = viewController
+        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-
+        
         return true
     }
 }
@@ -25,7 +25,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 class MockFetcher: Fetcher {
     func fetch() -> [Item] {
         [
-            Item(image: UIImage(systemName: "star.fill"),title: "hello", subtitle1: "hello", subtitle2: "hello")
+            Item(image: UIImage(systemName: "star.fill"), title: "hello1", subtitle1: "hello", subtitle2: "hello"),
+            Item(image: UIImage(systemName: "star.fill"), title: "hello2", subtitle1: "hello", subtitle2: "hello"),
+            Item(image: UIImage(systemName: "star.fill"), title: "hello3", subtitle1: "hello", subtitle2: "hello"),
+            Item(image: UIImage(systemName: "star.fill"), title: "hello3", subtitle1: "hello", subtitle2: "hello"),
+            Item(image: UIImage(systemName: "star.fill"), title: "hello3", subtitle1: "hello", subtitle2: "hello")
         ]
     }
 }
