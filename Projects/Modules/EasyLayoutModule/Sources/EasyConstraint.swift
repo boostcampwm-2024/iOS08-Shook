@@ -17,8 +17,32 @@ public struct EasyConstraint {
     }
     
     @discardableResult
+    public func width(min width: CGFloat) -> Self {
+        baseView.widthAnchor.constraint(greaterThanOrEqualToConstant: width).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func width(max width: CGFloat) -> Self {
+        baseView.widthAnchor.constraint(lessThanOrEqualToConstant: width).isActive = true
+        return self
+    }
+    
+    @discardableResult
     public func height(_ height: CGFloat) -> Self {
         baseView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func height(min height: CGFloat) -> Self {
+        baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: height).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func height(max height: CGFloat) -> Self {
+        baseView.heightAnchor.constraint(lessThanOrEqualToConstant: height).isActive = true
         return self
     }
     
