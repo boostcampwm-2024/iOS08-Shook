@@ -22,7 +22,7 @@ final class ShookPlayerView: BaseView {
     private var subscription: Set<AnyCancellable> = .init()
     private var unfoldedConstraint: NSLayoutConstraint?
     private var foldedConstraint: NSLayoutConstraint?
-    private var isFolded = false
+    private var isFolded = true
     private var isInitialized = false
     
     // MARK: - lazy var
@@ -49,6 +49,18 @@ final class ShookPlayerView: BaseView {
         player.replaceCurrentItem(with: playerItem)
         super.init(frame: .zero)
         addObserver()
+        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
+        
+#warning("Confiure UI 생명 주기 생기면 옮긴다.")
+        var playButtonConfig = UIButton.Configuration.plain()
+        playButtonConfig.image = DesignSystemAsset.Image.play48.image
+        playButton.configuration = playButtonConfig
+        playButton.alpha = .zero
+        
+        timeControlView.alpha = .zero
+        
+        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
+        indicatorView.hidesWhenStopped = true
     }
     
     required init?(coder: NSCoder) {
@@ -92,8 +104,8 @@ final class ShookPlayerView: BaseView {
         }
         
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
-        unfoldedConstraint?.isActive = true
         foldedConstraint = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
+        foldedConstraint?.isActive = true
         
         infoView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         infoView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
@@ -116,17 +128,6 @@ final class ShookPlayerView: BaseView {
     
     override func setupStyles() {
         playerLayer.frame = videoContainerView.bounds
-        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
-        
-        var playButtonConfig = UIButton.Configuration.plain()
-        playButtonConfig.image = DesignSystemAsset.Image.play48.image
-        playButton.configuration = playButtonConfig
-        playButton.alpha = .zero
-        
-        timeControlView.alpha = .zero
-        
-        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
-        indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
