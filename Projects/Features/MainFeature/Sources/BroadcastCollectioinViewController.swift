@@ -67,9 +67,12 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupBind() {
         let output = viewModel.transform(input: input)
-        output.items.sink { [weak self] items in
-            self?.applySnapshot(with: items)
-        }.store(in: &cancellables)
+        output.items
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] items in
+                self?.applySnapshot(with: items)
+            }
+            .store(in: &cancellables)
     }
 }
 
