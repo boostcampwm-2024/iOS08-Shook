@@ -29,7 +29,15 @@ public protocol Fetcher {
 }
 
 public class BroadcastCollectionViewModel: ViewModel {
-    private let outputData = CurrentValueSubject<Output, Never>(.data(items: []))
+    public struct Input {
+        let fetch: PassthroughSubject<Void, Never> = .init()
+    }
+    
+    public struct Output {
+        let items: CurrentValueSubject<[Item], Never> = .init([])
+    }
+    
+    private let output = Output()
     private var cancellables = Set<AnyCancellable>()
     private var fetcher: Fetcher
     
@@ -37,27 +45,17 @@ public class BroadcastCollectionViewModel: ViewModel {
         self.fetcher = fetcher
     }
     
-    public enum Input {
-        case fetch
-    }
-    
-    public enum Output {
-        case data(items: [Item])
-    }
-    
-    public func transform(input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
-        input.sink { [weak self] event in
-            switch event {
-            case .fetch:
+    public func transform(input: Input) -> Output {
+        input.fetch
+            .sink { [weak self] in
                 self?.fetchData()
-            }
-        }.store(in: &cancellables)
+            }.store(in: &cancellables)
         
-        return outputData.eraseToAnyPublisher()
+        return output
     }
     
     private func fetchData() {
         let fetchedItems = fetcher.fetch()
-        outputData.send(.data(items: fetchedItems))
+        output.items.send(fetchedItems)
     }
 }

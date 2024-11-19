@@ -17,7 +17,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     private typealias Input = BroadcastCollectionViewModel.Input
     
-    private let input = PassthroughSubject<Input, Never>()
+    private let input = Input()
     private var cancellables = Set<AnyCancellable>()
     
     private let layout = setupCollectionViewCompositionalLayout()
@@ -38,7 +38,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         super.viewDidLoad()
         setupDataSource()
         setupBind()
-        input.send(.fetch)
+        input.fetch.send()
     }
     
     public override func setupViews() {
@@ -56,12 +56,9 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     }
     
     public override func setupBind() {
-        let output = viewModel.transform(input: input.eraseToAnyPublisher())
-        output.sink { [weak self] event in
-            switch event {
-            case .data(items: let items):
-                self?.applySnapshot(with: items)
-            }
+        let output = viewModel.transform(input: input)
+        output.items.sink { [weak self] items in
+            self?.applySnapshot(with: items)
         }.store(in: &cancellables)
     }
 }
