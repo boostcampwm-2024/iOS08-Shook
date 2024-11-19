@@ -15,14 +15,12 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
-    private typealias Input = BroadcastCollectionViewModel.Input
     
-    private let input = Input()
+    private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
-    private let layout = setupCollectionViewCompositionalLayout()
     private let refreshControl = UIRefreshControl()
-    
+    private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
     
@@ -43,16 +41,28 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupViews() {
         navigationItem.title = "실시간 리스트"
-        view.addSubview(collectionView)
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        
+        collectionView.refreshControl = refreshControl
+        
         collectionView.register(BigCollectionViewCell.self, forCellWithReuseIdentifier: BigCollectionViewCell.identifier)
         collectionView.register(SmallCollectionViewCell.self, forCellWithReuseIdentifier: SmallCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+        
+        view.addSubview(collectionView)
     }
     
     public override func setupLayouts() {
         collectionView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
+    }
+    
+    public override func setupActions() {
+        refreshControl.addAction(UIAction { [weak self] _ in
+            self?.input.fetch.send()
+        }, for: .valueChanged)
     }
     
     public override func setupBind() {
@@ -174,6 +184,10 @@ extension BroadcastCollectionViewController {
             snapshot.appendItems(smallSectionItems, toSection: .small)
         }
         
-        dataSource?.apply(snapshot, animatingDifferences: true)
+        dataSource?.apply(snapshot, animatingDifferences: true) { [weak self] in
+            if self?.refreshControl.isRefreshing == true {
+                self?.refreshControl.endRefreshing()
+            }
+        }
     }
 }
