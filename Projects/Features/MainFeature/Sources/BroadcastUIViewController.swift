@@ -25,7 +25,6 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
 
         view.addSubview(stackView)
         view.addSubview(willEndButton)
-        willEndButton.addTarget(self, action: #selector(willEndButtonTapped), for: .touchUpInside)
     }
     
     public override func setupStyles() {
@@ -65,6 +64,10 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
+    }
+    
+    public override func setupActions() {
+        willEndButton.addTarget(self, action: #selector(willEndButtonTapped), for: .touchUpInside)
     }
     
     @objc
