@@ -4,7 +4,7 @@ import UIKit
 
 public final class LiveStreamViewControoler: BaseViewController<LiveStreamViewModel> {
 
-    private let playerView: ShookPlayerView = ShookPlayerView()
+    private let playerView: ShookPlayerView = ShookPlayerView(with:  URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     
     public override func setupViews() {
         view.addSubview(playerView)
@@ -12,9 +12,10 @@ public final class LiveStreamViewControoler: BaseViewController<LiveStreamViewMo
     
     public override func setupLayouts() {
         playerView.ezl.makeConstraint {
-            $0.top(to: view)
-              .horizontal(to: view)
-              .height(200)
+            $0.top(to: view.safeAreaLayoutGuide)
+                .horizontal(to: view.safeAreaLayoutGuide)
+                .height(200)
         }
+        
     }
 }
