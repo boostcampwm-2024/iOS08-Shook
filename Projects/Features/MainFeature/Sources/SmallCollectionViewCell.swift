@@ -8,17 +8,19 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     static var identifier: String { String(describing: Self.self) }
 
     private let thumbnail = UIImageView()
-    private let descriptionStack = UIStackView()
     
+    private let descriptionStack = UIStackView()
     private let title = UILabel()
     private let subtitle1 = UILabel()
     private let subtitle2 = UILabel()
     
-    private let liveCircle = UIView()
-    
+    private let liveBadge = PaddingUILabel()
+
     override func setupViews() {
+        liveBadge.text = "L I V E"
+        
         contentView.addSubview(thumbnail)
-        contentView.addSubview(liveCircle)
+        contentView.addSubview(liveBadge)
         contentView.addSubview(descriptionStack)
         
         descriptionStack.addArrangedSubview(title)
@@ -39,10 +41,9 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
                 .centerY(to: thumbnail)
         }
         
-        liveCircle.ezl.makeConstraint {
-            $0.top(to: thumbnail, offset: 12)
-                .leading(to: thumbnail, offset: 12)
-                .size(with: 8)
+        liveBadge.ezl.makeConstraint {
+            $0.top(to: thumbnail, offset: 8)
+                .leading(to: thumbnail, offset: 8)
         }
     }
     
@@ -51,9 +52,13 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
         thumbnail.clipsToBounds = true
         thumbnail.layer.cornerRadius = 8
         
-        liveCircle.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveCircle.layer.cornerRadius = 4
-        liveCircle.clipsToBounds = true
+        liveBadge.textInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
+        liveBadge.backgroundColor = DesignSystemAsset.Color.mainGreen.color
+        liveBadge.textColor = .white
+        liveBadge.textAlignment = .center
+        liveBadge.font = .setFont(.caption2(weight: .bold))
+        liveBadge.layer.cornerRadius = 8
+        liveBadge.clipsToBounds = true
         
         descriptionStack.axis = .vertical
         descriptionStack.spacing = 4

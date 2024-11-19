@@ -10,14 +10,15 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
     private let thumbnail = UIImageView()
     private let title = UILabel()
     private let subtitle = UILabel()
-    private let liveLabel = PaddingLabel()
+    private let liveBadge = PaddingUILabel()
     
     override func setupViews() {
-        liveLabel.text = "L I V E"
+        liveBadge.text = "L I V E"
+        
         contentView.addSubview(thumbnail)
         contentView.addSubview(title)
         contentView.addSubview(subtitle)
-        contentView.addSubview(liveLabel)
+        contentView.addSubview(liveBadge)
     }
     
     override func setupLayouts() {
@@ -37,7 +38,7 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
                 .horizontal(to: contentView)
         }
         
-        liveLabel.ezl.makeConstraint {
+        liveBadge.ezl.makeConstraint {
             $0.top(to: thumbnail, offset: 12)
                 .leading(to: thumbnail, offset: 12)
         }
@@ -54,32 +55,18 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
         subtitle.font = .setFont(.caption1())
         subtitle.numberOfLines = 1
         
-        liveLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveLabel.textColor = .white
-        liveLabel.textAlignment = .center
-        liveLabel.font = .setFont(.caption1(weight: .bold))
-        liveLabel.layer.cornerRadius = 16
-        liveLabel.clipsToBounds = true
+        liveBadge.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        liveBadge.backgroundColor = DesignSystemAsset.Color.mainGreen.color
+        liveBadge.textColor = .white
+        liveBadge.textAlignment = .center
+        liveBadge.font = .setFont(.caption1(weight: .bold))
+        liveBadge.layer.cornerRadius = 16
+        liveBadge.clipsToBounds = true
     }
     
     func configure(image: UIImage?, title: String, subtitle: String) {
         self.thumbnail.image = image
         self.title.text = title
         self.subtitle.text = subtitle
-    }
-}
-
-final class PaddingLabel: UILabel {
-    var textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-
-    override func drawText(in rect: CGRect) {
-        let insetRect = rect.inset(by: textInsets)
-        super.drawText(in: insetRect)
-    }
-
-    override var intrinsicContentSize: CGSize {
-        let size = super.intrinsicContentSize
-        return CGSize(width: size.width + textInsets.left + textInsets.right,
-                      height: size.height + textInsets.top + textInsets.bottom)
     }
 }
