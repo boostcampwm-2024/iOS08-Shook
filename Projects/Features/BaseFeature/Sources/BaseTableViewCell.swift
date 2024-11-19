@@ -22,6 +22,7 @@ open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
         setupStyles()
     }
     
+    // MARK: - View Life Cycle
     open func setupViews() { }
 
     open func setupLayouts() { }
