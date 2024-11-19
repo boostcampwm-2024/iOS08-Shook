@@ -2,10 +2,12 @@ import UIKit
 
 import BaseFeature
 import BaseFeatureInterface
+import DesignSystem
 import EasyLayoutModule
 
-final class BroadcastCollectionViewModel: ViewModel {
-    func transform(input: String) -> String { "" }
+public class BroadcastCollectionViewModel: ViewModel {
+    public init() { }
+    public func transform(input: String) -> String { "" }
 }
 
 struct Item: Hashable {
@@ -15,7 +17,7 @@ struct Item: Hashable {
     var subtitle2: String
 }
 
-final class BroadcastCollectioinViewController: BaseViewController<BroadcastCollectionViewModel> {
+public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
         case big
         case small
@@ -25,18 +27,26 @@ final class BroadcastCollectioinViewController: BaseViewController<BroadcastColl
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
     private let layout = setupCollectionViewCompositionalLayout()
-    private let refreshControll = UIRefreshControl()
+    private let refreshControl = UIRefreshControl()
     
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
     
-    override func viewDidLoad() {
+    public override init(viewModel: BroadcastCollectionViewModel) {
+        super.init(viewModel: viewModel)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupDataSource()
         setupBind()
     }
     
-    override func setupViews() {
+    public override func setupViews() {
         navigationItem.title = "실시간 리스트"
         view.addSubview(collectionView)
         collectionView.register(BigCollectionViewCell.self, forCellWithReuseIdentifier: BigCollectionViewCell.identifier)
@@ -44,16 +54,16 @@ final class BroadcastCollectioinViewController: BaseViewController<BroadcastColl
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
     }
     
-    override func setupLayouts() {
+    public override func setupLayouts() {
         collectionView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
     }
     
-    override func setupBind() { }
+    public override func setupBind() { }
 }
 
-extension BroadcastCollectioinViewController {
+extension BroadcastCollectionViewController {
     private static func setupCollectionViewCompositionalLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, _  in
             let section = Section(rawValue: sectionIndex) ?? .small
@@ -110,7 +120,7 @@ extension BroadcastCollectioinViewController {
     }
 }
 
-extension BroadcastCollectioinViewController {
+extension BroadcastCollectionViewController {
     private func setupDataSource() {
         dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             guard let section = Section(rawValue: indexPath.section) else { return UICollectionViewCell() }

@@ -7,26 +7,26 @@ import EasyLayoutModule
 final class BigCollectionViewCell: BaseCollectionViewCell {
     static let identifier = "BigCollectionViewCell"
     
-    private let thumnail = UIImageView()
+    private let thumbnail = UIImageView()
     private let title = UILabel()
     private let subtitle = UILabel()
     
     override func setupViews() {
-        addSubview(thumnail)
-        addSubview(thumnail)
+        addSubview(thumbnail)
+        addSubview(thumbnail)
         addSubview(title)
         addSubview(subtitle)
     }
     
     override func setupLayouts() {
-        thumnail.ezl.makeConstraint {
+        thumbnail.ezl.makeConstraint {
             $0.top(to: contentView)
                 .horizontal(to: contentView)
                 .height(213)
         }
         
         title.ezl.makeConstraint {
-            $0.top(to: thumnail.ezl.bottom, offset: 4)
+            $0.top(to: thumbnail.ezl.bottom, offset: 4)
                 .horizontal(to: contentView)
         }
         
@@ -37,8 +37,8 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
     }
     
     override func setupStyles() {
-        thumnail.contentMode = .scaleAspectFill
-        thumnail.clipsToBounds = true
+        thumbnail.contentMode = .scaleAspectFill
+        thumbnail.clipsToBounds = true
         
         title.font = .setFont(.body2())
         title.numberOfLines = 2
@@ -48,7 +48,7 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
     }
     
     func configure(image: UIImage?, title: String, subtitle: String) {
-        self.thumnail.image = image
+        self.thumbnail.image = image
         self.title.text = title
         self.subtitle.text = subtitle
     }
