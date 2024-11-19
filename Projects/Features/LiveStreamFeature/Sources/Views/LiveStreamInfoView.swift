@@ -18,10 +18,6 @@ final class LiveStreamInfoView: BaseView {
         return stackView
     }()
     
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: bounds.width, height: titleLabel.bounds.height + descriptionLabel.bounds.height + 20 + 20 + 10)
-    }
-    
     override func setupViews() {
         self.addSubview(stackView)
         self.backgroundColor = .black
@@ -36,7 +32,7 @@ final class LiveStreamInfoView: BaseView {
     
     override func setupStyles() {
         titleLabel.font = .setFont(.body2())
-        descriptionLabel.font = .setFont(.body3())
+        descriptionLabel.font = .setFont(.caption1())
         titleLabel.textColor = .white
         descriptionLabel.textColor = .white
         
@@ -49,6 +45,5 @@ extension LiveStreamInfoView {
     public func fillLabels(with model: (String, String)) {
         titleLabel.text = model.0
         descriptionLabel.text = model.1
-        invalidateIntrinsicContentSize()
     }
 }

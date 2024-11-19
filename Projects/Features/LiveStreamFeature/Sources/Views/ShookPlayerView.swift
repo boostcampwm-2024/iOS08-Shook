@@ -20,6 +20,8 @@ final class ShookPlayerView: BaseView {
     private var infoView: LiveStreamInfoView = LiveStreamInfoView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
+    private var temp1: NSLayoutConstraint?
+    private var temp2: NSLayoutConstraint?
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -39,6 +41,7 @@ final class ShookPlayerView: BaseView {
     // MARK: - @Published
     @Published private var isPlayingState: Bool = false
     @Published private var isBufferingState: Bool = false
+    private var isFold = false
     
     init(with url: URL) {
         playerItem = AVPlayerItem(url: url)
@@ -116,12 +119,12 @@ final class ShookPlayerView: BaseView {
     
     override func setupViews() {
         super.setupViews()
-        self.addSubview(videoContainerView)
         self.addSubview(infoView)
+        self.addSubview(videoContainerView)
         videoContainerView.addSubview(playButton)
         videoContainerView.addSubview(indicatorView)
         videoContainerView.addSubview(timeControlView)
-    
+        
     }
     
     override func setupLayouts() {
@@ -131,10 +134,17 @@ final class ShookPlayerView: BaseView {
             $0.diagonal(to: self)
         }
         
-        infoView.ezl.makeConstraint {
-            $0.top(to: videoContainerView.ezl.bottom)
-                .horizontal(to: self)
-        }
+        temp1 = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
+        temp1?.isActive = true
+        temp2 = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
+        
+        infoView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        infoView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        
+        //        infoView.ezl.makeConstraint {
+        //            $0.top(to: videoContainerView.ezl.bottom)
+        //                .horizontal(to: self)
+        //        }
         
         playButton.ezl.makeConstraint {
             $0.center(to: videoContainerView)
@@ -149,6 +159,7 @@ final class ShookPlayerView: BaseView {
                 .horizontal(to: self, padding: 15)
                 .bottom(to: videoContainerView, offset: -20)
         }
+        
     }
     
     override func setupStyles() {
@@ -239,9 +250,26 @@ extension ShookPlayerView {
     }
     
     @objc func toggleControlPannel() {
+        
+        UIView.transition(with: videoContainerView, duration: 0.3, options: .curveEaseInOut) {
+
+            if self.isFold {
+                self.temp1?.isActive = true
+                self.temp2?.isActive = false
+            } else {
+                self.temp1?.isActive = false
+                self.temp2?.isActive = true
+            
+            }
+            self.isFold = !self.isFold
+            self.layoutIfNeeded()
+           
+        }
+#warning("현재 위 트랜지션 때문에 씹힘, play , pasue도 적용이 안됨")
         UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
             self.playButton.isHidden = !self.playButton.isHidden
             self.timeControlView.isHidden = !self.timeControlView.isHidden
+           
         }
         
     }
