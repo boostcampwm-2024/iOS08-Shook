@@ -17,6 +17,7 @@ final class ShookPlayerView: BaseView {
     private let playButton: UIButton = UIButton()
     private var playerItem: AVPlayerItem
     private var timeControlView: TimeControlView = TimeControlView()
+    private var infoView: LiveStreamInfoView = LiveStreamInfoView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
     
@@ -116,9 +117,11 @@ final class ShookPlayerView: BaseView {
     override func setupViews() {
         super.setupViews()
         self.addSubview(videoContainerView)
+        self.addSubview(infoView)
         videoContainerView.addSubview(playButton)
         videoContainerView.addSubview(indicatorView)
         videoContainerView.addSubview(timeControlView)
+    
     }
     
     override func setupLayouts() {
@@ -126,6 +129,11 @@ final class ShookPlayerView: BaseView {
         
         videoContainerView.ezl.makeConstraint {
             $0.diagonal(to: self)
+        }
+        
+        infoView.ezl.makeConstraint {
+            $0.top(to: videoContainerView.ezl.bottom)
+                .horizontal(to: self)
         }
         
         playButton.ezl.makeConstraint {
@@ -177,6 +185,8 @@ final class ShookPlayerView: BaseView {
             }
         }
         .store(in: &subscription)
+        
+        infoView.fillLabels(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
     
 }
