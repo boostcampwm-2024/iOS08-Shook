@@ -1,8 +1,17 @@
 import AVFoundation
 import BaseFeature
+import Combine
 import DesignSystem
 import EasyLayoutModule
 import UIKit
+
+
+protocol ShookPlayerViewState {
+    var isPlaying: AnyPublisher<Bool, Never> { get }
+    var isBuffering: AnyPublisher<Bool, Never> { get }
+    
+}
+
 
 final class ShookPlayerView: BaseView {
     
@@ -25,6 +34,9 @@ final class ShookPlayerView: BaseView {
     }()
     
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
+    
+    @Published private var isPlayingState: Bool = false
+    @Published private var isBufferingState: Bool = false
     
     init(with url: URL) {
         playerItem = AVPlayerItem(url: url)
@@ -57,11 +69,9 @@ final class ShookPlayerView: BaseView {
             
             switch playerItem.status {
             case .readyToPlay: // 성공
-                print("재생 준비 완료")
-            case.failed:
-                print("실패")
-            case .unknown:
-                print("아직 실패")
+                player.play()
+            case.failed, .unknown:
+                isPlayingState = false
             @unknown default:
                 fatalError()
             }
@@ -69,8 +79,11 @@ final class ShookPlayerView: BaseView {
             switch keyPath {
             case "playbackBufferEmpty":
                 indicatorView.startAnimating()
+                isBufferingState = true
+                
             case "playbackLikelyToKeepUp", "playbackBufferFull":
                 indicatorView.stopAnimating()
+                isBufferingState = false
             default:
                 return
             }
@@ -79,11 +92,14 @@ final class ShookPlayerView: BaseView {
             switch player.timeControlStatus {
             case .playing:
                 playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
-                print("재생 시작")
+                isPlayingState = true
+                
             case.paused:
                 playButton.configuration?.image = DesignSystemAsset.Image.play48.image
+                isPlayingState = false
+                
             case .waitingToPlayAtSpecifiedRate:
-                print("재생 대기")
+                break
             @unknown default:
                 fatalError()
             }
@@ -127,7 +143,12 @@ final class ShookPlayerView: BaseView {
     override func setupActions() {
         playButton.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
-            self.player.pause()
+            print("state: \(self.isPlayingState)")
+            if self.isPlayingState {
+                self.player.pause()
+            } else {
+                self.player.play()
+            }
         }), for: .touchUpInside)
     }
     
@@ -159,6 +180,17 @@ extension ShookPlayerView {
     
     private func addObserverPlayer() {
         player.addObserver(self, forKeyPath: "timeControlStatus", context: nil)
+    }
+    
+}
+
+extension ShookPlayerView : ShookPlayerViewState {
+    var isPlaying: AnyPublisher<Bool, Never> {
+        $isPlayingState.eraseToAnyPublisher()
+    }
+    
+    var isBuffering: AnyPublisher<Bool, Never> {
+        $isBufferingState.eraseToAnyPublisher()
     }
     
 }
