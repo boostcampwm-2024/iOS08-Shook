@@ -32,6 +32,9 @@ final class SettingTableViewCell: BaseTableViewCell {
     }
     
     override func setupStyles() {
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        textView.textContainerInset = .zero
         stackView.axis = .horizontal
         stackView.spacing = 10
         selectionStyle = .none

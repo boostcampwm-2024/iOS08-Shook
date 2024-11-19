@@ -10,7 +10,7 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     private let button = UIButton()
     private let streamingName = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
-    private let placeholderInfo = ["3~20글자 입력해주세요!", "방송 내용을 알려주세요!"]
+    private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
     private let subject: PassthroughSubject<String, Never> = PassthroughSubject()
     private var cancellables = Set<AnyCancellable>()
     
