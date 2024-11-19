@@ -258,61 +258,36 @@ extension ShookPlayerView {
         }
     }
     
-    
     // MARK: - @objc
     @objc func toggleControlPannel() {
-        let buttonAnimator = UIViewPropertyAnimator(
-            duration: 0.2,
-            curve: .easeIn,
-            animations: {
-                self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
-                self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
-            }
-        )
-        
-        let constraintsAnimator = UIViewPropertyAnimator(
-            duration: 0.3,
-            curve: .easeInOut,
-            animations: {
-                if self.isFolded {
-                    self.unfoldedConstraint?.isActive = true
-                    self.foldedConstraint?.isActive = false
-                } else {
-                    self.unfoldedConstraint?.isActive = false
-                    self.foldedConstraint?.isActive = true
-                    
-                }
-                self.isFolded = !self.isFolded
-                self.layoutIfNeeded()
-            }
-        )
-        
-        [buttonAnimator, constraintsAnimator].forEach {
-            $0.startAnimation()
-        }
-        
-#warning("현재 위 트랜지션 때문에 씹힘, play , pasue도 적용이 안됨")
-        
-//        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
-//            self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
-//            self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
-//        }
-//        
-//        UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
-//            if self.isFolded {
-//                self.unfoldedConstraint?.isActive = true
-//                self.foldedConstraint?.isActive = false
-//            } else {
-//                self.unfoldedConstraint?.isActive = false
-//                self.foldedConstraint?.isActive = true
-//                
-//            }
-//            self.isFolded = !self.isFolded
-//            self.layoutIfNeeded()
-//        }
-        
+        infoViewConstraintAnimation()
+        controlPanelAlphaAnimation()
     }
     
+}
+
+extension ShookPlayerView {
+    func controlPanelAlphaAnimation() {
+        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
+            self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
+            self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
+        }
+    }
+    
+    func infoViewConstraintAnimation() {
+        UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
+            if self.isFolded {
+                self.unfoldedConstraint?.isActive = true
+                self.foldedConstraint?.isActive = false
+            } else {
+                self.unfoldedConstraint?.isActive = false
+                self.foldedConstraint?.isActive = true
+                
+            }
+            self.isFolded = !self.isFolded
+            self.layoutIfNeeded()
+        }
+    }
 }
 
 extension ShookPlayerView: ShookPlayerViewState {
