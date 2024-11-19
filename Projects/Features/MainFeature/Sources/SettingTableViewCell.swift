@@ -10,6 +10,7 @@ final class SettingTableViewCell: BaseTableViewCell {
     private let textView = UITextView()
     private let placeholder = UILabel()
     private var placeholderValue = ""
+    private let errorMessageLabel = UILabel()
     private var textDidChange: ((String) -> Void)?
     
     func configure(label: String, placeholder: String, textDidChange: ((String) -> Void)?) {
@@ -21,11 +22,13 @@ final class SettingTableViewCell: BaseTableViewCell {
         
     override func setupViews() {
         textView.delegate = self
-     
+        
+        errorMessageLabel.isHidden = true
         textView.addSubview(placeholder)
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(textView)
         contentView.addSubview(stackView)
+        contentView.addSubview(errorMessageLabel)
     }
     
     override func setupStyles() {
@@ -38,6 +41,7 @@ final class SettingTableViewCell: BaseTableViewCell {
         titleLabel.font = .setFont(.body1(weight: .semiBold))
         textView.font = .setFont(.body1(weight: .regular))
         placeholder.font = .setFont(.body1(weight: .regular))
+        errorMessageLabel.font = .setFont(.caption1(weight: .regular))
         
         // Colors
         contentView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
@@ -46,6 +50,7 @@ final class SettingTableViewCell: BaseTableViewCell {
         textView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
         titleLabel.textColor = .white
         textView.textColor = .white
+        errorMessageLabel.textColor = DesignSystemAsset.Color.errorRed.color
         
         // alpha
         placeholder.alpha = 0.5
@@ -54,12 +59,27 @@ final class SettingTableViewCell: BaseTableViewCell {
     override func setupLayouts() {
         stackView.ezl.makeConstraint {
             $0.horizontal(to: contentView, padding: 10)
-                .vertical(to: contentView, padding: 17)
+                .vertical(to: contentView, padding: 27)
         }
         
         placeholder.ezl.makeConstraint {
             $0.centerY(to: textView)
                 .leading(to: textView, offset: 10)
+        }
+        
+        errorMessageLabel.ezl.makeConstraint {
+            $0.top(to: textView.ezl.bottom, offset: 10)
+                .leading(to: textView)
+        }
+    }
+    
+    func setErrorMessage(message: String?) {
+        if let message, placeholder.text != placeholderValue {
+            errorMessageLabel.text = message
+            errorMessageLabel.isHidden = false
+        } else {
+            errorMessageLabel.text = nil
+            errorMessageLabel.isHidden = true
         }
     }
 }

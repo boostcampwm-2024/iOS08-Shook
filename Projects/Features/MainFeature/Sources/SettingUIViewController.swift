@@ -29,6 +29,13 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
                     : DesignSystemAsset.Color.gray.color
             }
             .store(in: &cancellables)
+        
+        output.errorMessage
+            .sink { [weak self] errorMessage in
+                guard let self else { return }
+                self.streamingName.setErrorMessage(message: errorMessage)
+            }
+            .store(in: &cancellables)
     }
     
     public override func setupViews() {
