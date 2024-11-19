@@ -17,7 +17,6 @@ final public class SettingViewModel: ViewModel {
     
     public init() {}
     
-    @Published var streamingName: String = ""    
     private let output = Output()
     private var cancellables = Set<AnyCancellable>()
     
@@ -25,7 +24,6 @@ final public class SettingViewModel: ViewModel {
         input.didWriteStreamingName
             .sink { [weak self] name in
                 guard let self else { return }
-                self.streamingName = name
                 self.output.isActive.send(valid(name))
             }
             .store(in: &cancellables)
