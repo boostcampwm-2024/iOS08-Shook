@@ -3,7 +3,7 @@ import DesignSystem
 import EasyLayoutModule
 import UIKit
 
-public final class LiveStreamViewControoler: BaseViewController<LiveStreamViewModel> {
+public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
 
     private let playerView: ShookPlayerView = ShookPlayerView(with:  URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     
