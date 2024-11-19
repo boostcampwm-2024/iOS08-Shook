@@ -52,7 +52,7 @@ final class SettingTableViewCell: BaseTableViewCell {
         textView.textColor = .white
         errorMessageLabel.textColor = DesignSystemAsset.Color.errorRed.color
         
-        // alpha
+        // Alpha
         placeholder.alpha = 0.5
     }
     
@@ -84,6 +84,7 @@ final class SettingTableViewCell: BaseTableViewCell {
     }
 }
 
+// MARK: Text View의 Delegate
 extension SettingTableViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
