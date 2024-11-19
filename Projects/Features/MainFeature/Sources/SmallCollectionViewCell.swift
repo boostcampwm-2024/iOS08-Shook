@@ -5,7 +5,7 @@ import DesignSystem
 import EasyLayoutModule
 
 final class SmallCollectionViewCell: BaseCollectionViewCell {
-    static let identifier = "SmallCollectionViewCell"
+    static let identifier = String(describing: type(of: SmallCollectionViewCell.self))
     
     private let thumbnail = UIImageView()
     private let stack = UIStackView()
@@ -15,8 +15,8 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     private let subtitle2 = UILabel()
     
     override func setupViews() {
-        addSubview(thumbnail)
-        addSubview(stack)
+        contentView.addSubview(thumbnail)
+        contentView.addSubview(stack)
         
         stack.addArrangedSubview(title)
         stack.addArrangedSubview(subtitle1)
@@ -26,7 +26,6 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
     override func setupLayouts() {
         thumbnail.ezl.makeConstraint {
             $0.leading(to: contentView)
-                .vertical(to: contentView)
                 .width(164)
                 .height(103)
         }
@@ -34,7 +33,7 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
         stack.axis = .vertical
         stack.spacing = 4
         stack.ezl.makeConstraint {
-            $0.trailing(to: thumbnail, offset: 8)
+            $0.leading(to: thumbnail.ezl.trailing, offset: 8)
                 .centerY(to: thumbnail)
         }
     }
@@ -47,6 +46,9 @@ final class SmallCollectionViewCell: BaseCollectionViewCell {
         title.numberOfLines = 2
         
         subtitle1.font = .setFont(.caption1())
+        subtitle1.numberOfLines = 1
+        
+        subtitle2.font = .setFont(.caption1())
         subtitle1.numberOfLines = 1
     }
     

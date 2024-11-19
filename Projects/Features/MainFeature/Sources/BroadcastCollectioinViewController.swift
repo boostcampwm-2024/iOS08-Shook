@@ -72,34 +72,26 @@ extension BroadcastCollectionViewController {
             let section = Section(rawValue: sectionIndex) ?? .small
             switch section {
             case .big:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                      heightDimension: .fractionalHeight(1.0)
+                let size = NSCollectionLayoutSize(
+                    widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
+                    heightDimension: NSCollectionLayoutDimension.estimated(250)
                 )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .fractionalHeight(1.0)
-                )
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 24, trailing: 16)
                 section.interGroupSpacing = 8
+                
                 return section
-                
+            
             case .small:
-                let itemSize = NSCollectionLayoutSize(
+                let size = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .fractionalHeight(1.0)
+                    heightDimension: .estimated(103)
                 )
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(
-                    widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .fractionalHeight(1.0)
-                )
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
@@ -107,7 +99,7 @@ extension BroadcastCollectionViewController {
                 
                 let headerSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .absolute(36)
+                    heightDimension: .estimated(20)
                 )
                 
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
@@ -183,8 +175,8 @@ extension BroadcastCollectionViewController {
             let smallSectionItems = Array(items.suffix(from: 3))
             snapshot.appendSections([.small])
             snapshot.appendItems(smallSectionItems, toSection: .small)
-            
-            dataSource?.apply(snapshot, animatingDifferences: true)
         }
+        
+        dataSource?.apply(snapshot, animatingDifferences: true)
     }
 }

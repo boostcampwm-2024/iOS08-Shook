@@ -5,17 +5,16 @@ import DesignSystem
 import EasyLayoutModule
 
 final class BigCollectionViewCell: BaseCollectionViewCell {
-    static let identifier = "BigCollectionViewCell"
+    static let identifier = String(describing: type(of: BigCollectionViewCell.self))
     
     private let thumbnail = UIImageView()
     private let title = UILabel()
     private let subtitle = UILabel()
     
     override func setupViews() {
-        addSubview(thumbnail)
-        addSubview(thumbnail)
-        addSubview(title)
-        addSubview(subtitle)
+        contentView.addSubview(thumbnail)
+        contentView.addSubview(title)
+        contentView.addSubview(subtitle)
     }
     
     override func setupLayouts() {

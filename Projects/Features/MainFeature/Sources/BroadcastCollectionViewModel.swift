@@ -4,6 +4,7 @@ import UIKit
 import BaseFeatureInterface
 
 public struct Item: Hashable {
+    let id = UUID().uuidString
     var image: UIImage?
     var title: String
     var subtitle1: String
