@@ -10,13 +10,13 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     private let button = UIButton()
     private let streamingName = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
-
     private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
+    private let subject: PassthroughSubject<String, Never> = PassthroughSubject()
     private var cancellables = Set<AnyCancellable>()
     
     override public func setupBind() {
         let input = SettingViewModel.Input(
-            didWriteStreamingName: PassthroughSubject<String, Never>()
+            didWriteStreamingName: subject
         )
         let output = viewModel.transform(input: input)
         
@@ -70,6 +70,7 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
             streamingName.configure(label: "방송정보", placeholder: "플레이스 홀더") { inputValue in
+                self.subject.send(inputValue)
             }
             return streamingName
         } else {

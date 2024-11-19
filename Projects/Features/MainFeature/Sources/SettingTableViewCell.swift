@@ -8,9 +8,9 @@ class SettingTableViewCell: BaseTableViewCell {
     private let titleLabel = UILabel()
     private let textView = UITextView()
     private let placeholder = UILabel()
-    private var textDidChange: ((String?) -> Void)?
+    private var textDidChange: ((String) -> Void)?
     
-    func configure(label: String, placeholder: String, textDidChange: ((String?) -> Void)?) {
+    func configure(label: String, placeholder: String, textDidChange: ((String) -> Void)?) {
         titleLabel.text = label
         self.placeholder.text = placeholder
         self.textDidChange = textDidChange
