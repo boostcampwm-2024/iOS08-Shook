@@ -19,13 +19,13 @@ public struct Item: Hashable {
 }
 
 class BroadcastFetcher: Fetcher {
-    func fetch() -> [Item] {
+    func fetch() async -> [Item] {
         return []
     }
 }
 
 public protocol Fetcher {
-    func fetch() -> [Item]
+    func fetch() async -> [Item]
 }
 
 public class BroadcastCollectionViewModel: ViewModel {
@@ -55,7 +55,9 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private func fetchData() {
-        let fetchedItems = fetcher.fetch()
-        output.items.send(fetchedItems)
+        Task {
+            let fetchedItems = await fetcher.fetch()
+            output.items.send(fetchedItems)
+        }
     }
 }
