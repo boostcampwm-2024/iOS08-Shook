@@ -87,11 +87,7 @@ final class SettingTableViewCell: BaseTableViewCell {
 // MARK: Text View의 Delegate
 extension SettingTableViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            placeholder.text = placeholderValue
-        } else {
-            placeholder.text = ""
-        }
+        placeholder.text = textView.text.isEmpty ? placeholderValue : ""
         textDidChange?(textView.text)
         
         if let tableView = self.superview as? UITableView {
