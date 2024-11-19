@@ -3,7 +3,7 @@ import UIKit
 import BaseFeatureInterface
 
 open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
-    var viewModel: VM
+    public var viewModel: VM
     
     public init(viewModel: VM) {
         self.viewModel = viewModel
@@ -27,6 +27,7 @@ open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
         setupStyles()
     }
     
+    // MARK: - View Life Cycle
     open func setupBind() { }
     
     open func setupViews() { }
