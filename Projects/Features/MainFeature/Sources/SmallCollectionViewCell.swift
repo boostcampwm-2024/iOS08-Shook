@@ -5,8 +5,8 @@ import DesignSystem
 import EasyLayoutModule
 
 final class SmallCollectionViewCell: BaseCollectionViewCell {
-    static let identifier = String(describing: type(of: SmallCollectionViewCell.self))
-    
+    static var identifier: String { String(describing: Self.self) }
+
     private let thumbnail = UIImageView()
     private let stack = UIStackView()
     
