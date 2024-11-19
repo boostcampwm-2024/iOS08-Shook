@@ -12,6 +12,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let viewController = SettingUIViewController(viewModel: SettingViewModel())
+        //let viewController = BroadcastUIViewController(viewModel: BroadcastCollectionViewModel())
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
 
