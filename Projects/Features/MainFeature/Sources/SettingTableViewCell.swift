@@ -53,7 +53,7 @@ final class SettingTableViewCell: BaseTableViewCell {
         textView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
         titleLabel.textColor = .white
         textView.textColor = .white
-        errorMessageLabel.textColor = UIColor(red: 255/255, green: 88/255, blue: 65/255, alpha: 1.0)
+        errorMessageLabel.textColor = UIColor(red: 255/255, green: 88/255, blue: 65/255, alpha: 1)
         
         // Alpha
         placeholder.alpha = 0.5
