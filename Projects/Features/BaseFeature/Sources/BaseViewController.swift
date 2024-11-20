@@ -27,6 +27,7 @@ open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
         setupStyles()
     }
     
+    // MARK: - View Life Cycle
     open func setupBind() { }
     
     open func setupViews() { }
