@@ -1,9 +1,11 @@
 import AVFoundation
-import BaseFeature
 import Combine
+import UIKit
+
+import BaseFeature
 import DesignSystem
 import EasyLayoutModule
-import UIKit
+
 
 protocol ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> { get }
@@ -11,7 +13,6 @@ protocol ShookPlayerViewState {
 }
 
 final class ShookPlayerView: BaseView {
-    
     private let player: AVPlayer = AVPlayer()
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private let playButton: UIButton = UIButton()
@@ -31,13 +32,11 @@ final class ShookPlayerView: BaseView {
         layer.videoGravity = .resizeAspectFill
         return layer
     }()
-    
     private lazy var videoContainerView: UIView = {
         let view = UIView()
         view.layer.addSublayer(playerLayer)
         return view
     }()
-    
     private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
     
     // MARK: - @Published
@@ -62,7 +61,6 @@ final class ShookPlayerView: BaseView {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        
         guard let keyPath = keyPath else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             return
@@ -113,7 +111,6 @@ final class ShookPlayerView: BaseView {
                 .horizontal(to: self, padding: 15)
                 .bottom(to: videoContainerView, offset: -20)
         }
-        
     }
     
     override func setupStyles() {
@@ -129,7 +126,6 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupActions() {
-        
         playButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
             if self.playingState {
@@ -147,18 +143,16 @@ final class ShookPlayerView: BaseView {
         }
         .store(in: &subscription)
         
-        infoView.fillLabels(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = videoContainerView.bounds
     }
-    
 }
 
 extension ShookPlayerView {
-    
     enum BufferState: String {
         case playbackBufferEmpty
         case playbackLikelyToKeepUp
@@ -186,6 +180,7 @@ extension ShookPlayerView {
         player.addObserver(self, forKeyPath: "timeControlStatus", context: nil)
         
         let interval = CMTimeMakeWithSeconds(1, preferredTimescale: Int32(NSEC_PER_SEC))
+        
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] cmtTime in
             guard let self else { return }
             let floatSecond = CMTimeGetSeconds(cmtTime)
@@ -214,14 +209,12 @@ extension ShookPlayerView {
                 isInitialized = true
             }
             timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
-            print("\(#function) \(#line) readToplay ")
             
         case.failed, .unknown:
             playingState = false
-            print("\(#function) \(#line) failed")
             
         @unknown default:
-            fatalError()
+            break
         }
     }
     
@@ -230,12 +223,10 @@ extension ShookPlayerView {
         case "playbackBufferEmpty":
             indicatorView.startAnimating()
             bufferingState = true
-            print("\(#function) \(#line) buffering Empty")
             
         case "playbackLikelyToKeepUp", "playbackBufferFull":
             indicatorView.stopAnimating()
             bufferingState = false
-            print("\(#function) \(#line) buffering enough")
             
         default:
             return
@@ -247,18 +238,16 @@ extension ShookPlayerView {
         case .playing:
             playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
             playingState = true
-            print("\(#function) \(#line) playing")
             
         case.paused:
             playButton.configuration?.image = DesignSystemAsset.Image.play48.image
             playingState = false
-            print("\(#function) \(#line) pause")
             
         case .waitingToPlayAtSpecifiedRate:
-            print("\(#function) \(#line) waitingToPlayAtSpecifiedRate")
+            break
             
         @unknown default:
-            fatalError()
+            break
         }
     }
     
@@ -267,7 +256,6 @@ extension ShookPlayerView {
         infoViewConstraintAnimation()
         controlPanelAlphaAnimation()
     }
-    
 }
 
 extension ShookPlayerView {
@@ -302,5 +290,4 @@ extension ShookPlayerView: ShookPlayerViewState {
     var isBuffering: AnyPublisher<Bool, Never> {
         $bufferingState.eraseToAnyPublisher()
     }
-    
 }

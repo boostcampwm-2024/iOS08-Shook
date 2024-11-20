@@ -1,14 +1,18 @@
-import BaseFeature
 import Combine
+import UIKit
+
+import BaseFeature
 import DesignSystem
 import EasyLayoutModule
-import UIKit
 
 protocol TimeControlAction {
     var value: AnyPublisher<Float, Never> { get }
 }
 
 final class TimeControlView: BaseView {
+    private let liveStringLabel: UILabel = UILabel()
+    private let slider: UISlider = UISlider()
+    
     public var maxValue: Float = 0 {
         willSet {
             slider.maximumValue = newValue
@@ -16,9 +20,6 @@ final class TimeControlView: BaseView {
     }
     
     @Published var currentValue: Float = 0
-    
-    private let liveStringLabel: UILabel = UILabel()
-    private let slider: UISlider = UISlider()
     
     override func setupViews() {
         self.addSubview(liveStringLabel)
@@ -37,7 +38,7 @@ final class TimeControlView: BaseView {
                 .vertical(to: self)
         }
     }
-#warning("나중에 색 바꾸기")
+
     override func setupStyles() {
         liveStringLabel.textColor = DesignSystemAsset.Color.white.color
         liveStringLabel.font = .setFont(.caption2())
@@ -45,7 +46,7 @@ final class TimeControlView: BaseView {
         
         slider.setThumbImage(renderThumbImage(size: CGSize(width: 10, height: 10)), for: .normal)
         slider.minimumTrackTintColor = DesignSystemAsset.Color.mainGreen.color
-        slider.maximumTrackTintColor = .gray
+        slider.maximumTrackTintColor = DesignSystemAsset.Color.gray.color
     }
     
     override func setupActions() {
@@ -63,13 +64,12 @@ extension TimeControlView {
             path.fill()
         }
     }
-    
-    @objc private func changedValue() {
-        currentValue = slider.value
-    }
-    
+        
     public func updateSlider(to time: Float) {
         slider.setValue(time, animated: false)
+    }
+    @objc private func changedValue() {
+        currentValue = slider.value
     }
 }
 
@@ -77,5 +77,4 @@ extension TimeControlView: TimeControlAction {
     var value: AnyPublisher<Float, Never> {
         $currentValue.eraseToAnyPublisher()
     }
-    
 }

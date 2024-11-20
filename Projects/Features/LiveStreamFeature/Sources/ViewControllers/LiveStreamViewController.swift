@@ -1,7 +1,9 @@
+import UIKit
+
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
-import UIKit
+
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
 
@@ -17,7 +19,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
                 .horizontal(to: view.safeAreaLayoutGuide)
                 .height(200)
         }
-        
     }
     
     public override func setupStyles() {

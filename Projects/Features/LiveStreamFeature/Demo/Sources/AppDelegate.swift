@@ -1,5 +1,6 @@
-import LiveStreamFeature
 import UIKit
+
+import LiveStreamFeature
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {

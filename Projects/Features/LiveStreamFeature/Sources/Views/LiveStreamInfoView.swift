@@ -1,10 +1,11 @@
+import UIKit
+
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
-import UIKit
+
 
 final class LiveStreamInfoView: BaseView {
-
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     
@@ -27,22 +28,21 @@ final class LiveStreamInfoView: BaseView {
         stackView.ezl.makeConstraint {
             $0.diagonal(to: self, padding: 20)
         }
-        
     }
     
     override func setupStyles() {
         titleLabel.font = .setFont(.body2())
-        descriptionLabel.font = .setFont(.caption1())
-        titleLabel.textColor = .white
-        descriptionLabel.textColor = .white
-        
         titleLabel.numberOfLines = 0
+        titleLabel.textColor = .white
+        
+        descriptionLabel.font = .setFont(.caption1())
+        descriptionLabel.textColor = .white
         descriptionLabel.numberOfLines = 1
     }
 }
 
 extension LiveStreamInfoView {
-    public func fillLabels(with model: (String, String)) {
+    public func configureUI(with model: (String, String)) {
         titleLabel.text = model.0
         descriptionLabel.text = model.1
     }
