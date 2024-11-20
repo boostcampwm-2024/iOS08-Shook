@@ -4,9 +4,7 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-final class BigCollectionViewCell: BaseCollectionViewCell {
-    static var identifier: String { String(describing: Self.self) }
-    
+final class BigCollectionViewCell: BaseCollectionViewCell {    
     private let thumbnail = UIImageView()
     private let title = UILabel()
     private let subtitle = UILabel()
