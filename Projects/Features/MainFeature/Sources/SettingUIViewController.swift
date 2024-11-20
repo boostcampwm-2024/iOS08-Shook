@@ -6,10 +6,12 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class SettingUIViewController: BaseViewController<SettingViewModel> {
+    private let rightBarButton = UIBarButtonItem()
     private let tableView = UITableView()
     private let button = UIButton()
     private let streamingName = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
+    
     private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
     private let input = SettingViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
@@ -36,6 +38,11 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     }
     
     public override func setupViews() {
+        rightBarButton.image = UIImage(systemName: "xmark")
+        
+        navigationItem.title = "방송설정"
+        navigationItem.rightBarButtonItem = rightBarButton
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
@@ -49,7 +56,12 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     }
     
     public override func setupStyles() {
+        rightBarButton.style = .plain
+        
         view.backgroundColor = .black
+        
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
         
         tableView.backgroundColor = .black
         
@@ -72,6 +84,21 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
+    }
+    
+    public override func setupActions() {
+        startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
+        rightBarButton.target = self
+        rightBarButton.action = #selector(didTapRightBarButton)
+    }
+    
+    @objc
+    private func didTapRightBarButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didTapSettingButton() {
     }
 }
 
