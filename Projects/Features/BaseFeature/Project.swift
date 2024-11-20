@@ -8,8 +8,8 @@ let project = Project.module(
         .interface(module: .feature(.BaseFeature)),
         .implements(module: .feature(.BaseFeature), dependencies: [
             .feature(target: .BaseFeature, type: .interface),
-            .module(target: .ThirdPartyLibModule),
-            .userInterface(target: .DesignSystem)
+            .userInterface(target: .DesignSystem),
+            .module(target: .ThirdPartyLibModule)
         ]),
         .testing(module: .feature(.BaseFeature), dependencies: [
             .feature(target: .BaseFeature, type: .interface)
