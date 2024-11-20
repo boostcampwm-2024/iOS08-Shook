@@ -20,7 +20,6 @@ private enum Constants: CGFloat {
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
     private var playerItem: AVPlayerItem
-    private let playerControlView: PlayerControlView = PlayerControlView()
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
@@ -46,6 +45,8 @@ final class ShookPlayerView: BaseView {
     // MARK: - @Published
     @Published private var playingState: Bool = false
     @Published private var bufferingState: Bool = false
+    
+    public let playerControlView: PlayerControlView = PlayerControlView()
     
     init(with url: URL) {
         playerItem = AVPlayerItem(url: url)
