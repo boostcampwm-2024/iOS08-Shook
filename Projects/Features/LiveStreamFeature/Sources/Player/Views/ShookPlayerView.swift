@@ -7,6 +7,9 @@ import DesignSystem
 import EasyLayoutModule
 
 #warning("추후 네트워크 에러 헨들링")
+//protocol ShookPlayerViewAciton {
+//    var playing
+//}
 
 protocol ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> { get }
@@ -53,7 +56,7 @@ final class ShookPlayerView: BaseView {
         player.replaceCurrentItem(with: playerItem)
         super.init(frame: .zero)
         addObserver()
-        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
+        player.play()
         
     }
     
@@ -112,10 +115,12 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupStyles() {
-        self.playerControlView.alpha = .zero
+        playerControlView.alpha = .zero
+        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
         
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
+        
     }
     
     override func setupActions() {
@@ -193,7 +198,7 @@ extension ShookPlayerView {
         switch status {
         case .readyToPlay: // 성공
             if !isInitialized {
-                player.play()
+               
                 isInitialized = true
             }
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))

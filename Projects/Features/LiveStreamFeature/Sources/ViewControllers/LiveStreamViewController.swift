@@ -62,7 +62,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         .store(in: &subscription)
     }
     
-    
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if output.isExpanded.value {

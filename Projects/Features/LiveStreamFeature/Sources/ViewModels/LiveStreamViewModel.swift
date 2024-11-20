@@ -13,7 +13,9 @@ public final class LiveStreamViewModel: ViewModel {
     
     public struct Output {
         let isExpanded: CurrentValueSubject<Bool, Never> = .init(false)
+        let isPlaying: CurrentValueSubject<Bool, Never> = .init(false)
         let time: PassthroughSubject<Double, Never> = .init()
+       
     }
     
     public init() {}

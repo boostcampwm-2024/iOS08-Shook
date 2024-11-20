@@ -5,7 +5,11 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-protocol TimeControlAction {
+private protocol TimeControlState {
+    func updateSlider(to time: Float)
+}
+
+private protocol TimeControlAction {
     var valueDidChanged: AnyPublisher<Float, Never> { get }
 }
 
@@ -65,11 +69,14 @@ extension TimeControlView {
         }
     }
     
-    public func updateSlider(to time: Float) {
-        slider.setValue(time, animated: false)
-    }
     @objc private func changedValue() {
         currentValue = slider.value
+    }
+}
+
+extension TimeControlView: TimeControlState {
+    func updateSlider(to time: Float) {
+            slider.setValue(time, animated: false)
     }
 }
 
