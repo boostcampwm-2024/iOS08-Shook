@@ -11,6 +11,8 @@ final class ChatInputField: BaseView {
     
     private let clipView = UIView()
     
+    private var inputFieldHeightContraint: NSLayoutConstraint!
+    
     override func setupViews() {
         addSubview(heartButton)
         addSubview(clipView)
@@ -21,7 +23,6 @@ final class ChatInputField: BaseView {
         heartButton.setImage(DesignSystemAsset.Image.heart24.image, for: .normal)
         heartButton.setContentHuggingPriority(.required, for: .horizontal)
         
-        inputField.isScrollEnabled = false
         inputField.textContainerInset = .zero
         inputField.delegate = self
 
@@ -69,6 +70,10 @@ final class ChatInputField: BaseView {
                 .height(max: 100)
         }
         
+        inputFieldHeightContraint = inputField.heightAnchor.constraint(equalToConstant: 20)
+        inputFieldHeightContraint.priority = .defaultLow
+        inputFieldHeightContraint.isActive = true
+        
         sendButton.ezl.makeConstraint {
             $0.trailing(to: clipView, offset: -15)
                 .bottom(to: clipView, offset: -8)
@@ -86,6 +91,8 @@ extension ChatInputField: UITextViewDelegate {
             sendButton.tintColor = DesignSystemAsset.Color.mainGreen.color
         }
         
-        textView.isScrollEnabled = textView.contentSize.height >= 100
+        inputFieldHeightContraint.constant = textView.contentSize.height
+        
+        layoutIfNeeded()
     }
 }
