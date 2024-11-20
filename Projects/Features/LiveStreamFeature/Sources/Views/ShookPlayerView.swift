@@ -6,7 +6,6 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-
 protocol ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> { get }
     var isBuffering: AnyPublisher<Bool, Never> { get }

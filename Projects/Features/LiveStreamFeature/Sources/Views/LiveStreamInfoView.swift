@@ -4,7 +4,6 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-
 final class LiveStreamInfoView: BaseView {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
