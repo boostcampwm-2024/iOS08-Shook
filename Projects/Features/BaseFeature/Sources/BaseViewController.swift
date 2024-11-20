@@ -17,14 +17,10 @@ open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
     open override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
         setupBind()
-    }
-    
-    open override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupStyles()
     }
     
     // MARK: - View Life Cycle

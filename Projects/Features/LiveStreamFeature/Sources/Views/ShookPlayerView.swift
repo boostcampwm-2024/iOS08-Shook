@@ -94,8 +94,9 @@ final class ShookPlayerView: BaseView {
         foldedConstraint = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
         foldedConstraint?.isActive = true
         
-        infoView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        infoView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        infoView.ezl.makeConstraint {
+            $0.horizontal(to: self)
+        }
         
         playButton.ezl.makeConstraint {
             $0.center(to: videoContainerView)

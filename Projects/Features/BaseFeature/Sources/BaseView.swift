@@ -6,6 +6,7 @@ open class BaseView: UIView, ViewLifeCycle {
     public init() {
         super.init(frame: .zero)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
     }
@@ -13,6 +14,7 @@ open class BaseView: UIView, ViewLifeCycle {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
     }
@@ -20,13 +22,9 @@ open class BaseView: UIView, ViewLifeCycle {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        setupStyles()
     }
     
     // MARK: - View Life Cycle
