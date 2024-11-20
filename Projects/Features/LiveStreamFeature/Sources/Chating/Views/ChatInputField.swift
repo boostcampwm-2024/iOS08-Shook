@@ -53,11 +53,8 @@ final class ChatInputField: BaseView {
             $0.vertical(to: self, padding: 10)
                 .leading(to: heartButton.ezl.trailing, offset: 10)
                 .trailing(to: self, offset: -20)
+                .height(min: 40)
         }
-        
-        NSLayoutConstraint.activate([
-            clipView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40)
-        ])
         
         inputField.ezl.makeConstraint {
             $0.vertical(to: clipView, padding: 10)
