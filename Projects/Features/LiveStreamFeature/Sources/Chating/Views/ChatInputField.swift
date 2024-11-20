@@ -23,9 +23,13 @@ final class ChatInputField: BaseView {
         
         inputField.isScrollEnabled = false
         inputField.textContainerInset = .zero
+        inputField.delegate = self
 
         sendButton.setContentHuggingPriority(.required, for: .horizontal)
-        sendButton.setImage(DesignSystemAsset.Image.send24.image, for: .normal)
+        sendButton.setImage(
+            DesignSystemAsset.Image.send24.image.withRenderingMode(.alwaysTemplate),
+            for: .normal
+        )
         sendButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
@@ -41,6 +45,8 @@ final class ChatInputField: BaseView {
         inputField.font = .setFont(.body2())
         inputField.backgroundColor = .clear
         inputField.textColor = .white
+        
+        sendButton.tintColor = .white
     }
     
     override func setupLayouts() {
@@ -60,11 +66,26 @@ final class ChatInputField: BaseView {
             $0.vertical(to: clipView, padding: 10)
                 .leading(to: clipView, offset: 16)
                 .trailing(to: sendButton.ezl.leading, offset: -12)
+                .height(max: 100)
         }
         
         sendButton.ezl.makeConstraint {
             $0.trailing(to: clipView, offset: -15)
                 .bottom(to: clipView, offset: -8)
         }
+    }
+}
+
+extension ChatInputField: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            clipView.layer.borderColor = UIColor.white.cgColor
+            sendButton.tintColor = .white
+        } else {
+            clipView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
+            sendButton.tintColor = DesignSystemAsset.Color.mainGreen.color
+        }
+        
+        textView.isScrollEnabled = textView.contentSize.height >= 100
     }
 }
