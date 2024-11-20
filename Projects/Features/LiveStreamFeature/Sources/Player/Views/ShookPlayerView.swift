@@ -13,11 +13,9 @@ protocol ShookPlayerViewState {
 
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
-    private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
-    private let playButton: UIButton = UIButton()
     private var playerItem: AVPlayerItem
-    private var timeControlView: TimeControlView = TimeControlView()
-    private var infoView: LiveStreamInfoView = LiveStreamInfoView()
+    private let playerControlView: PlayerControlView = PlayerControlView()
+    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
     private var unfoldedConstraint: NSLayoutConstraint?
@@ -48,7 +46,7 @@ final class ShookPlayerView: BaseView {
         super.init(frame: .zero)
         addObserver()
         videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
-    
+        
     }
     
     required init?(coder: NSCoder) {
@@ -77,15 +75,12 @@ final class ShookPlayerView: BaseView {
         super.setupViews()
         self.addSubview(infoView)
         self.addSubview(videoContainerView)
-        videoContainerView.addSubview(playButton)
-        videoContainerView.addSubview(indicatorView)
-        videoContainerView.addSubview(timeControlView)
+        videoContainerView.addSubview(playerControlView)
         
     }
     
     override func setupLayouts() {
         super.setupLayouts()
-        
         videoContainerView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
@@ -98,52 +93,35 @@ final class ShookPlayerView: BaseView {
             $0.horizontal(to: self)
         }
         
-        playButton.ezl.makeConstraint {
-            $0.center(to: videoContainerView)
-        }
-        
-        indicatorView.ezl.makeConstraint {
-            $0.width(30).height(30).center(to: videoContainerView)
-        }
-        
-        timeControlView.ezl.makeConstraint {
-            $0.height(10)
-                .horizontal(to: self, padding: 15)
-                .bottom(to: videoContainerView, offset: -20)
+        playerControlView.ezl.makeConstraint {
+            $0.diagonal(to: self)
         }
     }
     
     override func setupStyles() {
-        var playButtonConfig = UIButton.Configuration.plain()
-        playButtonConfig.image = DesignSystemAsset.Image.play48.image
-        playButton.configuration = playButtonConfig
-        playButton.alpha = .zero
-        
-        timeControlView.alpha = .zero
-        
-        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
-        indicatorView.hidesWhenStopped = true
+        self.playerControlView.alpha = .zero
     }
     
     override func setupActions() {
-        playButton.addAction(UIAction { [weak self] _ in
+        videoContainerView.addGestureRecognizer(tapGesture)
+        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+        
+        playerControlView.playButtonDidTap.sink { [weak self] in
             guard let self else { return }
+            
             if self.playingState {
                 self.player.pause()
             } else {
                 self.player.play()
             }
-        }, for: .touchUpInside)
-        
-        videoContainerView.addGestureRecognizer(tapGesture)
-        
-        timeControlView.$currentValue.sink { [weak self] currentValue in
-            guard let self else { return }
-            self.player.seek(to: CMTime(seconds: Double(currentValue), preferredTimescale: Int32(NSEC_PER_SEC)))
         }
         .store(in: &subscription)
         
-        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+        playerControlView.sliderValueDidChange.sink { [weak self] newValue in
+            guard let self else { return }
+            self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
+        }
+        .store(in: &subscription)
     }
     
     override func layoutSubviews() {
@@ -184,7 +162,7 @@ extension ShookPlayerView {
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] cmtTime in
             guard let self else { return }
             let floatSecond = CMTimeGetSeconds(cmtTime)
-            self.timeControlView.updateSlider(to: Float(floatSecond))
+            playerControlView.timeControlView.updateSlider(to: Float(floatSecond))
         }
     }
     
@@ -208,7 +186,7 @@ extension ShookPlayerView {
                 player.play()
                 isInitialized = true
             }
-            timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
+            playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
             
         case.failed, .unknown:
             playingState = false
@@ -221,26 +199,25 @@ extension ShookPlayerView {
     func hanldePlayItemBufferString(_ bufferString: String) {
         switch bufferString {
         case "playbackBufferEmpty":
-            indicatorView.startAnimating()
             bufferingState = true
             
         case "playbackLikelyToKeepUp", "playbackBufferFull":
-            indicatorView.stopAnimating()
             bufferingState = false
             
         default:
             return
         }
+       
+        playerControlView.toggleIndicator(bufferingState)
     }
     
     func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
+        playerControlView.togglePlayerButtonAnimation(status)
         switch status {
         case .playing:
-            playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
             playingState = true
             
         case.paused:
-            playButton.configuration?.image = DesignSystemAsset.Image.play48.image
             playingState = false
             
         case .waitingToPlayAtSpecifiedRate:
@@ -253,19 +230,15 @@ extension ShookPlayerView {
     
     // MARK: - @objc
     @objc func toggleControlPannel() {
+        UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
+            self.playerControlView.alpha = self.playerControlView.alpha == .zero ? 1 : .zero
+        }
         infoViewConstraintAnimation()
-        controlPanelAlphaAnimation()
     }
 }
 
 extension ShookPlayerView {
-    func controlPanelAlphaAnimation() {
-        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
-            self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
-            self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
-        }
-    }
-    
+    // - MARK: animation
     func infoViewConstraintAnimation() {
         UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
             if self.isFolded {

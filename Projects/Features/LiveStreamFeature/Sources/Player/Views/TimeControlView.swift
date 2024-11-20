@@ -19,7 +19,7 @@ final class TimeControlView: BaseView {
         }
     }
     
-    @Published var currentValue: Float = 0
+    @Published private var currentValue: Float = 0
     
     override func setupViews() {
         self.addSubview(liveStringLabel)
@@ -38,7 +38,7 @@ final class TimeControlView: BaseView {
                 .vertical(to: self)
         }
     }
-
+    
     override func setupStyles() {
         liveStringLabel.textColor = DesignSystemAsset.Color.white.color
         liveStringLabel.font = .setFont(.caption2())
@@ -64,7 +64,7 @@ extension TimeControlView {
             path.fill()
         }
     }
-        
+    
     public func updateSlider(to time: Float) {
         slider.setValue(time, animated: false)
     }
