@@ -10,12 +10,9 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let imageView = UIImageView()
     private let broadcastStateText = UILabel()
     private let willEndButton = UIButton()
-    private let subject: PassthroughSubject<Bool, Never> = PassthroughSubject()
+    private let input = BroadcastCollectionViewModel.Input()
     
     public override func setupBind() {
-        let input = BroadcastCollectionViewModel.Input(
-            didTapStreamingDone: subject
-        )
         viewModel.transform(input: input)
     }
     
@@ -72,26 +69,5 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     
     @objc
     private func willEndButtonTapped() {
-    }
-}
-
-// Dummy
-public final class BroadcastCollectionViewModel: ViewModel {
-    public struct Input {
-        let didTapStreamingDone: PassthroughSubject<Bool, Never>
-    }
-    
-    public struct Output {
-        
-    }
-    
-    public init() {}
-    
-    public func transform(input: Input) -> Output {
-        input.didTapStreamingDone
-            .sink { [weak self] isDone in
-                guard let self else { return }
-            }
-        return Output()
     }
 }
