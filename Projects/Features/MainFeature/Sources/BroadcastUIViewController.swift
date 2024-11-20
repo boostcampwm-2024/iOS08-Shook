@@ -64,10 +64,18 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     }
     
     public override func setupActions() {
-        willEndButton.addTarget(self, action: #selector(willEndButtonTapped), for: .touchUpInside)
+        willEndButton.addTarget(self, action: #selector(didTapEndButton), for: .touchUpInside)
     }
     
     @objc
-    private func willEndButtonTapped() {
+    private func didTapEndButton() {
+        let broadcastCollectionViewController = BroadcastCollectionViewController(viewModel: viewModel)
+        let navigationViewController = UINavigationController(rootViewController: broadcastCollectionViewController)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
+        
+        UIView.transition(with: window, duration: 0, options: .transitionCrossDissolve) {
+            window.rootViewController = navigationViewController
+        }
     }
 }
