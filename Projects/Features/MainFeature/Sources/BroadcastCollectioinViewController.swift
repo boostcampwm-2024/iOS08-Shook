@@ -44,8 +44,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         
         collectionView.refreshControl = refreshControl
         
-        collectionView.register(BigCollectionViewCell.self, forCellWithReuseIdentifier: BigCollectionViewCell.identifier)
-        collectionView.register(SmallCollectionViewCell.self, forCellWithReuseIdentifier: SmallCollectionViewCell.identifier)
+        collectionView.register(BigBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: BigBroadcastCollectionViewCell.identifier)
+        collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
         view.addSubview(collectionView)
@@ -131,9 +131,9 @@ extension BroadcastCollectionViewController {
             switch section {
             case .big:
                 guard let bigCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: BigCollectionViewCell.identifier,
+                    withReuseIdentifier: BigBroadcastCollectionViewCell.identifier,
                     for: indexPath
-                ) as? BigCollectionViewCell else {
+                ) as? BigBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 bigCell.configure(image: item.image, title: item.title, subtitle: item.subtitle1)
@@ -141,9 +141,9 @@ extension BroadcastCollectionViewController {
                 
             case .small:
                 guard let smallCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: SmallCollectionViewCell.identifier,
+                    withReuseIdentifier: SmallBroadcastCollectionViewCell.identifier,
                     for: indexPath
-                ) as? SmallCollectionViewCell else {
+                ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 smallCell.configure(image: item.image, title: item.title, subtitle1: item.subtitle1, subtitle2: item.subtitle2)

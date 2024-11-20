@@ -4,7 +4,7 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-final class SmallCollectionViewCell: BaseCollectionViewCell {
+final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell {
     private let thumbnail = UIImageView()
     
     private let descriptionStack = UIStackView()
