@@ -44,7 +44,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         
         collectionView.refreshControl = refreshControl
         
-        collectionView.register(BigBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: BigBroadcastCollectionViewCell.identifier)
+        collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
@@ -131,9 +131,9 @@ extension BroadcastCollectionViewController {
             switch section {
             case .big:
                 guard let bigCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: BigBroadcastCollectionViewCell.identifier,
+                    withReuseIdentifier: LargeBroadcastCollectionViewCell.identifier,
                     for: indexPath
-                ) as? BigBroadcastCollectionViewCell else {
+                ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 bigCell.configure(image: item.image, title: item.title, subtitle: item.subtitle1)
