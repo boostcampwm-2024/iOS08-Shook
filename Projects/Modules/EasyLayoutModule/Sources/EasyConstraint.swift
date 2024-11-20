@@ -17,8 +17,32 @@ public struct EasyConstraint {
     }
     
     @discardableResult
+    public func width(min width: CGFloat) -> Self {
+        baseView.widthAnchor.constraint(greaterThanOrEqualToConstant: width).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func width(max width: CGFloat) -> Self {
+        baseView.widthAnchor.constraint(lessThanOrEqualToConstant: width).isActive = true
+        return self
+    }
+    
+    @discardableResult
     public func height(_ height: CGFloat) -> Self {
         baseView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func height(min height: CGFloat) -> Self {
+        baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: height).isActive = true
+        return self
+    }
+    
+    @discardableResult
+    public func height(max height: CGFloat) -> Self {
+        baseView.heightAnchor.constraint(lessThanOrEqualToConstant: height).isActive = true
         return self
     }
     
@@ -39,7 +63,7 @@ public struct EasyConstraint {
     
     @discardableResult
     public func top(to view: Anchorable, offset: CGFloat = 0) -> Self {
-        top(to: view.ezl.top, offset: offset)
+        top(to: .top(view), offset: offset)
     }
     
     @discardableResult
@@ -53,7 +77,7 @@ public struct EasyConstraint {
     
     @discardableResult
     public func bottom(to view: Anchorable, offset: CGFloat = 0) -> Self {
-        bottom(to: view.ezl.bottom, offset: offset)
+        bottom(to: .bottom(view), offset: offset)
     }
     
     @discardableResult
@@ -67,7 +91,7 @@ public struct EasyConstraint {
     
     @discardableResult
     public func leading(to view: Anchorable, offset: CGFloat = 0) -> Self {
-        leading(to: view.ezl.leading, offset: offset)
+        leading(to: .leading(view), offset: offset)
     }
     
     @discardableResult
@@ -81,19 +105,19 @@ public struct EasyConstraint {
     
     @discardableResult
     public func trailing(to view: Anchorable, offset: CGFloat = 0) -> Self {
-        trailing(to: view.ezl.trailing, offset: offset)
+        trailing(to: .trailing(view), offset: offset)
     }
     
     @discardableResult
     public func horizontal(to view: Anchorable, padding: CGFloat = 0.0) -> Self {
-        leading(to: view.ezl.leading, offset: padding)
-            .trailing(to: view.ezl.trailing, offset: padding * -1)
+        leading(to: .leading(view), offset: padding)
+            .trailing(to: .trailing(view), offset: padding * -1)
     }
     
     @discardableResult
     public func vertical(to view: Anchorable, padding: CGFloat = 0.0) -> Self {
-        top(to: view.ezl.top, offset: padding)
-            .bottom(to: view.ezl.bottom, offset: padding * -1)
+        top(to: .top(view), offset: padding)
+            .bottom(to: .bottom(view), offset: padding * -1)
     }
     
     @discardableResult

@@ -22,7 +22,7 @@ open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
         setupLayouts()
         setupActions()
     }
-    
+
     open func setupViews() { }
     
     open func setupStyles() { }
