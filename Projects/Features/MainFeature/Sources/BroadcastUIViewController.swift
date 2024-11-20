@@ -10,11 +10,6 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let imageView = UIImageView()
     private let broadcastStateText = UILabel()
     private let willEndButton = UIButton()
-    private let input = BroadcastCollectionViewModel.Input()
-    
-    public override func setupBind() {
-        viewModel.transform(input: input)
-    }
     
     public override func setupViews() {
         stackView.addArrangedSubview(imageView)

@@ -31,7 +31,6 @@ public protocol Fetcher {
 public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
-        let didTapStreamingDone: PassthroughSubject<Bool, Never> = .init()
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
     }
     
@@ -53,12 +52,6 @@ public class BroadcastCollectionViewModel: ViewModel {
         input.fetch
             .sink { [weak self] in
                 self?.fetchData()
-            }
-            .store(in: &cancellables)
-        
-        input.didTapStreamingDone
-            .sink { [weak self] isDone in
-                guard let self else { return }
             }
             .store(in: &cancellables)
         
