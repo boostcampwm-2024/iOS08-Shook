@@ -85,7 +85,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     @objc
     private func didTapRightBarButton() {
-        let settingUIViewController = SettingUIViewController(viewModel: SettingViewModel())
+        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
         let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
         navigationController?.present(settingNavigationController, animated: true)
     }

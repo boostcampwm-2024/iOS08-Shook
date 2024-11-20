@@ -5,7 +5,7 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-public final class SettingUIViewController: BaseViewController<SettingViewModel> {
+public final class SettingUIViewController: BaseViewController<BroadcastCollectionViewModel> {
     private let rightBarButton = UIBarButtonItem()
     private let tableView = UITableView()
     private let startStreamingButton = UIButton()
@@ -13,7 +13,7 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     
     private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
-    private let input = SettingViewModel.Input()
+    private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
     public override func setupBind() {
