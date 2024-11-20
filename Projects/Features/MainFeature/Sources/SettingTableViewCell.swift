@@ -32,37 +32,39 @@ final class SettingTableViewCell: BaseTableViewCell {
     }
     
     override func setupStyles() {
-        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        textView.textContainerInset = .zero
+        selectionStyle = .none
+        contentView.backgroundColor = .black
+        
         stackView.axis = .horizontal
         stackView.spacing = 10
-        selectionStyle = .none
-        textView.isScrollEnabled = false
+        stackView.backgroundColor = .black
         
-        // Fonts
+        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         titleLabel.font = .setFont(.body1(weight: .semiBold))
-        textView.font = .setFont(.body1(weight: .regular))
-        placeholder.font = .setFont(.body1(weight: .regular))
-        errorMessageLabel.font = .setFont(.caption1(weight: .regular))
-        
-        // Colors
-        contentView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
-        stackView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
-        placeholder.textColor = DesignSystemAsset.Color.gray.color
-        textView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
         titleLabel.textColor = .white
-        textView.textColor = .white
-        errorMessageLabel.textColor = UIColor(red: 255/255, green: 88/255, blue: 65/255, alpha: 1)
         
-        // Alpha
+        textView.textColor = .white
+        textView.textContainerInset = .zero
+        textView.isScrollEnabled = false
+        textView.font = .setFont(.body1(weight: .regular))
+        textView.backgroundColor = .black
+        
+        placeholder.font = .setFont(.body1(weight: .regular))
+        placeholder.textColor = DesignSystemAsset.Color.gray.color
         placeholder.alpha = 0.5
+ 
+        errorMessageLabel.preferredMaxLayoutWidth = errorMessageLabel.frame.width
+        errorMessageLabel.font = .setFont(.caption1(weight: .regular))
+        errorMessageLabel.numberOfLines = 0
+        errorMessageLabel.lineBreakMode = .byWordWrapping
+        errorMessageLabel.textColor = DesignSystemAsset.Color.errorRed.color
     }
     
     override func setupLayouts() {
         stackView.ezl.makeConstraint {
             $0.horizontal(to: contentView, padding: 10)
-                .vertical(to: contentView, padding: 27)
+                .top(to: contentView, offset: 27)
         }
         
         placeholder.ezl.makeConstraint {
@@ -73,6 +75,8 @@ final class SettingTableViewCell: BaseTableViewCell {
         errorMessageLabel.ezl.makeConstraint {
             $0.top(to: textView.ezl.bottom, offset: 10)
                 .leading(to: textView)
+                .trailing(to: textView)
+                .bottom(to: contentView)
         }
     }
     
