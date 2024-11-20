@@ -98,7 +98,7 @@ final class PlayerControlView: BaseView {
 }
 
 extension PlayerControlView {
-    private func toggleExpandButtonImage(_ expanded: Bool) {
+    public func toggleExpandButtonImage(_ expanded: Bool) {
         expandButton.configuration?.image = expanded ? ImageConstants.zoomOut.image : ImageConstants.zoomIn.image
     }
     

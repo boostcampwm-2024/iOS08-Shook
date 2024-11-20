@@ -6,20 +6,29 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
+
+    private var shrinkConstraint: NSLayoutConstraint?
+    private var expandConstraint: NSLayoutConstraint?
     
-    var orientation: UIInterfaceOrientationMask = .portrait
-    var tempConstraints: NSLayoutConstraint?
-    var tempConstraints2: NSLayoutConstraint?
-    var subscription: Set<AnyCancellable> = .init()
+    private var subscription = Set<AnyCancellable>()
+    
+    private lazy var input = LiveStreamViewModel.Input(
+        expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher())
+    
+    private lazy var output = viewModel.transform(input: input)
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return orientation
+        return output.isExpanded.value ? .landscapeLeft: .portrait
     }
     
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     
     public override func setupViews() {
         view.addSubview(playerView)
+    }
+    
+    public override func setupStyles() {
+        view.backgroundColor = .black
     }
     
     public override func setupLayouts() {
@@ -31,34 +40,33 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
         let width = windowScene.screen.bounds.width
     
-        tempConstraints = playerView.heightAnchor.constraint(equalToConstant: 200)
-        tempConstraints?.isActive = true
-        tempConstraints2 = playerView.heightAnchor.constraint(equalToConstant: width)
+        shrinkConstraint = playerView.heightAnchor.constraint(equalToConstant: 200)
+        shrinkConstraint?.isActive = true
+        expandConstraint = playerView.heightAnchor.constraint(equalToConstant: width)
     }
-    
+        
     public override func setupActions() {
-        playerView.playerControlView
-            .expandButtonDidTap
-            .dropFirst()
-            .sink { [weak self] _ in
-                guard let self else { return }
-                self.changeOrientation()
-            }
-            .store(in: &subscription)
+        
     }
     
-    public override func setupStyles() {
-        view.backgroundColor = .black
+    public override func setupBind() {
+        output.isExpanded.sink { [weak self]  flag in
+            guard let self else { return }
+            self.changeOrientation()
+            self.playerView.playerControlView.toggleExpandButtonImage(flag)
+        }
+        .store(in: &subscription)
     }
+    
     
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if orientation == .landscapeLeft {
-            tempConstraints?.isActive = false
-            tempConstraints2?.isActive = true
+        if output.isExpanded.value {
+            shrinkConstraint?.isActive = false
+            expandConstraint?.isActive = true
         } else {
-            tempConstraints2?.isActive = false
-            tempConstraints?.isActive = true
+            shrinkConstraint?.isActive = false
+            shrinkConstraint?.isActive = true
         }
         
     }
@@ -67,15 +75,12 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
 extension LiveStreamViewController {
     func changeOrientation() {
         let appDelegate = UIApplication.shared.delegate
-        
-        orientation = orientation == .portrait ? .landscapeLeft : .portrait
+        let orientation: UIInterfaceOrientationMask = output.isExpanded.value ? .landscapeLeft: .portrait
 
         if #available(iOS 16.0, *) {
                 guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
                 self.setNeedsUpdateOfSupportedInterfaceOrientations()
-            windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation)) { error in
-                    print("ERR: \(error)")
-                }
+            windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
         } else {
             UIDevice.current.setValue(orientation, forKey: "orientation")
         }
