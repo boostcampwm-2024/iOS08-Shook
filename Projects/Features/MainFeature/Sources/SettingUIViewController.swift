@@ -5,13 +5,15 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-public final class SettingUIViewController: BaseViewController<SettingViewModel> {
+public final class SettingUIViewController: BaseViewController<BroadcastCollectionViewModel> {
+    private let rightBarButton = UIBarButtonItem()
     private let tableView = UITableView()
-    private let button = UIButton()
+    private let startStreamingButton = UIButton()
     private let streamingName = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
+    
     private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
-    private let input = SettingViewModel.Input()
+    private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
     public override func setupBind() {
@@ -20,8 +22,8 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
         output.isActive
             .sink { [weak self] isActive in
                 guard let self else { return }
-                self.button.isEnabled = isActive
-                self.button.backgroundColor = isActive
+                self.startStreamingButton.isEnabled = isActive
+                self.startStreamingButton.backgroundColor = isActive
                     ? DesignSystemAsset.Color.mainGreen.color
                     : DesignSystemAsset.Color.gray.color
             }
@@ -36,41 +38,73 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     }
     
     public override func setupViews() {
+        rightBarButton.image = UIImage(systemName: "xmark")
+        
+        navigationItem.title = "방송설정"
+        navigationItem.rightBarButtonItem = rightBarButton
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
         
-        button.isEnabled = false
+        startStreamingButton.isEnabled = false
         
         view.addSubview(tableView)
-        view.addSubview(button)
+        view.addSubview(startStreamingButton)
     }
     
     public override func setupStyles() {
+        rightBarButton.style = .plain
+        
         view.backgroundColor = .black
+        
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
         
         tableView.backgroundColor = .black
         
-        button.setTitle("방송시작", for: .normal)
-        button.layer.cornerRadius = 16
-        button.titleLabel?.font = .setFont(.body1(weight: .semiBold))
-        button.backgroundColor = DesignSystemAsset.Color.gray.color
-        button.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
+        startStreamingButton.setTitle("방송시작", for: .normal)
+        startStreamingButton.layer.cornerRadius = 16
+        startStreamingButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))
+        startStreamingButton.backgroundColor = DesignSystemAsset.Color.gray.color
+        startStreamingButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
     }
         
     public override func setupLayouts() {
         tableView.ezl.makeConstraint {
-            $0.top(to: view.safeAreaLayoutGuide, offset: 30)
-                .bottom(to: button.ezl.top)
+            $0.top(to: view.safeAreaLayoutGuide, offset: 21)
+                .bottom(to: startStreamingButton.ezl.top)
                 .horizontal(to: view, padding: 20)
         }
         
-        button.ezl.makeConstraint {
+        startStreamingButton.ezl.makeConstraint {
             $0.height(56)
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
+        }
+    }
+    
+    public override func setupActions() {
+        startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
+        rightBarButton.target = self
+        rightBarButton.action = #selector(didTapRightBarButton)
+    }
+    
+    @objc
+    private func didTapRightBarButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didTapSettingButton() {
+        let newViewController = BroadcastUIViewController(viewModel: viewModel)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
+        
+        UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
+            window.rootViewController = newViewController
         }
     }
 }

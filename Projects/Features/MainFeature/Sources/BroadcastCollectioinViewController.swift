@@ -19,6 +19,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private var cancellables = Set<AnyCancellable>()
     
     private let refreshControl = UIRefreshControl()
+    private let rightBarButton: UIBarButtonItem = UIBarButtonItem()
     private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
@@ -38,9 +39,12 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     }
     
     public override func setupViews() {
+        rightBarButton.title = "방송하기"
+
         navigationItem.title = "실시간 리스트"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
+        navigationItem.rightBarButtonItem = rightBarButton
         
         collectionView.refreshControl = refreshControl
         
@@ -49,6 +53,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
         view.addSubview(collectionView)
+    }
+    
+    public override func setupStyles() {
+        rightBarButton.style = .plain
     }
     
     public override func setupLayouts() {
@@ -61,6 +69,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         refreshControl.addAction(UIAction { [weak self] _ in
             self?.input.fetch.send()
         }, for: .valueChanged)
+        rightBarButton.target = self
+        rightBarButton.action = #selector(didTapRightBarButton)
     }
     
     public override func setupBind() {
@@ -71,6 +81,13 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
                 self?.applySnapshot(with: items)
             }
             .store(in: &cancellables)
+    }
+    
+    @objc
+    private func didTapRightBarButton() {
+        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
+        let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
+        navigationController?.present(settingNavigationController, animated: true)
     }
 }
 
