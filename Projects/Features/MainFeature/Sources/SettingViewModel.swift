@@ -7,7 +7,7 @@ import DesignSystem
 public final class SettingViewModel: ViewModel {
     /// Input of SettingViewModel
     public struct Input {
-        let didWriteStreamingName: PassthroughSubject<String, Never>
+        let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
     }
     
     /// Output of SettingViewModel
