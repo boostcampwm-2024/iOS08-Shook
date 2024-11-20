@@ -23,6 +23,7 @@ open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
         setupActions()
     }
 
+    // MARK: - View Life Cycle
     open func setupViews() { }
     
     open func setupStyles() { }
