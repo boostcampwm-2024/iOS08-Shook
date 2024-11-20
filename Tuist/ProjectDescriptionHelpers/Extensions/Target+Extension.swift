@@ -20,7 +20,6 @@ extension Target {
         scripts: generationEnvironment.scripts,
         dependencies: [
             .domain(target: .BaseDomain),
-            .userInterface(target: .DesignSystem),
             .feature(target: .MainFeature),
             .feature(target: .LiveStreamFeature)
         ],
