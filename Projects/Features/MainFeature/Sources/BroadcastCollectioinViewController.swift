@@ -1,9 +1,8 @@
+import Combine
 import UIKit
 
 import BaseFeature
 import BaseFeatureInterface
-import Combine
-
 import DesignSystem
 import EasyLayoutModule
 

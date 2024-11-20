@@ -1,5 +1,3 @@
-import Combine
-
 public protocol ViewModel {
     associatedtype Input
     associatedtype Output

@@ -49,7 +49,8 @@ public class BroadcastCollectionViewModel: ViewModel {
         input.fetch
             .sink { [weak self] in
                 self?.fetchData()
-            }.store(in: &cancellables)
+            }
+            .store(in: &cancellables)
         
         return output
     }
