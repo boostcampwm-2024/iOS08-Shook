@@ -11,7 +11,6 @@ public protocol PlayerControlViewAction {
 }
 
 final class PlayerControlView: BaseView {
-    private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private let playButton: UIButton = UIButton()
     var timeControlView: TimeControlView = TimeControlView()
     
@@ -20,7 +19,6 @@ final class PlayerControlView: BaseView {
     
     override func setupViews() {
         self.addSubview(playButton)
-        self.addSubview(indicatorView)
         self.addSubview(timeControlView)
     }
     
@@ -28,11 +26,7 @@ final class PlayerControlView: BaseView {
         playButton.ezl.makeConstraint {
             $0.center(to: self)
         }
-        
-        indicatorView.ezl.makeConstraint {
-            $0.width(30).height(30).center(to: self)
-        }
-        
+                
         timeControlView.ezl.makeConstraint {
             $0.height(10)
                 .horizontal(to: self, padding: 15)
@@ -46,9 +40,6 @@ final class PlayerControlView: BaseView {
         var playButtonConfig = UIButton.Configuration.plain()
         playButtonConfig.image = DesignSystemAsset.Image.play48.image
         playButton.configuration = playButtonConfig
-        
-        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
-        indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
@@ -63,15 +54,7 @@ final class PlayerControlView: BaseView {
     }
 }
 
-extension PlayerControlView {
-    public func toggleIndicator(_ isLoading: Bool) {
-        if isLoading {
-            indicatorView.startAnimating()
-        } else {
-            indicatorView.stopAnimating()
-        }
-    }
-    
+extension PlayerControlView {    
     public func togglePlayerButtonAnimation(_ status: AVPlayer.TimeControlStatus) {
         playButton.transform = CGAffineTransform(scaleX: .zero, y: .zero)
         

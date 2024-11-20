@@ -6,9 +6,15 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
+#warning("추후 네트워크 에러 헨들링")
+
 protocol ShookPlayerViewState {
     var isPlaying: AnyPublisher<Bool, Never> { get }
     var isBuffering: AnyPublisher<Bool, Never> { get }
+}
+
+private enum Constants: CGFloat {
+    case indicatorSize  = 50
 }
 
 final class ShookPlayerView: BaseView {
@@ -16,6 +22,7 @@ final class ShookPlayerView: BaseView {
     private var playerItem: AVPlayerItem
     private let playerControlView: PlayerControlView = PlayerControlView()
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
+    private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
     private var unfoldedConstraint: NSLayoutConstraint?
@@ -76,6 +83,7 @@ final class ShookPlayerView: BaseView {
         self.addSubview(infoView)
         self.addSubview(videoContainerView)
         videoContainerView.addSubview(playerControlView)
+        videoContainerView.addSubview(indicatorView)
         
     }
     
@@ -83,6 +91,10 @@ final class ShookPlayerView: BaseView {
         super.setupLayouts()
         videoContainerView.ezl.makeConstraint {
             $0.diagonal(to: self)
+        }
+        
+        indicatorView.ezl.makeConstraint {
+            $0.width(Constants.indicatorSize.rawValue).height(Constants.indicatorSize.rawValue).center(to: self)
         }
         
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
@@ -100,6 +112,9 @@ final class ShookPlayerView: BaseView {
     
     override func setupStyles() {
         self.playerControlView.alpha = .zero
+        
+        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
+        indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
@@ -200,15 +215,15 @@ extension ShookPlayerView {
         switch bufferString {
         case "playbackBufferEmpty":
             bufferingState = true
+            indicatorView.startAnimating()
             
         case "playbackLikelyToKeepUp", "playbackBufferFull":
             bufferingState = false
+            indicatorView.stopAnimating()
             
         default:
             return
         }
-       
-        playerControlView.toggleIndicator(bufferingState)
     }
     
     func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
