@@ -50,17 +50,7 @@ final class ShookPlayerView: BaseView {
         super.init(frame: .zero)
         addObserver()
         videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
-        
-#warning("Confiure UI 생명 주기 생기면 옮긴다.")
-        var playButtonConfig = UIButton.Configuration.plain()
-        playButtonConfig.image = DesignSystemAsset.Image.play48.image
-        playButton.configuration = playButtonConfig
-        playButton.alpha = .zero
-        
-        timeControlView.alpha = .zero
-        
-        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
-        indicatorView.hidesWhenStopped = true
+    
     }
     
     required init?(coder: NSCoder) {
@@ -127,7 +117,15 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupStyles() {
-        playerLayer.frame = videoContainerView.bounds
+        var playButtonConfig = UIButton.Configuration.plain()
+        playButtonConfig.image = DesignSystemAsset.Image.play48.image
+        playButton.configuration = playButtonConfig
+        playButton.alpha = .zero
+        
+        timeControlView.alpha = .zero
+        
+        indicatorView.color = DesignSystemAsset.Color.mainGreen.color
+        indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
@@ -150,6 +148,11 @@ final class ShookPlayerView: BaseView {
         .store(in: &subscription)
         
         infoView.fillLabels(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        playerLayer.frame = videoContainerView.bounds
     }
     
 }
