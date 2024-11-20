@@ -35,7 +35,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     public struct Output {
-        let items: CurrentValueSubject<[Item], Never> = .init([])
+        let items: PassthroughSubject<[Item], Never> = .init()
         let isActive: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
         let errorMessage: PassthroughSubject<String?, Never> = .init()
     }
