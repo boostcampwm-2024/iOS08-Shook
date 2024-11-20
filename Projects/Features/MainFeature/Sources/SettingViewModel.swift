@@ -42,7 +42,7 @@ public final class SettingViewModel: ViewModel {
         let isCharactersValid = value.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" }
         
         if !isLengthValid && !isCharactersValid {
-            return (false, "최소 3글자 이상, 최대 20글자 이하로 입력해 주세요. 특수문자는 언더바(_)만 가능합니다.")
+            return (false, "3글자 이상,20글자 이하로 입력해 주세요. 특수문자는 언더바(_)만 가능합니다.")
         } else if !isLengthValid {
             return (false, "최소 3글자 이상, 최대 20글자 이하로 입력해 주세요.")
         } else if !isCharactersValid {

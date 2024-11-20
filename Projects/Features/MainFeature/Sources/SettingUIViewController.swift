@@ -39,27 +39,25 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
-        button.isEnabled = false
-        
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 100
+        
+        button.isEnabled = false
         
         view.addSubview(tableView)
         view.addSubview(button)
     }
     
     public override func setupStyles() {
+        view.backgroundColor = .black
+        
+        tableView.backgroundColor = .black
+        
         button.setTitle("방송시작", for: .normal)
         button.layer.cornerRadius = 16
-        
-        // Fonts
         button.titleLabel?.font = .setFont(.body1(weight: .semiBold))
-        
-        // Colors
         button.backgroundColor = DesignSystemAsset.Color.gray.color
         button.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
-        tableView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
-        view.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
     }
         
     public override func setupLayouts() {
@@ -68,6 +66,7 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
                 .bottom(to: button.ezl.top)
                 .horizontal(to: view, padding: 20)
         }
+        
         button.ezl.makeConstraint {
             $0.height(56)
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
