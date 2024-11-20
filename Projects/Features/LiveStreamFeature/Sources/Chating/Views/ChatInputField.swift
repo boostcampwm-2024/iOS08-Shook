@@ -30,7 +30,7 @@ final class ChatInputField: BaseView {
     }
     
     override func setupStyles() {
-        backgroundColor = .gray
+        backgroundColor = DesignSystemColors.Color.darkGray
         
         clipView.backgroundColor = .clear
         clipView.layer.cornerRadius = 20
