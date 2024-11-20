@@ -34,6 +34,7 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
         subtitle.ezl.makeConstraint {
             $0.top(to: title.ezl.bottom, offset: 4)
                 .horizontal(to: contentView)
+                .bottom(to: contentView)
         }
         
         liveBadge.ezl.makeConstraint {
@@ -47,10 +48,10 @@ final class BigCollectionViewCell: BaseCollectionViewCell {
         thumbnail.clipsToBounds = true
         thumbnail.layer.cornerRadius = 16
         
-        title.font = .setFont(.body2())
+        title.font = .setFont(.body1())
         title.numberOfLines = 2
         
-        subtitle.font = .setFont(.caption1())
+        subtitle.font = .setFont(.body2())
         subtitle.numberOfLines = 1
         
         liveBadge.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)

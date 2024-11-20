@@ -82,32 +82,32 @@ extension BroadcastCollectionViewController {
             case .big:
                 let size = NSCollectionLayoutSize(
                     widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-                    heightDimension: NSCollectionLayoutDimension.estimated(250)
+                    heightDimension: NSCollectionLayoutDimension.estimated(200)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: size)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 24, trailing: 16)
-                section.interGroupSpacing = 8
+                section.interGroupSpacing = 16
                 
                 return section
             
             case .small:
                 let size = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(103)
+                    heightDimension: .estimated(100)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: size)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-                section.interGroupSpacing = 8
+                section.interGroupSpacing = 14
                 
                 let headerSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(20)
+                    heightDimension: .estimated(10)
                 )
                 
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
@@ -160,7 +160,7 @@ extension BroadcastCollectionViewController {
             
             if indexPath.section == 1 {
                 let label = UILabel()
-                label.font = .setFont(.body1())
+                label.font = .setFont(.title())
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
