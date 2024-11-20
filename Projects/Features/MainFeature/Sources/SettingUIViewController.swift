@@ -99,6 +99,13 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     @objc
     private func didTapSettingButton() {
+        let newViewController = BroadcastUIViewController(viewModel: viewModel)
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
+        
+        UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
+            window.rootViewController = newViewController
+        }
     }
 }
 
