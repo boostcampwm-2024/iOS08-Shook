@@ -16,6 +16,6 @@ let project = Project.module(
                 ]
             )
         ),
-        .interface(module: .userInterface(.DesignSystem)),
+        .interface(module: .userInterface(.DesignSystem))
     ]
 )

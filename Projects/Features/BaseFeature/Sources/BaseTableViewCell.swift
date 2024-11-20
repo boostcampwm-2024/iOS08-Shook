@@ -3,6 +3,10 @@ import UIKit
 import BaseFeatureInterface
 
 open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
+    public static var identifier: String {
+        String(describing: Self.self)
+    }
+    
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -22,6 +26,7 @@ open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
         setupStyles()
     }
     
+    // MARK: - View Life Cycle
     open func setupViews() { }
 
     open func setupLayouts() { }

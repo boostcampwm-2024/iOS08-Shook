@@ -4,9 +4,7 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-final class ChatingCell: BaseTableViewCell {
-    static let identifier: String = "ChatingCell"
-    
+final class ChatingCell: BaseTableViewCell {    
     private let nameLabel = UILabel()
     private let detailLabel = UILabel()
     
