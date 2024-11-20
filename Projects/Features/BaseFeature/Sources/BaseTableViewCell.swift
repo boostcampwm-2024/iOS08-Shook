@@ -10,6 +10,7 @@ open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
     }
@@ -17,13 +18,9 @@ open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        setupStyles()
     }
     
     // MARK: - View Life Cycle
