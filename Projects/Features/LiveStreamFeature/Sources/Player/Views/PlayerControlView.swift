@@ -7,7 +7,6 @@ import DesignSystem
 
 public protocol PlayerControlViewAction {
     var playButtonDidTap: AnyPublisher<Void, Never> { get }
-    var sliderValueDidChange: AnyPublisher<Double, Never> { get }
     var expandButtonDidTap: AnyPublisher<Void, Never> { get }
 }
 
@@ -86,10 +85,6 @@ final class PlayerControlView: BaseView {
             self.playButtonTapPublisher = ()
         }, for: .touchUpInside)
         
-        timeControlView.value
-            .compactMap { Double($0)}
-            .assign(to: &$sliderValuePublisher)
-        
         expandButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
             self.expandButtonTapPublisher = ()
@@ -128,9 +123,5 @@ extension PlayerControlView: PlayerControlViewAction {
     
     var playButtonDidTap: AnyPublisher<Void, Never> {
         $playButtonTapPublisher.eraseToAnyPublisher()
-    }
-    
-    var sliderValueDidChange: AnyPublisher<Double, Never> {
-        $sliderValuePublisher.eraseToAnyPublisher()
     }
 }

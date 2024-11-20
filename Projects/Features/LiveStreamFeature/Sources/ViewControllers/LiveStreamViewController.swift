@@ -6,15 +6,13 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
-
     private var shrinkConstraint: NSLayoutConstraint?
     private var expandConstraint: NSLayoutConstraint?
-    
     private var subscription = Set<AnyCancellable>()
-    
     private lazy var input = LiveStreamViewModel.Input(
-        expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher())
-    
+        expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher(),
+        sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher()
+    )
     private lazy var output = viewModel.transform(input: input)
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -54,6 +52,12 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             guard let self else { return }
             self.changeOrientation()
             self.playerView.playerControlView.toggleExpandButtonImage(flag)
+        }
+        .store(in: &subscription)
+        
+        output.time.sink { [weak self] amount in
+            guard let self else { return }
+            self.playerView.seek(to: amount)
         }
         .store(in: &subscription)
     }

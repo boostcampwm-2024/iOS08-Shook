@@ -6,7 +6,7 @@ import DesignSystem
 import EasyLayoutModule
 
 protocol TimeControlAction {
-    var value: AnyPublisher<Float, Never> { get }
+    var valueDidChanged: AnyPublisher<Float, Never> { get }
 }
 
 final class TimeControlView: BaseView {
@@ -74,7 +74,7 @@ extension TimeControlView {
 }
 
 extension TimeControlView: TimeControlAction {
-    var value: AnyPublisher<Float, Never> {
+    var valueDidChanged: AnyPublisher<Float, Never> {
         $currentValue.eraseToAnyPublisher()
     }
 }

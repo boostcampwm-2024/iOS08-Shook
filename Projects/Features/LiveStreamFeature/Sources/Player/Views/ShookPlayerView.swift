@@ -132,12 +132,6 @@ final class ShookPlayerView: BaseView {
             }
         }
         .store(in: &subscription)
-        
-        playerControlView.sliderValueDidChange.sink { [weak self] newValue in
-            guard let self else { return }
-            self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
-        }
-        .store(in: &subscription)
     }
     
     override func layoutSubviews() {
@@ -147,7 +141,7 @@ final class ShookPlayerView: BaseView {
 }
 
 extension ShookPlayerView {
-    enum BufferState: String {
+    private enum BufferState: String {
         case playbackBufferEmpty
         case playbackLikelyToKeepUp
         case playbackBufferFull
@@ -195,7 +189,7 @@ extension ShookPlayerView {
     }
     
     // MARK: - observeValue Handler
-    func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
+    private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
             if !isInitialized {
@@ -212,7 +206,7 @@ extension ShookPlayerView {
         }
     }
     
-    func hanldePlayItemBufferString(_ bufferString: String) {
+    private func hanldePlayItemBufferString(_ bufferString: String) {
         switch bufferString {
         case "playbackBufferEmpty":
             bufferingState = true
@@ -227,7 +221,7 @@ extension ShookPlayerView {
         }
     }
     
-    func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
+    private func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
         playerControlView.togglePlayerButtonAnimation(status)
         switch status {
         case .playing:
@@ -244,18 +238,8 @@ extension ShookPlayerView {
         }
     }
     
-    // MARK: - @objc
-    @objc func toggleControlPannel() {
-        UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
-            self.playerControlView.alpha = self.playerControlView.alpha == .zero ? 1 : .zero
-        }
-        infoViewConstraintAnimation()
-    }
-}
-
-extension ShookPlayerView {
     // - MARK: animation
-    func infoViewConstraintAnimation() {
+    private func infoViewConstraintAnimation() {
         UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
             if self.isFolded {
                 self.unfoldedConstraint?.isActive = true
@@ -268,6 +252,20 @@ extension ShookPlayerView {
             self.isFolded = !self.isFolded
             self.layoutIfNeeded()
         }
+    }
+    
+    // MARK: - @objc
+    @objc func toggleControlPannel() {
+        UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
+            self.playerControlView.alpha = self.playerControlView.alpha == .zero ? 1 : .zero
+        }
+        infoViewConstraintAnimation()
+    }
+}
+
+extension ShookPlayerView {
+    public func seek(to newValue: Double) {
+        self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
     }
 }
 
