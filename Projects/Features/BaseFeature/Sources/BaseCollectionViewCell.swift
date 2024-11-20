@@ -3,9 +3,14 @@ import UIKit
 import BaseFeatureInterface
 
 open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
+    public static var identifier: String {
+        String(describing: Self.self)
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
     }
@@ -13,13 +18,9 @@ open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
+        setupStyles()
         setupLayouts()
         setupActions()
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        setupStyles()
     }
     
     open func setupViews() { }
