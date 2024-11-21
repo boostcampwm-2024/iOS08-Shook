@@ -15,7 +15,7 @@ open class BaseRepository<E: Endpoint> {
         client = NetworkClient(interceptors: interceptors)
     }
     
-    final func request<T>(_ endpoint: E, type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
+    public final func request<T>(_ endpoint: E, type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
         performRequest(endpoint)
             .map(\.data)
             .decode(type: type, decoder: decoder)
