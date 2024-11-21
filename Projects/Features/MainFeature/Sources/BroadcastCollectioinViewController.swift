@@ -44,8 +44,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         
         collectionView.refreshControl = refreshControl
         
-        collectionView.register(BigCollectionViewCell.self, forCellWithReuseIdentifier: BigCollectionViewCell.identifier)
-        collectionView.register(SmallCollectionViewCell.self, forCellWithReuseIdentifier: SmallCollectionViewCell.identifier)
+        collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
+        collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
         view.addSubview(collectionView)
@@ -82,32 +82,32 @@ extension BroadcastCollectionViewController {
             case .big:
                 let size = NSCollectionLayoutSize(
                     widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-                    heightDimension: NSCollectionLayoutDimension.estimated(250)
+                    heightDimension: NSCollectionLayoutDimension.estimated(200)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: size)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 24, trailing: 16)
-                section.interGroupSpacing = 8
+                section.interGroupSpacing = 16
                 
                 return section
             
             case .small:
                 let size = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(103)
+                    heightDimension: .estimated(100)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: size)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-                section.interGroupSpacing = 8
+                section.interGroupSpacing = 14
                 
                 let headerSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .estimated(20)
+                    heightDimension: .estimated(10)
                 )
                 
                 let header = NSCollectionLayoutBoundarySupplementaryItem(
@@ -131,9 +131,9 @@ extension BroadcastCollectionViewController {
             switch section {
             case .big:
                 guard let bigCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: BigCollectionViewCell.identifier,
+                    withReuseIdentifier: LargeBroadcastCollectionViewCell.identifier,
                     for: indexPath
-                ) as? BigCollectionViewCell else {
+                ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 bigCell.configure(image: item.image, title: item.title, subtitle: item.subtitle1)
@@ -141,9 +141,9 @@ extension BroadcastCollectionViewController {
                 
             case .small:
                 guard let smallCell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: SmallCollectionViewCell.identifier,
+                    withReuseIdentifier: SmallBroadcastCollectionViewCell.identifier,
                     for: indexPath
-                ) as? SmallCollectionViewCell else {
+                ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
                 smallCell.configure(image: item.image, title: item.title, subtitle1: item.subtitle1, subtitle2: item.subtitle2)
@@ -160,7 +160,7 @@ extension BroadcastCollectionViewController {
             
             if indexPath.section == 1 {
                 let label = UILabel()
-                label.font = .setFont(.body1())
+                label.font = .setFont(.title())
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
