@@ -15,7 +15,7 @@ final class ChatingListView: BaseView {
             withIdentifier: ChatingCell.identifier,
             for: indexPath
         ) as? ChatingCell ?? ChatingCell()
-                        
+        cell.configure(chat: chatInfo)
         return cell
     }
     
