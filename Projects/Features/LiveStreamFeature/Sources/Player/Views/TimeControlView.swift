@@ -5,21 +5,25 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-protocol TimeControlAction {
-    var value: AnyPublisher<Float, Never> { get }
+private protocol TimeControlState {
+    func updateSlider(to time: Float)
+}
+
+private protocol TimeControlAction {
+    var valueDidChanged: AnyPublisher<Float, Never> { get }
 }
 
 final class TimeControlView: BaseView {
     private let liveStringLabel: UILabel = UILabel()
     private let slider: UISlider = UISlider()
     
-    public var maxValue: Float = 0 {
+    var maxValue: Float = 0 {
         willSet {
             slider.maximumValue = newValue
         }
     }
     
-    @Published var currentValue: Float = 0
+    @Published private var currentValue: Float = 0
     
     override func setupViews() {
         self.addSubview(liveStringLabel)
@@ -38,7 +42,7 @@ final class TimeControlView: BaseView {
                 .vertical(to: self)
         }
     }
-
+    
     override func setupStyles() {
         liveStringLabel.textColor = DesignSystemAsset.Color.white.color
         liveStringLabel.font = .setFont(.caption2())
@@ -64,17 +68,20 @@ extension TimeControlView {
             path.fill()
         }
     }
-        
-    public func updateSlider(to time: Float) {
-        slider.setValue(time, animated: false)
-    }
+    
     @objc private func changedValue() {
         currentValue = slider.value
     }
 }
 
+extension TimeControlView: TimeControlState {
+    func updateSlider(to time: Float) {
+        slider.setValue(time, animated: false)
+    }
+}
+
 extension TimeControlView: TimeControlAction {
-    var value: AnyPublisher<Float, Never> {
+    var valueDidChanged: AnyPublisher<Float, Never> {
         $currentValue.eraseToAnyPublisher()
     }
 }
