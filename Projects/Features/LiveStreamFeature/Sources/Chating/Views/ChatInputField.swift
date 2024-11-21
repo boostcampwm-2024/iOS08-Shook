@@ -1,8 +1,13 @@
+import Combine
 import UIKit
 
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
+
+protocol ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> { get }
+}
 
 final class ChatInputField: BaseView {
     private let heartButton = UIButton()
@@ -13,6 +18,8 @@ final class ChatInputField: BaseView {
     
     private var inputFieldHeightContraint: NSLayoutConstraint!
     
+    @Published private var sendButtonDidTapPublisher: ChatInfo?
+
     override func setupViews() {
         addSubview(heartButton)
         addSubview(clipView)
@@ -79,6 +86,22 @@ final class ChatInputField: BaseView {
                 .bottom(to: clipView, offset: -8)
         }
     }
+    
+    override func setupActions() {
+        sendButton.addAction(
+            UIAction { [weak self] _ in
+                guard let self else { return }
+                #warning("Chating User Name 추후 수정")
+                sendButtonDidTapPublisher = ChatInfo(
+                    name: "홍길동",
+                    message: inputField.text
+                )
+                inputField.text = ""
+                textViewDidChange(inputField)
+            },
+            for: .touchUpInside
+        )
+    }
 }
 
 extension ChatInputField: UITextViewDelegate {
@@ -94,5 +117,11 @@ extension ChatInputField: UITextViewDelegate {
         inputFieldHeightContraint.constant = textView.contentSize.height
         
         layoutIfNeeded()
+    }
+}
+
+extension ChatInputField: ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> {
+        $sendButtonDidTapPublisher.dropFirst().eraseToAnyPublisher()
     }
 }
