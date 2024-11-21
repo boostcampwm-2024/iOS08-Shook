@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 import BaseFeatureInterface
+import LiveStationDomainInterface
 
 public struct Item: Hashable {
     let id = UUID().uuidString
@@ -41,11 +42,11 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private let output = Output()
+    private let usecase: any FetchChannelListUsecase
     private var cancellables = Set<AnyCancellable>()
-    private var fetcher: Fetcher
     
-    public init(fetcher: Fetcher) {
-        self.fetcher = fetcher
+    public init(usecase: FetchChannelListUsecase) {
+        self.usecase = usecase
     }
     
     public func transform(input: Input) -> Output {
@@ -68,10 +69,14 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private func fetchData() {
-        Task {
-            let fetchedItems = await fetcher.fetch()
-            output.items.send(fetchedItems)
-        }
+
+        usecase.execute()
+            .sink { error in
+                print(error)
+            } receiveValue: { ids in
+                print(ids.first?.channelId)
+                self.output.items.send(ids.map { Item(title: $0.channelId, subtitle1: "test", subtitle2: "test") })
+            }.store(in: &cancellables)
     }
     
     /// 방송 이름이 유효한지 확인하는 메서드
