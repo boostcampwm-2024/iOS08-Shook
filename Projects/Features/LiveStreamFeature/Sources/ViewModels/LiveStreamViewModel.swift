@@ -30,6 +30,7 @@ public final class LiveStreamViewModel: ViewModel {
         input.expandButtonDidTap
             .sink {
                 output.isExpanded.send(!output.isExpanded.value)
+                output.isplayerControlShowed.send(false)
             }
             .store(in: &subscription)
         
