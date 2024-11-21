@@ -33,7 +33,7 @@ public final class SampleLiveStreamViewController: BaseViewController<SampleLive
         playerView.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide)
                 .horizontal(to: view.safeAreaLayoutGuide)
-                .height(200)
+                .height(view.frame.width * 0.5625)
         }
         
         dismissButton.ezl.makeConstraint {
@@ -48,6 +48,12 @@ public final class SampleLiveStreamViewController: BaseViewController<SampleLive
     
     @objc private func didTapDismissButton() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    public override func setupActions() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        playerView.addGestureRecognizer(panGesture)
+        playerView.isUserInteractionEnabled = true // 제스처 인식을 위해 필수
     }
 }
 
@@ -95,5 +101,29 @@ public final class SampleShookPlayerView: BaseView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = videoContainerView.bounds
+    }
+}
+
+extension SampleLiveStreamViewController {
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                let scale = max(1 - translation.y / 320, 0.8)
+                view.transform = CGAffineTransform(scaleX: scale, y: scale)
+                view.layer.cornerRadius = min(translation.y, 24)
+            }
+            
+        case .ended, .cancelled:
+            if translation.y > 20 {
+                dismiss(animated: true)
+            } else {
+                view.transform = .identity
+            }
+            
+        default: break
+        }
     }
 }
