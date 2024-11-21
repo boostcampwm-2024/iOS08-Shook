@@ -8,7 +8,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell {
     private let thumbnail = UIImageView()
     private let title = UILabel()
     private let subtitle = UILabel()
-    private let liveBadge = PaddingUILabel()
+    private let liveBadge = PaddingLabel()
     
     override func setupViews() {
         liveBadge.text = "L I V E"

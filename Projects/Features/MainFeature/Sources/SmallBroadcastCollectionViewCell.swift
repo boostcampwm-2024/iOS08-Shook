@@ -12,7 +12,7 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell {
     private let subtitle1 = UILabel()
     private let subtitle2 = UILabel()
     
-    private let liveBadge = PaddingUILabel()
+    private let liveBadge = PaddingLabel()
 
     override func setupViews() {
         liveBadge.text = "L I V E"

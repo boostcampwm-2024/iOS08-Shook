@@ -8,7 +8,7 @@ import EasyLayoutModule
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
-        case big
+        case large
         case small
     }
     
@@ -96,7 +96,7 @@ extension BroadcastCollectionViewController {
         return UICollectionViewCompositionalLayout { sectionIndex, _  in
             let section = Section(rawValue: sectionIndex) ?? .small
             switch section {
-            case .big:
+            case .large:
                 let size = NSCollectionLayoutSize(
                     widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
                     heightDimension: NSCollectionLayoutDimension.estimated(200)
@@ -146,7 +146,7 @@ extension BroadcastCollectionViewController {
             guard let section = Section(rawValue: indexPath.section) else { return UICollectionViewCell() }
             
             switch section {
-            case .big:
+            case .large:
                 guard let bigCell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: LargeBroadcastCollectionViewCell.identifier,
                     for: indexPath
@@ -193,8 +193,8 @@ extension BroadcastCollectionViewController {
         var snapshot = Snapshot()
         
         let bigSectionItems = Array(items.prefix(3))
-        snapshot.appendSections([.big])
-        snapshot.appendItems(bigSectionItems, toSection: .big)
+        snapshot.appendSections([.large])
+        snapshot.appendItems(bigSectionItems, toSection: .large)
         
         if items.count > 3 {
             let smallSectionItems = Array(items.suffix(from: 3))
