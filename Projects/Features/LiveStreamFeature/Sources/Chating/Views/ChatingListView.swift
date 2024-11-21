@@ -36,6 +36,7 @@ final class ChatingListView: BaseView {
         chatListView.backgroundColor = .clear
         chatListView.keyboardDismissMode = .interactive
         chatListView.allowsSelection = false
+        chatListView.separatorStyle = .none
     }
     
     override func setupLayouts() {
