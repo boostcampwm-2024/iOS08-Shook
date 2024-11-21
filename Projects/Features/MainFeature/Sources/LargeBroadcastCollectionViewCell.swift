@@ -30,6 +30,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.ezl.makeConstraint {
             $0.top(to: thumbnailView.ezl.bottom, offset: 4)
                 .horizontal(to: contentView)
+                .bottom(to: subtitleLabel.ezl.top)
         }
         
         subtitleLabel.ezl.makeConstraint {
@@ -47,6 +48,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupStyles() {
         titleLabel.font = .setFont(.body1())
         titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byWordWrapping
         
         subtitleLabel.font = .setFont(.body2())
         subtitleLabel.numberOfLines = 1
@@ -64,5 +66,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         self.thumbnailView.configure(with: image)
         self.titleLabel.text = title
         self.subtitleLabel.text = subtitle
+        contentView.layoutIfNeeded()
     }
 }

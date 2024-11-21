@@ -44,10 +44,6 @@ final class ThumbnailView: BaseView {
     }
     
     override func setupLayouts() {
-        shadowView.ezl.makeConstraint {
-            $0.diagonal(to: self)
-        }
-        
         containerView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
@@ -55,14 +51,20 @@ final class ThumbnailView: BaseView {
         imageView.ezl.makeConstraint {
             $0.diagonal(to: containerView)
         }
+        
+        shadowView.ezl.makeConstraint {
+            $0.diagonal(to: self)
+        }
     }
     
     override func updateStyles() {
-        
+        imageView.layer.cornerRadius = 0
     }
     
     override func updateLayouts() {
-        
+        imageView.ezl.makeConstraint {
+            $0.top(to: self.safeAreaLayoutGuide)
+        }
     }
     
     func configure(with image: UIImage?) {
