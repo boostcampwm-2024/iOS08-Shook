@@ -7,13 +7,24 @@ final class ChatingListView: BaseView {
     private let titleLabel = UILabel()
     private let chatListView = UITableView()
     private let chatEmptyView = ChatEmptyView()
-        
+    
+    private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
+        tableView: chatListView
+    ) { [weak self] tableView, indexPath, chatInfo in
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: ChatingCell.identifier,
+            for: indexPath
+        ) as? ChatingCell ?? ChatingCell()
+                        
+        return cell
+    }
+    
     override func setupViews() {
         addSubview(titleLabel)
         addSubview(chatListView)
         
         titleLabel.text = "실시간 채팅"
-       
+        
         chatListView.register(ChatingCell.self, forCellReuseIdentifier: ChatingCell.identifier)
         chatListView.backgroundView = chatEmptyView
     }
@@ -37,5 +48,16 @@ final class ChatingListView: BaseView {
                 .top(to: titleLabel.ezl.bottom, offset: 21)
                 .bottom(to: self)
         }
+    }
+}
+
+extension ChatingListView {
+    func updateList(_ chatList: [ChatInfo]) {
+        chatEmptyView.isHidden = !chatList.isEmpty
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Int, ChatInfo>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(chatList)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
