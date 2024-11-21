@@ -1,11 +1,14 @@
 import ProjectDescription
 
 extension InfoPlist {
-    
     static var demoDefulat: InfoPlist = .extendingDefault(with: [
         "UIMainStoryboardFile": "",
         "UILaunchStoryboardName": "LaunchScreen",
         "ENABLE_TESTS": .boolean(true),
+        "SECRETS": [
+            "ACCESS_KEY" : "$(ACCESS_KEY)",
+            "SECRET_KEY": "$(SECRET_KEY)"
+        ]
     ])
     
     static var projectDefault: InfoPlist = .extendingDefault(
@@ -22,6 +25,10 @@ extension InfoPlist {
                     ]
                 ]
             ],
+            "SECRETS": [
+                "ACCESS_KEY" : "$(ACCESS_KEY)",
+                "SECRET_KEY": "$(SECRET_KEY)"
+            ]
         ]
     )
 }
