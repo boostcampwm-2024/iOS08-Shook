@@ -5,76 +5,72 @@ import DesignSystem
 import EasyLayoutModule
 
 final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell {
-    private let thumbnail = UIImageView()
+    let thumbnailView = ThumbnailView(for: .small)
     
     private let descriptionStack = UIStackView()
-    private let title = UILabel()
-    private let subtitle1 = UILabel()
-    private let subtitle2 = UILabel()
-    
-    private let liveBadge = PaddingLabel()
+    private let titleLabel = UILabel()
+    private let subtitle1Label = UILabel()
+    private let subtitle2Label = UILabel()
+    private let liveBadgeLabel = PaddingLabel()
 
     override func setupViews() {
-        liveBadge.text = "L I V E"
+        liveBadgeLabel.text = "L I V E"
         
-        contentView.addSubview(thumbnail)
-        contentView.addSubview(liveBadge)
+        contentView.addSubview(thumbnailView)
+        contentView.addSubview(liveBadgeLabel)
         contentView.addSubview(descriptionStack)
         
-        descriptionStack.addArrangedSubview(title)
-        descriptionStack.addArrangedSubview(subtitle1)
-        descriptionStack.addArrangedSubview(subtitle2)
+        descriptionStack.addArrangedSubview(titleLabel)
+        descriptionStack.addArrangedSubview(subtitle1Label)
+        descriptionStack.addArrangedSubview(subtitle2Label)
     }
     
     override func setupLayouts() {
-        thumbnail.ezl.makeConstraint {
+        thumbnailView.ezl.makeConstraint {
             $0.leading(to: contentView)
+                .centerY(to: contentView)
                 .width(contentView.frame.width * 0.45)
                 .height(contentView.frame.width * 0.45 * 0.5625)
         }
         
         descriptionStack.ezl.makeConstraint {
-            $0.leading(to: thumbnail.ezl.trailing, offset: 8)
+            $0.leading(to: thumbnailView.ezl.trailing, offset: 8)
                 .trailing(to: contentView)
-                .centerY(to: thumbnail)
+                .centerY(to: thumbnailView)
         }
         
-        liveBadge.ezl.makeConstraint {
-            $0.top(to: thumbnail, offset: 8)
-                .leading(to: thumbnail, offset: 8)
+        liveBadgeLabel.ezl.makeConstraint {
+            $0.top(to: thumbnailView, offset: 8)
+                .leading(to: thumbnailView, offset: 8)
         }
     }
     
     override func setupStyles() {
-        thumbnail.contentMode = .scaleAspectFill
-        thumbnail.clipsToBounds = true
-        thumbnail.layer.cornerRadius = 8
-        
-        liveBadge.textInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
-        liveBadge.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveBadge.textColor = .white
-        liveBadge.textAlignment = .center
-        liveBadge.font = .setFont(.caption2(weight: .bold))
-        liveBadge.layer.cornerRadius = 8
-        liveBadge.clipsToBounds = true
+        liveBadgeLabel.textInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
+        liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
+        liveBadgeLabel.textColor = .white
+        liveBadgeLabel.textAlignment = .center
+        liveBadgeLabel.font = .setFont(.caption2(weight: .bold))
+        liveBadgeLabel.layer.cornerRadius = 8
+        liveBadgeLabel.clipsToBounds = true
         
         descriptionStack.axis = .vertical
         descriptionStack.spacing = 4
         
-        title.font = .setFont(.body2())
-        title.numberOfLines = 2
+        titleLabel.font = .setFont(.body2())
+        titleLabel.numberOfLines = 2
         
-        subtitle1.font = .setFont(.caption1())
-        subtitle1.numberOfLines = 1
+        subtitle1Label.font = .setFont(.caption1())
+        subtitle1Label.numberOfLines = 1
         
-        subtitle2.font = .setFont(.caption1())
-        subtitle1.numberOfLines = 1
+        subtitle2Label.font = .setFont(.caption1())
+        subtitle1Label.numberOfLines = 1
     }
     
     func configure(image: UIImage?, title: String, subtitle1: String, subtitle2: String) {
-        self.thumbnail.image = image
-        self.title.text = title
-        self.subtitle1.text = subtitle1
-        self.subtitle2.text = subtitle2
+        self.thumbnailView.configure(with: image)
+        self.titleLabel.text = title
+        self.subtitle1Label.text = subtitle1
+        self.subtitle2Label.text = subtitle2
     }
 }
