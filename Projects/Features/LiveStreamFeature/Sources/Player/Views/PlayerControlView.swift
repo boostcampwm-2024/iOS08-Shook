@@ -18,12 +18,11 @@ private enum ImageConstants {
     
     var image: UIImage {
         switch self {
-
         case .zoomIn:
             return DesignSystemAsset.Image.zoomIn24.image
             
         case .zoomOut:
-            return DesignSystemAsset.Image.zoomOut48.image
+            return DesignSystemAsset.Image.zoomOut24.image
             
         case .play:
             return DesignSystemAsset.Image.play48.image
@@ -64,7 +63,6 @@ final class PlayerControlView: BaseView {
             $0.trailing(to: self, offset: -20)
                 .top(to: self, offset: 15)
         }
-        
     }
     
     override func setupStyles() {
@@ -93,11 +91,11 @@ final class PlayerControlView: BaseView {
 }
 
 extension PlayerControlView {
-    public func toggleExpandButtonImage(_ expanded: Bool) {
+    func toggleExpandButtonImage(_ expanded: Bool) {
         expandButton.configuration?.image = expanded ? ImageConstants.zoomOut.image : ImageConstants.zoomIn.image
     }
     
-    public func togglePlayerButtonAnimation(_ status: AVPlayer.TimeControlStatus) {
+    func togglePlayerButtonAnimation(_ isPlaying: Bool) {
         playButton.transform = CGAffineTransform(scaleX: .zero, y: .zero)
         
         UIView.animate(withDuration: 0.7,
@@ -105,7 +103,7 @@ extension PlayerControlView {
                        usingSpringWithDamping: 0.6,
                        initialSpringVelocity: 0.4,
                        options: .allowUserInteraction) {
-            if status == .playing {
+            if isPlaying {
                 self.playButton.configuration?.image = ImageConstants.pause.image
             } else {
                 self.playButton.configuration?.image = ImageConstants.play.image

@@ -11,7 +11,10 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private var subscription = Set<AnyCancellable>()
     private lazy var input = LiveStreamViewModel.Input(
         expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher(),
-        sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher()
+        sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.dropFirst().eraseToAnyPublisher(),
+        playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
+        playerGestureDidTap: playerView.playerGestureDidTap.dropFirst().eraseToAnyPublisher(),
+        playButtonDidTap: playerView.playerControlView.playButtonDidTap.dropFirst().eraseToAnyPublisher()
     )
     private lazy var output = viewModel.transform(input: input)
     
@@ -60,6 +63,21 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             self.playerView.seek(to: amount)
         }
         .store(in: &subscription)
+        
+        output.isplayerControlShowed.sink { [weak self] flag in
+            guard let self else { return }
+            self.playerView.updatePlayerAnimation(flag)
+        }
+        .store(in: &subscription)
+        
+        output.isPlaying
+            .removeDuplicates()
+            .sink { [weak self] isPlaying in
+                guard let self else { return }
+                print(isPlaying)
+                self.playerView.updataePlayState(isPlaying)
+            }
+            .store(in: &subscription)
     }
     
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {

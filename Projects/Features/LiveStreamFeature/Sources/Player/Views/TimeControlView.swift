@@ -17,7 +17,7 @@ final class TimeControlView: BaseView {
     private let liveStringLabel: UILabel = UILabel()
     private let slider: UISlider = UISlider()
     
-    public var maxValue: Float = 0 {
+    var maxValue: Float = 0 {
         willSet {
             slider.maximumValue = newValue
         }
@@ -76,7 +76,7 @@ extension TimeControlView {
 
 extension TimeControlView: TimeControlState {
     func updateSlider(to time: Float) {
-            slider.setValue(time, animated: false)
+        slider.setValue(time, animated: false)
     }
 }
 

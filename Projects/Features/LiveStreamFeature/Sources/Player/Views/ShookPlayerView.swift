@@ -6,14 +6,14 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-#warning("추후 네트워크 에러 헨들링")
-//protocol ShookPlayerViewAciton {
-//    var playing
-//}
+protocol ShhokPlayerViewState {
+    func updatePlayerAnimation(_ isShowed: Bool)
+    func updataePlayState(_ isPlaying: Bool)
+}
 
-protocol ShookPlayerViewState {
-    var isPlaying: AnyPublisher<Bool, Never> { get }
-    var isBuffering: AnyPublisher<Bool, Never> { get }
+protocol ShookPlayerViewAciton {
+    var playerStateDidChange: AnyPublisher<Bool, Never> { get }
+    var playerGestureDidTap: AnyPublisher<Void, Never> { get }
 }
 
 private enum Constants: CGFloat {
@@ -29,8 +29,11 @@ final class ShookPlayerView: BaseView {
     private var subscription: Set<AnyCancellable> = .init()
     private var unfoldedConstraint: NSLayoutConstraint?
     private var foldedConstraint: NSLayoutConstraint?
-    private var isFolded = true
     private var isInitialized = false
+    
+    // MARK: - @Published
+    @Published private var playingStateChangedPublisher: Bool = false
+    @Published private var playerGestureTapPublisher: Void = ()
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -45,10 +48,6 @@ final class ShookPlayerView: BaseView {
     }()
     private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
     
-    // MARK: - @Published
-    @Published private var playingState: Bool = false
-    @Published private var bufferingState: Bool = false
-    
     public let playerControlView: PlayerControlView = PlayerControlView()
     
     init(with url: URL) {
@@ -56,8 +55,6 @@ final class ShookPlayerView: BaseView {
         player.replaceCurrentItem(with: playerItem)
         super.init(frame: .zero)
         addObserver()
-        player.play()
-        
     }
     
     required init?(coder: NSCoder) {
@@ -116,27 +113,17 @@ final class ShookPlayerView: BaseView {
     
     override func setupStyles() {
         playerControlView.alpha = .zero
+        
         videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
         
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
-        
     }
     
     override func setupActions() {
         videoContainerView.addGestureRecognizer(tapGesture)
-        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
         
-        playerControlView.playButtonDidTap.sink { [weak self] in
-            guard let self else { return }
-            
-            if self.playingState {
-                self.player.pause()
-            } else {
-                self.player.play()
-            }
-        }
-        .store(in: &subscription)
+        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
     
     override func layoutSubviews() {
@@ -197,14 +184,12 @@ extension ShookPlayerView {
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
-            if !isInitialized {
-               
-                isInitialized = true
-            }
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
+            player.play()
             
         case.failed, .unknown:
-            playingState = false
+            #warning("에러")
+            break
             
         @unknown default:
             break
@@ -214,11 +199,9 @@ extension ShookPlayerView {
     private func hanldePlayItemBufferString(_ bufferString: String) {
         switch bufferString {
         case "playbackBufferEmpty":
-            bufferingState = true
             indicatorView.startAnimating()
             
         case "playbackLikelyToKeepUp", "playbackBufferFull":
-            bufferingState = false
             indicatorView.stopAnimating()
             
         default:
@@ -227,13 +210,12 @@ extension ShookPlayerView {
     }
     
     private func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
-        playerControlView.togglePlayerButtonAnimation(status)
         switch status {
         case .playing:
-            playingState = true
+            playingStateChangedPublisher = true
             
         case.paused:
-            playingState = false
+            playingStateChangedPublisher = false
             
         case .waitingToPlayAtSpecifiedRate:
             break
@@ -243,10 +225,21 @@ extension ShookPlayerView {
         }
     }
     
+    // MARK: - @objc
+    @objc func toggleControlPannel() {
+        playerGestureTapPublisher = ()
+    }
+}
+
+extension ShookPlayerView {
+    func seek(to newValue: Double) {
+        self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
+    }
+    
     // - MARK: animation
-    private func infoViewConstraintAnimation() {
+    private func infoViewConstraintAnimation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
-            if self.isFolded {
+            if isShowed {
                 self.unfoldedConstraint?.isActive = true
                 self.foldedConstraint?.isActive = false
             } else {
@@ -254,32 +247,43 @@ extension ShookPlayerView {
                 self.foldedConstraint?.isActive = true
                 
             }
-            self.isFolded = !self.isFolded
             self.layoutIfNeeded()
         }
     }
     
-    // MARK: - @objc
-    @objc func toggleControlPannel() {
+    private func playerViewAlphaAnimalation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
-            self.playerControlView.alpha = self.playerControlView.alpha == .zero ? 1 : .zero
+            if isShowed {
+                self.playerControlView.alpha = 1
+            } else {
+                self.playerControlView.alpha = .zero
+            }
         }
-        infoViewConstraintAnimation()
     }
 }
 
-extension ShookPlayerView {
-    public func seek(to newValue: Double) {
-        self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
-    }
-}
-
-extension ShookPlayerView: ShookPlayerViewState {
-    var isPlaying: AnyPublisher<Bool, Never> {
-        $playingState.eraseToAnyPublisher()
+extension ShookPlayerView: ShhokPlayerViewState {
+    func updatePlayerAnimation(_ isShowed: Bool) {
+        playerViewAlphaAnimalation(isShowed)
+        infoViewConstraintAnimation(isShowed)
     }
     
-    var isBuffering: AnyPublisher<Bool, Never> {
-        $bufferingState.eraseToAnyPublisher()
+    func updataePlayState(_ isPlaying: Bool) {
+        if isPlaying {
+            player.play()
+        } else {
+            player.pause()
+        }
+        playerControlView.togglePlayerButtonAnimation(isPlaying)
+    }
+}
+
+extension ShookPlayerView: ShookPlayerViewAciton {
+    var playerStateDidChange: AnyPublisher<Bool, Never> {
+        $playingStateChangedPublisher.eraseToAnyPublisher()
+    }
+    
+    var playerGestureDidTap: AnyPublisher<Void, Never> {
+        $playerGestureTapPublisher.eraseToAnyPublisher()
     }
 }
