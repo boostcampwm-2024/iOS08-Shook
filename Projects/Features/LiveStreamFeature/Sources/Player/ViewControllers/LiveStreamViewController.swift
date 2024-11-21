@@ -22,10 +22,14 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         return output.isExpanded.value ? .landscapeLeft: .portrait
     }
     
+    private let chatingList = ChatingListView()
+    private let chatInputField = ChatInputField()
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     
     public override func setupViews() {
         view.addSubview(playerView)
+        view.addSubview(chatingList)
+        view.addSubview(chatInputField)
     }
     
     public override func setupStyles() {
@@ -44,6 +48,17 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         shrinkConstraint = playerView.heightAnchor.constraint(equalToConstant: 200)
         shrinkConstraint?.isActive = true
         expandConstraint = playerView.heightAnchor.constraint(equalToConstant: width)
+        
+        chatingList.ezl.makeConstraint {
+            $0.top(to: playerView.ezl.bottom)
+                .horizontal(to: view)
+                .bottom(to: chatInputField.ezl.top)
+        }
+        
+        chatInputField.ezl.makeConstraint {
+            $0.horizontal(to: view)
+                .bottom(to: view.keyboardLayoutGuide.ezl.top)
+        }
     }
         
     public override func setupActions() {
@@ -74,7 +89,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .removeDuplicates()
             .sink { [weak self] isPlaying in
                 guard let self else { return }
-                print(isPlaying)
                 self.playerView.updataePlayState(isPlaying)
             }
             .store(in: &subscription)
