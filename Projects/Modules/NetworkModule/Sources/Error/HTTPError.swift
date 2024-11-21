@@ -33,5 +33,5 @@ public enum HTTPError: String, LocalizedError {
         }
     }
     
-    var errorDescription: String? { rawValue }
+    public var errorDescription: String? { rawValue }
 }
