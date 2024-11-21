@@ -19,9 +19,12 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private let refreshControl = UIRefreshControl()
     private let rightBarButton: UIBarButtonItem = UIBarButtonItem()
+    
     private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
+    
+    private let transitioning = CollectionViewCellTransitioning()
     
     var selectedThumbnailView: ThumbnailView? {
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
@@ -98,7 +101,10 @@ extension BroadcastCollectionViewController: UICollectionViewDelegate {
         let viewModel = SampleLiveStreamViewModel()
         let viewController = SampleLiveStreamViewController(viewModel: viewModel)
         viewController.modalPresentationStyle = .overCurrentContext
+        viewController.transitioningDelegate = transitioning
         present(viewController, animated: true, completion: nil)
+        
+        CFRunLoopWakeUp(CFRunLoopGetCurrent())
     }
 }
 
@@ -117,7 +123,7 @@ extension BroadcastCollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 24, trailing: 16)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 24, trailing: 0)
                 section.interGroupSpacing = 16
                 
                 return section
@@ -131,7 +137,7 @@ extension BroadcastCollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
                 section.interGroupSpacing = 14
                 
                 let headerSize = NSCollectionLayoutSize(
