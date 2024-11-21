@@ -105,6 +105,5 @@ extension LiveStreamViewController {
         } else {
             UIDevice.current.setValue(orientation, forKey: "orientation")
         }
-        
     }
 }

@@ -20,6 +20,12 @@ private enum Constants: CGFloat {
     case indicatorSize  = 50
 }
 
+private enum BufferStateConstants: String {
+    case playbackBufferEmpty
+    case playbackLikelyToKeepUp
+    case playbackBufferFull
+}
+
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
     private var playerItem: AVPlayerItem
@@ -85,7 +91,6 @@ final class ShookPlayerView: BaseView {
         self.addSubview(videoContainerView)
         videoContainerView.addSubview(playerControlView)
         videoContainerView.addSubview(indicatorView)
-        
     }
     
     override func setupLayouts() {
@@ -133,12 +138,6 @@ final class ShookPlayerView: BaseView {
 }
 
 extension ShookPlayerView {
-    private enum BufferState: String {
-        case playbackBufferEmpty
-        case playbackLikelyToKeepUp
-        case playbackBufferFull
-    }
-    
     // MARK: - register / remove observer
     private func addObserver() {
         addObserverPlayerItem()
@@ -151,9 +150,9 @@ extension ShookPlayerView {
                                options: [.old, .new],
                                context: nil) // 동일한 객체를 여러 키 경로에서 관찰할 때 구분하기 위한 식별자
         
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackBufferEmpty.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackBufferFull.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue, options: .new, context: nil)
     }
     
     private func addObserverPlayer() {
@@ -171,9 +170,9 @@ extension ShookPlayerView {
     private func removeObserver() {
         self.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
         self.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
-        self.removeObserver(self, forKeyPath: BufferState.playbackBufferEmpty.rawValue)
-        self.removeObserver(self, forKeyPath: BufferState.playbackLikelyToKeepUp.rawValue)
-        self.removeObserver(self, forKeyPath: BufferState.playbackBufferFull.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
         
         if let token = timeObserverToken {
             player.removeTimeObserver(token)
@@ -251,7 +250,7 @@ extension ShookPlayerView {
         }
     }
     
-    private func playerViewAlphaAnimalation(_ isShowed: Bool) {
+    private func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
             if isShowed {
                 self.playerControlView.alpha = 1
@@ -264,7 +263,7 @@ extension ShookPlayerView {
 
 extension ShookPlayerView: ShhokPlayerViewState {
     func updatePlayerAnimation(_ isShowed: Bool) {
-        playerViewAlphaAnimalation(isShowed)
+        playerControlViewAlphaAnimalation(isShowed)
         infoViewConstraintAnimation(isShowed)
     }
     
