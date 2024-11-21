@@ -3,16 +3,14 @@ import UIKit
 import BaseFeature
 import EasyLayoutModule
 
-public final class ChatingListView: BaseView {
+final class ChatingListView: BaseView {
     private let titleLabel = UILabel()
     private let chatListView = UITableView()
     private let chatEmptyView = ChatEmptyView()
-    private let chatInputField = ChatInputField()
         
-    public override func setupViews() {
+    override func setupViews() {
         addSubview(titleLabel)
         addSubview(chatListView)
-        addSubview(chatInputField)
         
         titleLabel.text = "실시간 채팅"
        
@@ -20,7 +18,7 @@ public final class ChatingListView: BaseView {
         chatListView.backgroundView = chatEmptyView
     }
     
-    public override func setupStyles() {
+    override func setupStyles() {
         titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         
@@ -28,21 +26,16 @@ public final class ChatingListView: BaseView {
         chatListView.keyboardDismissMode = .interactive
     }
     
-    public override func setupLayouts() {
+    override func setupLayouts() {
         titleLabel.ezl.makeConstraint {
             $0.top(to: self)
-                .leading(to: self)
+                .leading(to: self, offset: 20)
         }
         
         chatListView.ezl.makeConstraint {
             $0.horizontal(to: self)
                 .top(to: titleLabel.ezl.bottom, offset: 21)
-                .bottom(to: chatInputField.ezl.top)
-        }
-        
-        chatInputField.ezl.makeConstraint {
-            $0.horizontal(to: self)
-                .bottom(to: self.keyboardLayoutGuide.ezl.top)
+                .bottom(to: self)
         }
     }
 }
