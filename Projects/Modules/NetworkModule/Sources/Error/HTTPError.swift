@@ -1,6 +1,6 @@
 import Foundation
 
-enum HTTPError: String, LocalizedError {
+public enum HTTPError: String, LocalizedError {
     
     // MARK: 400..<500 , Client Error
     case badRequest /// 400
