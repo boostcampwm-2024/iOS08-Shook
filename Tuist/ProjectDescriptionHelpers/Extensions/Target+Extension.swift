@@ -19,7 +19,7 @@ extension Target {
         resources: .resources,
         scripts: generationEnvironment.scripts,
         dependencies: [
-            .domain(target: .BaseDomain),
+            .domain(target: .LiveStationDomain),
             .feature(target: .MainFeature),
             .feature(target: .LiveStreamFeature)
         ],
