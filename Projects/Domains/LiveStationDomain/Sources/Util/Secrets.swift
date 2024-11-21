@@ -12,4 +12,3 @@ func config(key: KeyKind) -> String {
     }
     return secrets[key.rawValue] as? String ?? "not found key"
 }
-

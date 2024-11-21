@@ -3,19 +3,19 @@ import Foundation
 
 import NetworkModule
 
-enum LiveStationEndpoint {
+public enum LiveStationEndpoint {
     case fetchChannelList
 }
 
 extension LiveStationEndpoint: Endpoint {
-    var method: NetworkModule.HTTPMethod {
+    public var method: NetworkModule.HTTPMethod {
         switch self {
         case .fetchChannelList:
             return .get
         }
     }
     
-    var header: [String : String]? {
+    public var header: [String: String]? {
         switch self {
         case .fetchChannelList:
             return [
@@ -28,18 +28,18 @@ extension LiveStationEndpoint: Endpoint {
         }
     }
     
-    var host: String {
-        "https://livestation.apigw.ntruss.com"
+    public var host: String {
+        "livestation.apigw.ntruss.com"
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .fetchChannelList:
             return "/api/v2/channels"
         }
     }
     
-    var requestTask: NetworkModule.RequestTask {
+    public var requestTask: NetworkModule.RequestTask {
         return .empty
     }
     
@@ -73,7 +73,7 @@ private extension LiveStationEndpoint {
 
         let hmacData = Data(hmac)
         let base64Signature = hmacData.base64EncodedString()
-
+        
         return base64Signature
     }
 }
