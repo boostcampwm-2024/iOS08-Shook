@@ -6,24 +6,40 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-protocol ShookPlayerViewState {
-    var isPlaying: AnyPublisher<Bool, Never> { get }
-    var isBuffering: AnyPublisher<Bool, Never> { get }
+protocol ShhokPlayerViewState {
+    func updatePlayerAnimation(_ isShowed: Bool)
+    func updataePlayState(_ isPlaying: Bool)
+}
+
+protocol ShookPlayerViewAciton {
+    var playerStateDidChange: AnyPublisher<Bool, Never> { get }
+    var playerGestureDidTap: AnyPublisher<Void, Never> { get }
+}
+
+private enum Constants: CGFloat {
+    case indicatorSize  = 50
+}
+
+private enum BufferStateConstants: String {
+    case playbackBufferEmpty
+    case playbackLikelyToKeepUp
+    case playbackBufferFull
 }
 
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
-    private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
-    private let playButton: UIButton = UIButton()
     private var playerItem: AVPlayerItem
-    private var timeControlView: TimeControlView = TimeControlView()
-    private var infoView: LiveStreamInfoView = LiveStreamInfoView()
+    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
+    private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
     private var unfoldedConstraint: NSLayoutConstraint?
     private var foldedConstraint: NSLayoutConstraint?
-    private var isFolded = true
     private var isInitialized = false
+    
+    // MARK: - @Published
+    @Published private var playingStateChangedPublisher: Bool = false
+    @Published private var playerGestureTapPublisher: Void = ()
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -38,17 +54,13 @@ final class ShookPlayerView: BaseView {
     }()
     private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
     
-    // MARK: - @Published
-    @Published private var playingState: Bool = false
-    @Published private var bufferingState: Bool = false
+    public let playerControlView: PlayerControlView = PlayerControlView()
     
     init(with url: URL) {
         playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         super.init(frame: .zero)
         addObserver()
-        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
-    
     }
     
     required init?(coder: NSCoder) {
@@ -77,17 +89,18 @@ final class ShookPlayerView: BaseView {
         super.setupViews()
         self.addSubview(infoView)
         self.addSubview(videoContainerView)
-        videoContainerView.addSubview(playButton)
+        videoContainerView.addSubview(playerControlView)
         videoContainerView.addSubview(indicatorView)
-        videoContainerView.addSubview(timeControlView)
-        
     }
     
     override func setupLayouts() {
         super.setupLayouts()
-        
         videoContainerView.ezl.makeConstraint {
             $0.diagonal(to: self)
+        }
+        
+        indicatorView.ezl.makeConstraint {
+            $0.width(Constants.indicatorSize.rawValue).height(Constants.indicatorSize.rawValue).center(to: self)
         }
         
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
@@ -98,50 +111,22 @@ final class ShookPlayerView: BaseView {
             $0.horizontal(to: self)
         }
         
-        playButton.ezl.makeConstraint {
-            $0.center(to: videoContainerView)
-        }
-        
-        indicatorView.ezl.makeConstraint {
-            $0.width(30).height(30).center(to: videoContainerView)
-        }
-        
-        timeControlView.ezl.makeConstraint {
-            $0.height(10)
-                .horizontal(to: self, padding: 15)
-                .bottom(to: videoContainerView, offset: -20)
+        playerControlView.ezl.makeConstraint {
+            $0.diagonal(to: self)
         }
     }
     
     override func setupStyles() {
-        var playButtonConfig = UIButton.Configuration.plain()
-        playButtonConfig.image = DesignSystemAsset.Image.play48.image
-        playButton.configuration = playButtonConfig
-        playButton.alpha = .zero
+        playerControlView.alpha = .zero
         
-        timeControlView.alpha = .zero
+        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
         
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
-        playButton.addAction(UIAction { [weak self] _ in
-            guard let self else { return }
-            if self.playingState {
-                self.player.pause()
-            } else {
-                self.player.play()
-            }
-        }, for: .touchUpInside)
-        
         videoContainerView.addGestureRecognizer(tapGesture)
-        
-        timeControlView.$currentValue.sink { [weak self] currentValue in
-            guard let self else { return }
-            self.player.seek(to: CMTime(seconds: Double(currentValue), preferredTimescale: Int32(NSEC_PER_SEC)))
-        }
-        .store(in: &subscription)
         
         infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
@@ -153,12 +138,6 @@ final class ShookPlayerView: BaseView {
 }
 
 extension ShookPlayerView {
-    enum BufferState: String {
-        case playbackBufferEmpty
-        case playbackLikelyToKeepUp
-        case playbackBufferFull
-    }
-    
     // MARK: - register / remove observer
     private func addObserver() {
         addObserverPlayerItem()
@@ -171,9 +150,9 @@ extension ShookPlayerView {
                                options: [.old, .new],
                                context: nil) // 동일한 객체를 여러 키 경로에서 관찰할 때 구분하기 위한 식별자
         
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackBufferEmpty.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferState.playbackBufferFull.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
+        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue, options: .new, context: nil)
     }
     
     private func addObserverPlayer() {
@@ -184,16 +163,16 @@ extension ShookPlayerView {
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] cmtTime in
             guard let self else { return }
             let floatSecond = CMTimeGetSeconds(cmtTime)
-            self.timeControlView.updateSlider(to: Float(floatSecond))
+            playerControlView.timeControlView.updateSlider(to: Float(floatSecond))
         }
     }
     
     private func removeObserver() {
         self.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
         self.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
-        self.removeObserver(self, forKeyPath: BufferState.playbackBufferEmpty.rawValue)
-        self.removeObserver(self, forKeyPath: BufferState.playbackLikelyToKeepUp.rawValue)
-        self.removeObserver(self, forKeyPath: BufferState.playbackBufferFull.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
+        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
         
         if let token = timeObserverToken {
             player.removeTimeObserver(token)
@@ -201,47 +180,41 @@ extension ShookPlayerView {
     }
     
     // MARK: - observeValue Handler
-    func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
+    private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
-            if !isInitialized {
-                player.play()
-                isInitialized = true
-            }
-            timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
+            playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
+            player.play()
             
         case.failed, .unknown:
-            playingState = false
+            #warning("에러")
+            break
             
         @unknown default:
             break
         }
     }
     
-    func hanldePlayItemBufferString(_ bufferString: String) {
+    private func hanldePlayItemBufferString(_ bufferString: String) {
         switch bufferString {
         case "playbackBufferEmpty":
             indicatorView.startAnimating()
-            bufferingState = true
             
         case "playbackLikelyToKeepUp", "playbackBufferFull":
             indicatorView.stopAnimating()
-            bufferingState = false
             
         default:
             return
         }
     }
     
-    func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
+    private func handlePlayerTimeControlStatus(_ status: AVPlayer.TimeControlStatus) {
         switch status {
         case .playing:
-            playButton.configuration?.image = DesignSystemAsset.Image.pause48.image
-            playingState = true
+            playingStateChangedPublisher = true
             
         case.paused:
-            playButton.configuration?.image = DesignSystemAsset.Image.play48.image
-            playingState = false
+            playingStateChangedPublisher = false
             
         case .waitingToPlayAtSpecifiedRate:
             break
@@ -253,22 +226,19 @@ extension ShookPlayerView {
     
     // MARK: - @objc
     @objc func toggleControlPannel() {
-        infoViewConstraintAnimation()
-        controlPanelAlphaAnimation()
+        playerGestureTapPublisher = ()
     }
 }
 
 extension ShookPlayerView {
-    func controlPanelAlphaAnimation() {
-        UIView.transition(with: videoContainerView, duration: 0.2, options: .transitionCrossDissolve) {
-            self.playButton.alpha = self.playButton.alpha == .zero ? 1 : .zero
-            self.timeControlView.alpha = self.timeControlView.alpha == .zero ? 1 : .zero
-        }
+    func seek(to newValue: Double) {
+        self.player.seek(to: CMTime(seconds: newValue, preferredTimescale: Int32(NSEC_PER_SEC)))
     }
     
-    func infoViewConstraintAnimation() {
+    // - MARK: animation
+    private func infoViewConstraintAnimation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
-            if self.isFolded {
+            if isShowed {
                 self.unfoldedConstraint?.isActive = true
                 self.foldedConstraint?.isActive = false
             } else {
@@ -276,18 +246,43 @@ extension ShookPlayerView {
                 self.foldedConstraint?.isActive = true
                 
             }
-            self.isFolded = !self.isFolded
             self.layoutIfNeeded()
+        }
+    }
+    
+    private func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
+        UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
+            if isShowed {
+                self.playerControlView.alpha = 1
+            } else {
+                self.playerControlView.alpha = .zero
+            }
         }
     }
 }
 
-extension ShookPlayerView: ShookPlayerViewState {
-    var isPlaying: AnyPublisher<Bool, Never> {
-        $playingState.eraseToAnyPublisher()
+extension ShookPlayerView: ShhokPlayerViewState {
+    func updatePlayerAnimation(_ isShowed: Bool) {
+        playerControlViewAlphaAnimalation(isShowed)
+        infoViewConstraintAnimation(isShowed)
     }
     
-    var isBuffering: AnyPublisher<Bool, Never> {
-        $bufferingState.eraseToAnyPublisher()
+    func updataePlayState(_ isPlaying: Bool) {
+        if isPlaying {
+            player.play()
+        } else {
+            player.pause()
+        }
+        playerControlView.togglePlayerButtonAnimation(isPlaying)
+    }
+}
+
+extension ShookPlayerView: ShookPlayerViewAciton {
+    var playerStateDidChange: AnyPublisher<Bool, Never> {
+        $playingStateChangedPublisher.eraseToAnyPublisher()
+    }
+    
+    var playerGestureDidTap: AnyPublisher<Void, Never> {
+        $playerGestureTapPublisher.eraseToAnyPublisher()
     }
 }
