@@ -8,8 +8,7 @@ import EasyLayoutModule
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
-        case large
-        case small
+        case large, small
     }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
@@ -23,6 +22,13 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
+    
+    var selectedThumbnailView: ThumbnailView? {
+        guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
+        let cell = collectionView.cellForItem(at: indexPath)
+        guard let thumbnailViewContainer = cell as? ThumbnailViewContainer else { return nil }
+        return thumbnailViewContainer.thumbnailView
+    }
     
     public override init(viewModel: BroadcastCollectionViewModel) {
         super.init(viewModel: viewModel)
@@ -47,6 +53,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationItem.rightBarButtonItem = rightBarButton
         
         collectionView.refreshControl = refreshControl
+        
+        collectionView.delegate = self
         
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
@@ -82,15 +90,19 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
             }
             .store(in: &cancellables)
     }
-    
-    @objc
-    private func didTapRightBarButton() {
-        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
-        let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
-        navigationController?.present(settingNavigationController, animated: true)
+}
+
+// MARK: - CollectionView Delegate
+extension BroadcastCollectionViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let viewModel = SampleLiveStreamViewModel()
+        let viewController = SampleLiveStreamViewController(viewModel: viewModel)
+        viewController.modalPresentationStyle = .overCurrentContext
+        present(viewController, animated: true, completion: nil)
     }
 }
 
+// MARK: - CollectionView CompositionalLayout
 extension BroadcastCollectionViewController {
     private static func setupCollectionViewCompositionalLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, _  in
@@ -140,6 +152,7 @@ extension BroadcastCollectionViewController {
     }
 }
 
+// MARK: - CollectionView Diffable DataSource
 extension BroadcastCollectionViewController {
     private func setupDataSource() {
         dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
@@ -207,5 +220,15 @@ extension BroadcastCollectionViewController {
                 self?.refreshControl.endRefreshing()
             }
         }
+    }
+}
+
+// MARK: - CollectionView Methods
+extension BroadcastCollectionViewController {
+    @objc
+    private func didTapRightBarButton() {
+        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
+        let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
+        navigationController?.present(settingNavigationController, animated: true)
     }
 }

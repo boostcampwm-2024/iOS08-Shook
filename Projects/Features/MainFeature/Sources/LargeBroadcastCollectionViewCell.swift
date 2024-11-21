@@ -4,7 +4,7 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell {    
+final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailViewContainer {
     let thumbnailView = ThumbnailView(for: .large)
     
     private let titleLabel = UILabel()

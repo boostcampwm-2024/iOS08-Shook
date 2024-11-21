@@ -3,6 +3,10 @@ import UIKit
 import BaseFeature
 import EasyLayoutModule
 
+protocol ThumbnailViewContainer {
+    var thumbnailView: ThumbnailView { get }
+}
+
 final class ThumbnailView: BaseView {
     enum ViewMode {
         case large, small, full
