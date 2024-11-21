@@ -6,18 +6,18 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class SettingUIViewController: BaseViewController<BroadcastCollectionViewModel> {
-    private let rightBarButton = UIBarButtonItem()
-    private let tableView = UITableView()
+    private let settingTableView = UITableView()
+    private let closeBarButton = UIBarButtonItem()
     private let startStreamingButton = UIButton()
-    private let streamingName = SettingTableViewCell(style: .default, reuseIdentifier: nil)
-    private let streamingDescription = SettingTableViewCell(style: .default, reuseIdentifier: nil)
+    private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
+    private let streamingDescriptionCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     
-    private let placeholderInfo = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
-    private let input = BroadcastCollectionViewModel.Input()
+    private let placeholderStringOfCells = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
+    private let viewModelInput = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
     public override func setupBind() {
-        let output = viewModel.transform(input: input)
+        let output = viewModel.transform(input: viewModelInput)
         
         output.isActive
             .sink { [weak self] isActive in
@@ -32,38 +32,38 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         output.errorMessage
             .sink { [weak self] errorMessage in
                 guard let self else { return }
-                self.streamingName.setErrorMessage(message: errorMessage)
+                self.streamingNameCell.setErrorMessage(message: errorMessage)
             }
             .store(in: &cancellables)
     }
     
     public override func setupViews() {
-        rightBarButton.image = UIImage(systemName: "xmark")
+        closeBarButton.image = UIImage(systemName: "xmark")
         
         navigationItem.title = "방송설정"
-        navigationItem.rightBarButtonItem = rightBarButton
+        navigationItem.rightBarButtonItem = closeBarButton
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        settingTableView.delegate = self
+        settingTableView.dataSource = self
+        settingTableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
+        settingTableView.rowHeight = UITableView.automaticDimension
+        settingTableView.estimatedRowHeight = 100
         
         startStreamingButton.isEnabled = false
         
-        view.addSubview(tableView)
+        view.addSubview(settingTableView)
         view.addSubview(startStreamingButton)
     }
     
     public override func setupStyles() {
-        rightBarButton.style = .plain
-        
         view.backgroundColor = .black
-        
+
+        closeBarButton.style = .plain
+                
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .white
         
-        tableView.backgroundColor = .black
+        settingTableView.backgroundColor = .black
         
         startStreamingButton.setTitle("방송시작", for: .normal)
         startStreamingButton.layer.cornerRadius = 16
@@ -73,7 +73,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
         
     public override func setupLayouts() {
-        tableView.ezl.makeConstraint {
+        settingTableView.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide, offset: 21)
                 .bottom(to: startStreamingButton.ezl.top)
                 .horizontal(to: view, padding: 20)
@@ -88,8 +88,9 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     public override func setupActions() {
         startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
-        rightBarButton.target = self
-        rightBarButton.action = #selector(didTapRightBarButton)
+        
+        closeBarButton.target = self
+        closeBarButton.action = #selector(didTapRightBarButton)
     }
     
     @objc
@@ -99,37 +100,37 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     @objc
     private func didTapSettingButton() {
-        let newViewController = BroadcastUIViewController(viewModel: viewModel)
+        let newBroadcastUIViewController = BroadcastUIViewController(viewModel: viewModel)
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                 let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
         
         UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
-            window.rootViewController = newViewController
+            window.rootViewController = newBroadcastUIViewController
         }
     }
 }
 
 extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        placeholderInfo.count
+        placeholderStringOfCells.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            streamingName.configure(
+            streamingNameCell.configure(
                 label: "방송이름",
-                placeholder: placeholderInfo[indexPath.row]
+                placeholder: placeholderStringOfCells[indexPath.row]
             ) { inputValue in
-                self.input.didWriteStreamingName.send(inputValue)
+                self.viewModelInput.didWriteStreamingName.send(inputValue)
             }
-            return streamingName
+            return streamingNameCell
         } else {
-            streamingDescription.configure(
+            streamingDescriptionCell.configure(
                 label: "방송정보",
-                placeholder: placeholderInfo[indexPath.row],
+                placeholder: placeholderStringOfCells[indexPath.row],
                 textDidChange: nil
             )
-            return streamingDescription
+            return streamingDescriptionCell
         }
     }
     
