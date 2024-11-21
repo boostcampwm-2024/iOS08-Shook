@@ -14,7 +14,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let viewController = LiveStreamViewController(viewModel: LiveStreamViewModel())
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-
         return true
     }
 }
