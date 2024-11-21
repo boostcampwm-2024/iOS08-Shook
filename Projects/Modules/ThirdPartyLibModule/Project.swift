@@ -9,7 +9,6 @@ let project = Project.module(
         .implements(module: .module(.ThirdPartyLibModule), dependencies: [
             .module(target: .ThirdPartyLibModule, type: .interface),
             .SPM.HaishinKit,
-            .module(target: .NetworkModule),
             .module(target: .EasyLayoutModule)
         ]),
         .tests(module: .module(.ThirdPartyLibModule), dependencies: [
