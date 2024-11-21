@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 
 import BaseFeature
@@ -7,6 +8,9 @@ import EasyLayoutModule
 public final class ChatingViewController: BaseViewController<ChatingViewModel> {
     private let chatingList = ChatingListView()
     private let chatInputField = ChatInputField()
+    
+    private var cancellables = Set<AnyCancellable>()
+    private let input = ChatingViewModel.Input()
     
     public override func setupLayouts() {
         view.addSubview(chatingList)
@@ -22,5 +26,14 @@ public final class ChatingViewController: BaseViewController<ChatingViewModel> {
             $0.horizontal(to: view)
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
         }
+    }
+    
+    public override func setupBind() {
+        let output = viewModel.transform(input: input)
+        
+        output.chatList
+            .sink { [weak self] in
+                self?.chatingList.updateList($0)
+            }.store(in: &cancellables)
     }
 }
