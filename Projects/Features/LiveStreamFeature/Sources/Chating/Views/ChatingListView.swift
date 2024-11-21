@@ -3,46 +3,62 @@ import UIKit
 import BaseFeature
 import EasyLayoutModule
 
-public final class ChatingListView: BaseView {
+final class ChatingListView: BaseView {
     private let titleLabel = UILabel()
-    private let chatListView = UITableView()
+    private let chatListView = UITableView(frame: .zero, style: .plain)
     private let chatEmptyView = ChatEmptyView()
-    private let chatInputField = ChatInputField()
-        
-    public override func setupViews() {
+    
+    private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
+        tableView: chatListView
+    ) { [weak self] tableView, indexPath, chatInfo in
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: ChatingCell.identifier,
+            for: indexPath
+        ) as? ChatingCell ?? ChatingCell()
+                        
+        return cell
+    }
+    
+    override func setupViews() {
         addSubview(titleLabel)
         addSubview(chatListView)
-        addSubview(chatInputField)
         
         titleLabel.text = "실시간 채팅"
-       
+        
         chatListView.register(ChatingCell.self, forCellReuseIdentifier: ChatingCell.identifier)
         chatListView.backgroundView = chatEmptyView
     }
     
-    public override func setupStyles() {
+    override func setupStyles() {
         titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         
         chatListView.backgroundColor = .clear
         chatListView.keyboardDismissMode = .interactive
+        chatListView.allowsSelection = false
     }
     
-    public override func setupLayouts() {
+    override func setupLayouts() {
         titleLabel.ezl.makeConstraint {
             $0.top(to: self)
-                .leading(to: self)
+                .leading(to: self, offset: 20)
         }
         
         chatListView.ezl.makeConstraint {
             $0.horizontal(to: self)
                 .top(to: titleLabel.ezl.bottom, offset: 21)
-                .bottom(to: chatInputField.ezl.top)
+                .bottom(to: self)
         }
+    }
+}
+
+extension ChatingListView {
+    func updateList(_ chatList: [ChatInfo]) {
+        chatEmptyView.isHidden = !chatList.isEmpty
         
-        chatInputField.ezl.makeConstraint {
-            $0.horizontal(to: self)
-                .bottom(to: self.keyboardLayoutGuide.ezl.top)
-        }
+        var snapshot = NSDiffableDataSourceSnapshot<Int, ChatInfo>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(chatList)
+        self.dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
