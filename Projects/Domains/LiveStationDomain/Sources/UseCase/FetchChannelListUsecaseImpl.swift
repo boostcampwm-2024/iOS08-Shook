@@ -3,7 +3,6 @@ import Combine
 import LiveStationDomainInterface
 
 struct FetchChannelListUsecaseImpl: FetchChannelListUsecase {
-    
     private let repository: any LiveStationRepository
     
     init(repository: any LiveStationRepository) {

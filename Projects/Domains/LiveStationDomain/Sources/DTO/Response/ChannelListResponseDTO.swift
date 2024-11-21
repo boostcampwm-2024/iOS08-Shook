@@ -4,7 +4,6 @@ import LiveStationDomainInterface
 
 public struct ChannelListResponseDTO: Decodable {
     let content: [ChannelResponse]
-   
 }
 
 public struct ChannelResponse: Decodable {
