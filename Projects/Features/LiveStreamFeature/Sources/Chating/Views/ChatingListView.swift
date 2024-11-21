@@ -5,7 +5,7 @@ import EasyLayoutModule
 
 final class ChatingListView: BaseView {
     private let titleLabel = UILabel()
-    private let chatListView = UITableView()
+    private let chatListView = UITableView(frame: .zero, style: .plain)
     private let chatEmptyView = ChatEmptyView()
     
     private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
@@ -35,6 +35,7 @@ final class ChatingListView: BaseView {
         
         chatListView.backgroundColor = .clear
         chatListView.keyboardDismissMode = .interactive
+        chatListView.allowsSelection = false
     }
     
     override func setupLayouts() {
