@@ -39,6 +39,23 @@ extension Target {
             .target(name: env.name)
         ]
     )
+    
+    public static let broadcastExtension: Target = .target(
+        name: env.name + "BroadcastExtension",
+        destinations: [.iPhone],
+        product: .appExtension,
+        bundleId: env.bundleID + ".BroadcastUploadExtension",
+        deploymentTargets: env.deploymentTargets,
+        infoPlist: .extendingDefault(with: [
+            "NSExtension" : [
+                "NSExtensionPointIdentifier": "com.apple.broadcast-services-upload",
+                "NSExtensionPrincipalClass": "$(PRODUCT_MODULE_NAME).SampleHandler",
+                "RPBroadcastProcessMode": "RPBroadcastProcessModeSampleBuffer"
+            ]
+        ]),
+        sources: [.glob(.relativeToRoot("Projects/Features/MainFeature/BroadcastExtension/Sources/**"))],
+        resources: [.glob(pattern: .relativeToRoot("Projects/Features/MainFeature/BroadcastExtension/Resources/**"))]
+    )
 }
 
 

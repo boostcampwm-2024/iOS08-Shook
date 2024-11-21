@@ -15,7 +15,6 @@ public extension Project {
             schemes: [.projectDebugScheme, .projectReleaseScheme]
     )
     
-    
     static func module(
         name: String,
         options: Options = .options(),
