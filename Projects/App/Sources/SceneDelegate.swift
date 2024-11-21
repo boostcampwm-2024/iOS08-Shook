@@ -1,4 +1,8 @@
 import UIKit
+
+import MainFeature
+import LiveStreamFeature
+import LiveStreamFeatureInterface
 import ThirdPartyLibModule
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -32,4 +36,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // MARK: - Handling UniversalLink
     func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {}
+}
+
+extension SceneDelegate {
+    private func registerDependencies() {
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
+        DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
+    }
 }
