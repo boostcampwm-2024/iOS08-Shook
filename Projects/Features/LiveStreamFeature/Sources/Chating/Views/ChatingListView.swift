@@ -50,6 +50,13 @@ final class ChatingListView: BaseView {
                 .bottom(to: self)
         }
     }
+    
+    private func scrollToBottom() {
+        let lastRowIndex = chatListView.numberOfRows(inSection: 0) - 1
+        guard lastRowIndex >= 0 else { return }
+        let indexPath = IndexPath(row: lastRowIndex, section: 0)
+        chatListView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+    }
 }
 
 extension ChatingListView {
@@ -59,6 +66,7 @@ extension ChatingListView {
         var snapshot = NSDiffableDataSourceSnapshot<Int, ChatInfo>()
         snapshot.appendSections([0])
         snapshot.appendItems(chatList)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
+        self.dataSource.apply(snapshot, animatingDifferences: false)
+        scrollToBottom()
     }
 }
