@@ -8,18 +8,22 @@ protocol ThumbnailViewContainer {
 }
 
 final class ThumbnailView: BaseView {
-    enum ViewMode {
-        case large, small, full
+    enum Size {
+        case large, small
+    }
+    
+    enum Transition {
+        case present, dismiss
     }
     
     let shadowView = UIView()
     let containerView = UIView()
     let imageView = UIImageView()
     
-    var viewMode: ViewMode
+    var size: Size
     
-    init(for viewMode: ViewMode) {
-        self.viewMode = viewMode
+    init(for size: Size) {
+        self.size = size
         super.init()
     }
     
@@ -30,7 +34,7 @@ final class ThumbnailView: BaseView {
     override func setupViews() {
         addSubview(shadowView)
         addSubview(containerView)
-        
+                
         containerView.addSubview(imageView)
     }
     
@@ -40,7 +44,7 @@ final class ThumbnailView: BaseView {
         
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = viewMode == .large ? 16 : 8
+        imageView.layer.cornerRadius = size == .large ? 16 : 8
     }
     
     override func setupLayouts() {
@@ -49,7 +53,8 @@ final class ThumbnailView: BaseView {
         }
         
         imageView.ezl.makeConstraint {
-            $0.diagonal(to: containerView)
+            $0.horizontal(to: containerView, padding: 16)
+                .vertical(to: containerView)
         }
         
         shadowView.ezl.makeConstraint {
@@ -57,13 +62,23 @@ final class ThumbnailView: BaseView {
         }
     }
     
-    override func updateStyles() {
-        imageView.layer.cornerRadius = 0
+    func updateStyles(for transition: Transition) {
+        switch transition {
+        case .present:
+            imageView.layer.cornerRadius = 0
+            
+        case .dismiss:
+            imageView.layer.cornerRadius = size == .large ? 16 : 8
+        }
     }
     
-    override func updateLayouts() {
-        imageView.ezl.makeConstraint {
-            $0.top(to: self.safeAreaLayoutGuide)
+    func updateLayouts(for transition: Transition) {
+        if transition == .present {
+            imageView.ezl.makeConstraint {
+                $0.diagonal(to: self)
+            }
+        } else {
+            setupLayouts()
         }
     }
     

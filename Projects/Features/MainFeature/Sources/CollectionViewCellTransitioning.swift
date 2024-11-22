@@ -1,19 +1,19 @@
 import UIKit
 
-enum CellTransitionType {
-    case present
-    case dismiss
-    
-    var blurAlpha: CGFloat { return self == .present ? 1 : 0 }
-    var dimAlpha: CGFloat { return self == .present ? 0.75 : 0 }
-    var closeAlpha: CGFloat { return self == .present ? 1 : 0 }
-    var cornerRadius: CGFloat { return self == .present ? 20.0 : 0.0 }
-    var next: CellTransitionType { return self == .present ? .dismiss : .present }
-}
-
 final class CollectionViewCellTransitioning: NSObject {
-    var transition: CellTransitionType = .present
-    var transitionDuration: Double = 1
+    enum Transition {
+        case present
+        case dismiss
+        
+        var blurAlpha: CGFloat { return self == .present ? 1 : 0 }
+        var dimAlpha: CGFloat { return self == .present ? 0.2 : 0 }
+        var closeAlpha: CGFloat { return self == .present ? 1 : 0 }
+        var cornerRadius: CGFloat { return self == .present ? 20.0 : 0.0 }
+        var next: Transition { return self == .present ? .dismiss : .present }
+    }
+    
+    var transition: Transition = .present
+    var transitionDuration: Double = 1.0
     let shrinkDuration: Double = 0.2
     
     private let blurEffectView = UIVisualEffectView()
@@ -22,7 +22,7 @@ final class CollectionViewCellTransitioning: NSObject {
     
     override init() {
         super.init()
-        blurEffectView.effect = UIBlurEffect(style: .light)
+        blurEffectView.effect = UIBlurEffect(style: .dark)
         dimmingView.backgroundColor = .black
         backgroundView.backgroundColor = .systemBackground
     }
@@ -51,6 +51,7 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         if let navigationController = (toView as? UINavigationController), let viewController = (navigationController.topViewController as? BroadcastCollectionViewController) {
             thumbnailView = viewController.selectedThumbnailView
         }
+        
         guard let thumbnailView else { return }
         let thumbnailViewCopy = copy(of: thumbnailView)
         containerView.addSubview(thumbnailViewCopy)
@@ -71,7 +72,6 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
                 toView.view.isHidden = false
                 thumbnailViewCopy.removeFromSuperview()
                 thumbnailView.isHidden = false
-                toView.view.snapshotView(afterScreenUpdates: true)
                 transitionContext.completeTransition(true)
             }
         }
@@ -79,7 +79,8 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         if transition == .dismiss, let fromView {
             fromView.view.isHidden = true
 
-            thumbnailViewCopy.frame = CGRect(x: 0, y: fromView.view.layoutMargins.top, width: fromView.view.frame.width, height: fromView.view.frame.width / 16 * 9)
+            thumbnailViewCopy.frame = CGRect(x: 0, y: fromView.view.layoutMargins.top, width: fromView.view.frame.width, height: fromView.view.frame.width * 0.5625)
+            thumbnailViewCopy.layoutIfNeeded()
             
             moveAndConvert(thumbnailView: thumbnailViewCopy, containerView: containerView, to: absoluteFrame.origin.y) {
                 thumbnailView.isHidden = false
@@ -115,13 +116,13 @@ extension CollectionViewCellTransitioning {
     }
     
     private func copy(of thumbnailView: ThumbnailView) -> ThumbnailView {
-        let thumbnailViewCopy = ThumbnailView(for: thumbnailView.viewMode)
+        let thumbnailViewCopy = ThumbnailView(for: thumbnailView.size)
         thumbnailViewCopy.configure(with: thumbnailView.imageView.image)
         return thumbnailViewCopy
     }
     
     private func makeShrinkAnimator(of thumbnailView: ThumbnailView) -> UIViewPropertyAnimator {
-        UIViewPropertyAnimator(duration: shrinkDuration, curve: .easeOut) {
+        UIViewPropertyAnimator(duration: shrinkDuration, curve: .linear) {
             thumbnailView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
             self.dimmingView.alpha = 0.8
         }
@@ -135,6 +136,13 @@ extension CollectionViewCellTransitioning {
             thumbnailView.transform = .identity
             thumbnailView.containerView.layer.cornerRadius = self.transition.next.cornerRadius
             thumbnailView.frame.origin.y = yOrigin
+            
+            if self.transition == .present {
+                thumbnailView.updateStyles(for: .present)
+                thumbnailView.updateLayouts(for: .present)
+            } else {
+                thumbnailView.updateStyles(for: .dismiss)
+            }
             
             self.blurEffectView.alpha = self.transition.blurAlpha
             self.dimmingView.alpha = self.transition.dimAlpha
@@ -167,19 +175,7 @@ extension CollectionViewCellTransitioning {
             shrinkAnimator.startAnimation()
         } else {
             thumbnailView.layoutIfNeeded()
-            thumbnailView.updateLayouts()
             expandContractAnimator.startAnimation()
         }
-    }
-}
-
-extension UIView {
-    func snapshot() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(frame.size, false, 0.0)
-        drawHierarchy(in: frame, afterScreenUpdates: true)
-        
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
     }
 }

@@ -124,7 +124,7 @@ extension BroadcastCollectionViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 24, trailing: 0)
-                section.interGroupSpacing = 16
+                section.interGroupSpacing = 24
                 
                 return section
             
@@ -137,8 +137,8 @@ extension BroadcastCollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0)
-                section.interGroupSpacing = 16
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 24, trailing: 0)
+                section.interGroupSpacing = 24
                 
                 let headerSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),

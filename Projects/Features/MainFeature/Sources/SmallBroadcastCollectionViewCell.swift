@@ -34,14 +34,14 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         }
         
         descriptionStack.ezl.makeConstraint {
-            $0.leading(to: thumbnailView.ezl.trailing, offset: 8)
-                .trailing(to: contentView)
+            $0.leading(to: thumbnailView.imageView.ezl.trailing, offset: 8)
+                .trailing(to: contentView, offset: -16)
                 .centerY(to: thumbnailView)
         }
         
         liveBadgeLabel.ezl.makeConstraint {
-            $0.top(to: thumbnailView, offset: 8)
-                .leading(to: thumbnailView, offset: 8)
+            $0.top(to: thumbnailView.imageView, offset: 8)
+                .leading(to: thumbnailView.imageView, offset: 8)
         }
     }
     

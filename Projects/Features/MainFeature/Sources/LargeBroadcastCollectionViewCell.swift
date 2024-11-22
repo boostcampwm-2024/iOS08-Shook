@@ -28,20 +28,20 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         }
         
         titleLabel.ezl.makeConstraint {
-            $0.top(to: thumbnailView.ezl.bottom, offset: 4)
-                .horizontal(to: contentView)
+            $0.top(to: thumbnailView.imageView.ezl.bottom, offset: 6)
+                .horizontal(to: contentView, padding: 20)
                 .bottom(to: subtitleLabel.ezl.top)
         }
         
         subtitleLabel.ezl.makeConstraint {
-            $0.top(to: titleLabel.ezl.bottom, offset: 4)
-                .horizontal(to: contentView)
+            $0.top(to: titleLabel.ezl.bottom, offset: 6)
+                .horizontal(to: contentView, padding: 20)
                 .bottom(to: contentView)
         }
         
         liveBadgeLabel.ezl.makeConstraint {
-            $0.top(to: thumbnailView, offset: 12)
-                .leading(to: thumbnailView, offset: 12)
+            $0.top(to: thumbnailView.imageView, offset: 12)
+                .leading(to: thumbnailView.imageView, offset: 12)
         }
     }
     
