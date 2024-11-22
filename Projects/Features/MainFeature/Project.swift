@@ -1,6 +1,7 @@
 import DependencyPlugin
 import ProjectDescription
 import ProjectDescriptionHelpers
+import EnvironmentPlugin
 
 let project = Project.module(
     name: ModulePaths.Feature.MainFeature.rawValue,

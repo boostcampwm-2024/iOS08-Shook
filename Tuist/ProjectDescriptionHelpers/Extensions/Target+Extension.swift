@@ -41,20 +41,25 @@ extension Target {
     )
     
     public static let broadcastExtension: Target = .target(
-        name: env.name + "BroadcastExtension",
+        name: "BroadcastExtension",
         destinations: [.iPhone],
         product: .appExtension,
-        bundleId: env.bundleID + ".BroadcastUploadExtension",
+        bundleId: "kr.codesquad.boostcamp9.MainFeatureDemo.BroadcastUploadExtension",
         deploymentTargets: env.deploymentTargets,
         infoPlist: .extendingDefault(with: [
+            "CFBundleDisplayName": "$(PRODUCT_NAME)",
             "NSExtension" : [
                 "NSExtensionPointIdentifier": "com.apple.broadcast-services-upload",
                 "NSExtensionPrincipalClass": "$(PRODUCT_MODULE_NAME).SampleHandler",
                 "RPBroadcastProcessMode": "RPBroadcastProcessModeSampleBuffer"
             ]
         ]),
-        sources: [.glob(.relativeToRoot("Projects/Features/MainFeature/BroadcastExtension/Sources/**"))],
-        resources: [.glob(pattern: .relativeToRoot("Projects/Features/MainFeature/BroadcastExtension/Resources/**"))]
+        sources: [
+            .glob(.relativeToFeature("MainFeature" + "/BroadcastUploadExtension/**"))
+        ],
+        dependencies: [
+            .sdk(name: "ReplayKit", type: .framework, status: .required)
+        ]
     )
 }
 
