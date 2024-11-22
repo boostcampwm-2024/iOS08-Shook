@@ -52,7 +52,7 @@ final class PlayerControlView: BaseView {
         playButton.ezl.makeConstraint {
             $0.center(to: self)
         }
-                
+        
         timeControlView.ezl.makeConstraint {
             $0.height(10)
                 .horizontal(to: self, padding: 15)
@@ -111,7 +111,6 @@ extension PlayerControlView {
             self.playButton.transform  = .identity
         }
     }
-
 }
 
 extension PlayerControlView: PlayerControlViewAction {

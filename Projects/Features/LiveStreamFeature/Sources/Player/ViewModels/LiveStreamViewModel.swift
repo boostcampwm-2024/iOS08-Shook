@@ -67,7 +67,7 @@ public final class LiveStreamViewModel: ViewModel {
                 }
             }
             .store(in: &subscription)
-                
+        
         input.playButtonDidTap
             .compactMap { $0 }
             .sink { _ in

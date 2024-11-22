@@ -49,7 +49,7 @@ final class ShookPlayerView: BaseView {
         view.layer.addSublayer(playerLayer)
         return view
     }()
-  
+    
     public let playerControlView: PlayerControlView = PlayerControlView()
     
     init(with url: URL) {
@@ -98,7 +98,7 @@ final class ShookPlayerView: BaseView {
         indicatorView.ezl.makeConstraint {
             $0.width(Constants.indicatorSize.rawValue).height(Constants.indicatorSize.rawValue).center(to: self)
         }
-                
+        
         playerControlView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
@@ -114,7 +114,7 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupActions() {
-         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
         videoContainerView.addGestureRecognizer(tapGesture)
     }
     
@@ -165,7 +165,6 @@ extension ShookPlayerView {
             player.removeTimeObserver(token)
         }
     }
-    
     // MARK: - observeValue Handler
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
@@ -173,7 +172,7 @@ extension ShookPlayerView {
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
             
         case.failed, .unknown:
-            #warning("에러")
+        #warning("에러")
             break
             
         @unknown default:
@@ -222,7 +221,6 @@ extension ShookPlayerView {
     }
     
     // - MARK: animation
-    
     func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
             if isShowed {

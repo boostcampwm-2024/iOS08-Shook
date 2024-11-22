@@ -68,7 +68,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             $0.top(to: view.safeAreaLayoutGuide)
                 .horizontal(to: view.safeAreaLayoutGuide)
         }
-    
+        
         shrinkConstraints = [playerView.heightAnchor.constraint(equalTo: playerView.widthAnchor, multiplier: 9.0 / 16.0)]
         NSLayoutConstraint.activate(shrinkConstraints)
         
@@ -96,7 +96,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
         }
     }
-        
+    
     public override func setupActions() {
         
     }
@@ -105,26 +105,26 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         output.isExpanded
             .dropFirst()
             .sink { [weak self]  flag in
-            guard let self else { return }
-            self.changeOrientation()
-            self.playerView.playerControlView.toggleExpandButtonImage(flag)
-        }
-        .store(in: &subscription)
+                guard let self else { return }
+                self.changeOrientation()
+                self.playerView.playerControlView.toggleExpandButtonImage(flag)
+            }
+            .store(in: &subscription)
         
         output.time
             .sink { [weak self] amount in
-            guard let self else { return }
-            self.playerView.seek(to: amount)
-        }
-        .store(in: &subscription)
+                guard let self else { return }
+                self.playerView.seek(to: amount)
+            }
+            .store(in: &subscription)
         
         output.isShowedPlayerControl
             .dropFirst()
             .sink { [weak self] flag in
-            guard let self else { return }
-            self.playerView.playerControlViewAlphaAnimalation(flag)
-        }
-        .store(in: &subscription)
+                guard let self else { return }
+                self.playerView.playerControlViewAlphaAnimalation(flag)
+            }
+            .store(in: &subscription)
         
         output.isShowedInfoView
             .dropFirst()
@@ -148,10 +148,10 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
 extension LiveStreamViewController {
     func changeOrientation() {
         let orientation: UIInterfaceOrientationMask = output.isExpanded.value ? .landscapeLeft: .portrait
-
+        
         if #available(iOS 16.0, *) {
-                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-                self.setNeedsUpdateOfSupportedInterfaceOrientations()
+            guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
+            self.setNeedsUpdateOfSupportedInterfaceOrientations()
             windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
         } else {
             UIDevice.current.setValue(orientation, forKey: "orientation")
