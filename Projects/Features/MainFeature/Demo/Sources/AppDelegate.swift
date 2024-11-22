@@ -11,11 +11,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let fetcher = MockFetcher()
-        let viewModel = BroadcastCollectionViewModel(fetcher: fetcher)
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        window?.rootViewController = navigationController
+//        let fetcher = MockFetcher()
+//        let viewModel = BroadcastCollectionViewModel(fetcher: fetcher)
+//        let viewController = BroadcastCollectionViewController(viewModel: viewModel)
+//        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = UIViewController()
         window?.makeKeyAndVisible()
         
         return true

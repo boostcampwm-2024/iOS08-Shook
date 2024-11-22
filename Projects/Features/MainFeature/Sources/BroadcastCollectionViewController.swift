@@ -5,6 +5,7 @@ import BaseFeature
 import BaseFeatureInterface
 import DesignSystem
 import EasyLayoutModule
+import LiveStreamFeatureInterface
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
@@ -23,6 +24,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
+    private var factory: LiveStreamViewControllerFactory?
     
     private let transitioning = CollectionViewCellTransitioning()
     
@@ -32,8 +34,12 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         guard let thumbnailViewContainer = cell as? ThumbnailViewContainer else { return nil }
         return thumbnailViewContainer.thumbnailView
     }
-    
-    public override init(viewModel: BroadcastCollectionViewModel) {
+
+    public init(
+        viewModel: BroadcastCollectionViewModel,
+        factory: (any LiveStreamViewControllerFactory)? = nil
+    ) {
+        self.factory = factory
         super.init(viewModel: viewModel)
     }
     
