@@ -8,7 +8,11 @@ import EasyLayoutModule
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
     private var shrinkConstraint: NSLayoutConstraint?
     private var expandConstraint: NSLayoutConstraint?
+    private var unfoldedConstraint: NSLayoutConstraint?
+    private var foldedConstraint: NSLayoutConstraint?
+    
     private var subscription = Set<AnyCancellable>()
+    
     private lazy var input = LiveStreamViewModel.Input(
         expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher(),
         sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.dropFirst().eraseToAnyPublisher(),
@@ -25,8 +29,10 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private let chatingList = ChatingListView()
     private let chatInputField = ChatInputField()
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
+    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     
     public override func setupViews() {
+        view.addSubview(infoView)
         view.addSubview(playerView)
         view.addSubview(chatingList)
         view.addSubview(chatInputField)
@@ -34,6 +40,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     
     public override func setupStyles() {
         view.backgroundColor = .black
+        
+        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
     
     public override func setupLayouts() {
@@ -45,12 +53,20 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
         let width = windowScene.screen.bounds.width
     
-        shrinkConstraint = playerView.heightAnchor.constraint(equalToConstant: 200)
+        shrinkConstraint = playerView.heightAnchor.constraint(equalTo: playerView.widthAnchor, multiplier: 9.0 / 16.0)
         shrinkConstraint?.isActive = true
         expandConstraint = playerView.heightAnchor.constraint(equalToConstant: width)
         
+        unfoldedConstraint = infoView.topAnchor.constraint(equalTo: playerView.bottomAnchor)
+        foldedConstraint = infoView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
+        foldedConstraint?.isActive = true
+        
+        infoView.ezl.makeConstraint {
+            $0.horizontal(to: view)
+        }
+        
         chatingList.ezl.makeConstraint {
-            $0.top(to: playerView.ezl.bottom)
+            $0.top(to: infoView.ezl.bottom)
                 .horizontal(to: view)
                 .bottom(to: chatInputField.ezl.top)
         }
@@ -82,6 +98,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         output.isplayerControlShowed.sink { [weak self] flag in
             guard let self else { return }
             self.playerView.updatePlayerAnimation(flag)
+            self.infoViewConstraintAnimation(flag)
         }
         .store(in: &subscription)
         
@@ -118,6 +135,20 @@ extension LiveStreamViewController {
             windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientation))
         } else {
             UIDevice.current.setValue(orientation, forKey: "orientation")
+        }
+    }
+    
+    private func infoViewConstraintAnimation(_ isShowed: Bool) {
+        UIView.transition(with: view, duration: 0.3, options: .curveEaseInOut) {
+            if isShowed {
+                self.unfoldedConstraint?.isActive = true
+                self.foldedConstraint?.isActive = false
+            } else {
+                self.unfoldedConstraint?.isActive = false
+                self.foldedConstraint?.isActive = true
+                
+            }
+          //  self.view.layoutIfNeeded()
         }
     }
 }
