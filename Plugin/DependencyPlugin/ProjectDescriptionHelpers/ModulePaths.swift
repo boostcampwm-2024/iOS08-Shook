@@ -5,7 +5,6 @@ public enum ModulePaths {
     case module(Module)
     case domain(Domain)
     case userInterface(UserInterface)
-    
 }
 
 extension ModulePaths: ModularPathConvertable {
