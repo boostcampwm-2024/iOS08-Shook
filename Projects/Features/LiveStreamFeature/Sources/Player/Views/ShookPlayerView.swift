@@ -7,7 +7,6 @@ import DesignSystem
 import EasyLayoutModule
 
 protocol ShhokPlayerViewState {
-    func updatePlayerAnimation(_ isShowed: Bool)
     func updataePlayState(_ isPlaying: Bool)
 }
 
@@ -174,7 +173,6 @@ extension ShookPlayerView {
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
             
         case.failed, .unknown:
-            print("Faild Error")
             #warning("에러")
             break
             
@@ -225,7 +223,7 @@ extension ShookPlayerView {
     
     // - MARK: animation
     
-    private func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
+    func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
             if isShowed {
                 self.playerControlView.alpha = 1
@@ -237,10 +235,6 @@ extension ShookPlayerView {
 }
 
 extension ShookPlayerView: ShhokPlayerViewState {
-    func updatePlayerAnimation(_ isShowed: Bool) {
-        playerControlViewAlphaAnimalation(isShowed)
-    }
-    
     func updataePlayState(_ isPlaying: Bool) {
         if isPlaying {
             player.play()

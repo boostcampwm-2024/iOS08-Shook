@@ -60,8 +60,8 @@ final class PlayerControlView: BaseView {
         }
         
         expandButton.ezl.makeConstraint {
-            $0.trailing(to: self, offset: -20)
-                .top(to: self, offset: 15)
+            $0.trailing(to: self, offset: -13)
+                .top(to: self, offset: 16)
         }
     }
     

@@ -6,6 +6,11 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
+    private let chatingList = ChatingListView()
+    private let chatInputField = ChatInputField()
+    private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
+    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
+    
     private var shrinkConstraint: NSLayoutConstraint?
     private var expandConstraint: NSLayoutConstraint?
     private var unfoldedConstraint: NSLayoutConstraint?
@@ -22,14 +27,13 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     )
     private lazy var output = viewModel.transform(input: input)
     
+    deinit {
+        print("Deinit \(Self.self)")
+    }
+    
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return output.isExpanded.value ? .landscapeLeft: .portrait
     }
-    
-    private let chatingList = ChatingListView()
-    private let chatInputField = ChatInputField()
-    private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
-    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     
     public override func setupViews() {
         view.addSubview(infoView)
@@ -91,20 +95,28 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         }
         .store(in: &subscription)
         
-        output.time.sink { [weak self] amount in
+        output.time
+            .sink { [weak self] amount in
             guard let self else { return }
             self.playerView.seek(to: amount)
         }
         .store(in: &subscription)
         
-        output.isplayerControlShowed
+        output.isShowedPlayerControl
             .dropFirst()
             .sink { [weak self] flag in
             guard let self else { return }
-            self.playerView.updatePlayerAnimation(flag)
-            self.infoViewConstraintAnimation(flag)
+            self.playerView.playerControlViewAlphaAnimalation(flag)
         }
         .store(in: &subscription)
+        
+        output.isShowedInfoView
+            .dropFirst()
+            .sink { [weak self] flag in
+                guard let self else { return }
+                self.infoViewConstraintAnimation(flag)
+            }
+            .store(in: &subscription)
         
         output.isPlaying
             .dropFirst()
@@ -118,14 +130,13 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        if output.isExpanded.value {
-            shrinkConstraint?.isActive = false
-            expandConstraint?.isActive = true
-        } else {
-            shrinkConstraint?.isActive = false
-            shrinkConstraint?.isActive = true
-        }
-        
+//        if output.isExpanded.value {
+//            shrinkConstraint?.isActive = false
+//            expandConstraint?.isActive = true
+//        } else {
+//            shrinkConstraint?.isActive = false
+//            shrinkConstraint?.isActive = true
+//        }
     }
 }
 
@@ -150,7 +161,6 @@ extension LiveStreamViewController {
             } else {
                 self.unfoldedConstraint?.isActive = false
                 self.foldedConstraint?.isActive = true
-                
             }
             self.view.layoutIfNeeded()
         }

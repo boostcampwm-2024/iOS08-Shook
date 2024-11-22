@@ -18,11 +18,15 @@ public final class LiveStreamViewModel: ViewModel {
         let isExpanded: CurrentValueSubject<Bool, Never> = .init(false)
         let isPlaying: CurrentValueSubject<Bool, Never> = .init(false)
         let time: PassthroughSubject<Double, Never> = .init()
-        let isplayerControlShowed: CurrentValueSubject<Bool, Never> = .init(false)
-       
+        let isShowedPlayerControl: CurrentValueSubject<Bool, Never> = .init(false)
+        let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
     }
     
     public init() {}
+    
+    deinit {
+        print("Deinit \(Self.self)")
+    }
     
     public func transform(input: Input) -> Output {
         let output = Output()
@@ -30,8 +34,10 @@ public final class LiveStreamViewModel: ViewModel {
         input.expandButtonDidTap
             .compactMap { $0 }
             .sink {
-                output.isExpanded.send(!output.isExpanded.value)
-                output.isplayerControlShowed.send(false)
+                let nextValue = !output.isExpanded.value
+                output.isExpanded.send(nextValue)
+                output.isShowedPlayerControl.send(false)
+                output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
         
@@ -53,7 +59,12 @@ public final class LiveStreamViewModel: ViewModel {
         input.playerGestureDidTap
             .compactMap { $0 }
             .sink { _ in
-                output.isplayerControlShowed.send(!output.isplayerControlShowed.value)
+                output.isShowedPlayerControl.send(!output.isShowedPlayerControl.value)
+                if output.isExpanded.value {
+                    output.isShowedInfoView.send(false)
+                } else {
+                    output.isShowedInfoView.send(!output.isShowedInfoView.value)
+                }
             }
             .store(in: &subscription)
                 
