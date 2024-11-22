@@ -148,7 +148,7 @@ extension LiveStreamViewController {
                 self.foldedConstraint?.isActive = true
                 
             }
-          //  self.view.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
 }

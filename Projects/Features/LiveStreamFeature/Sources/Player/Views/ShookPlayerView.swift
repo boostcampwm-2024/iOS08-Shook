@@ -174,6 +174,7 @@ extension ShookPlayerView {
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
             
         case.failed, .unknown:
+            print("Faild Error")
             #warning("에러")
             break
             
