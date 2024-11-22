@@ -30,7 +30,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.ezl.makeConstraint {
             $0.top(to: thumbnailView.imageView.ezl.bottom, offset: 6)
                 .horizontal(to: contentView, padding: 20)
-                .bottom(to: subtitleLabel.ezl.top)
         }
         
         subtitleLabel.ezl.makeConstraint {
@@ -66,6 +65,5 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         self.thumbnailView.configure(with: image)
         self.titleLabel.text = title
         self.subtitleLabel.text = subtitle
-        contentView.layoutIfNeeded()
     }
 }
