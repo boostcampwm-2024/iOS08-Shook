@@ -14,11 +14,11 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private var subscription = Set<AnyCancellable>()
     
     private lazy var input = LiveStreamViewModel.Input(
-        expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.dropFirst().eraseToAnyPublisher(),
-        sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.dropFirst().eraseToAnyPublisher(),
+        expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.eraseToAnyPublisher(),
+        sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher(),
         playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
-        playerGestureDidTap: playerView.playerGestureDidTap.dropFirst().eraseToAnyPublisher(),
-        playButtonDidTap: playerView.playerControlView.playButtonDidTap.dropFirst().eraseToAnyPublisher()
+        playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
+        playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher()
     )
     private lazy var output = viewModel.transform(input: input)
     
@@ -82,7 +82,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupBind() {
-        output.isExpanded.sink { [weak self]  flag in
+        output.isExpanded
+            .dropFirst()
+            .sink { [weak self]  flag in
             guard let self else { return }
             self.changeOrientation()
             self.playerView.playerControlView.toggleExpandButtonImage(flag)
@@ -95,7 +97,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         }
         .store(in: &subscription)
         
-        output.isplayerControlShowed.sink { [weak self] flag in
+        output.isplayerControlShowed
+            .dropFirst()
+            .sink { [weak self] flag in
             guard let self else { return }
             self.playerView.updatePlayerAnimation(flag)
             self.infoViewConstraintAnimation(flag)
@@ -103,6 +107,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         .store(in: &subscription)
         
         output.isPlaying
+            .dropFirst()
             .removeDuplicates()
             .sink { [weak self] isPlaying in
                 guard let self else { return }
@@ -126,7 +131,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
 
 extension LiveStreamViewController {
     func changeOrientation() {
-        let appDelegate = UIApplication.shared.delegate
         let orientation: UIInterfaceOrientationMask = output.isExpanded.value ? .landscapeLeft: .portrait
 
         if #available(iOS 16.0, *) {

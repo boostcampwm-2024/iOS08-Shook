@@ -6,8 +6,8 @@ import BaseFeature
 import DesignSystem
 
 public protocol PlayerControlViewAction {
-    var playButtonDidTap: AnyPublisher<Void, Never> { get }
-    var expandButtonDidTap: AnyPublisher<Void, Never> { get }
+    var playButtonDidTap: AnyPublisher<Void?, Never> { get }
+    var expandButtonDidTap: AnyPublisher<Void?, Never> { get }
 }
 
 private enum ImageConstants {
@@ -38,9 +38,9 @@ final class PlayerControlView: BaseView {
     private let expandButton: UIButton = UIButton()
     var timeControlView: TimeControlView = TimeControlView()
     
-    @Published private var playButtonTapPublisher: Void = ()
-    @Published private var sliderValuePublisher: Double = .zero
-    @Published private var expandButtonTapPublisher: Void = ()
+    @Published private var playButtonTapPublisher: Void?
+    @Published private var sliderValuePublisher: Double?
+    @Published private var expandButtonTapPublisher: Void?
     
     override func setupViews() {
         self.addSubview(playButton)
@@ -115,11 +115,11 @@ extension PlayerControlView {
 }
 
 extension PlayerControlView: PlayerControlViewAction {
-    var expandButtonDidTap: AnyPublisher<Void, Never> {
+    var expandButtonDidTap: AnyPublisher<Void?, Never> {
         $expandButtonTapPublisher.eraseToAnyPublisher()
     }
     
-    var playButtonDidTap: AnyPublisher<Void, Never> {
+    var playButtonDidTap: AnyPublisher<Void?, Never> {
         $playButtonTapPublisher.eraseToAnyPublisher()
     }
 }

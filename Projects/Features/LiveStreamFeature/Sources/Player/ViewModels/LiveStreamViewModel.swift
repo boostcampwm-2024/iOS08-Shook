@@ -7,11 +7,11 @@ public final class LiveStreamViewModel: ViewModel {
     private var subscription = Set<AnyCancellable>()
     
     public struct Input {
-        let expandButtonDidTap: AnyPublisher<Void, Never>
-        let sliderValueDidChange: AnyPublisher<Float, Never>
-        let playerStateDidChange: AnyPublisher<Bool, Never>
-        let playerGestureDidTap: AnyPublisher<Void, Never>
-        let playButtonDidTap: AnyPublisher<Void, Never>
+        let expandButtonDidTap: AnyPublisher<Void?, Never>
+        let sliderValueDidChange: AnyPublisher<Float?, Never>
+        let playerStateDidChange: AnyPublisher<Bool?, Never>
+        let playerGestureDidTap: AnyPublisher<Void?, Never>
+        let playButtonDidTap: AnyPublisher<Void?, Never>
     }
     
     public struct Output {
@@ -28,6 +28,7 @@ public final class LiveStreamViewModel: ViewModel {
         let output = Output()
         
         input.expandButtonDidTap
+            .compactMap { $0 }
             .sink {
                 output.isExpanded.send(!output.isExpanded.value)
                 output.isplayerControlShowed.send(false)
@@ -35,25 +36,29 @@ public final class LiveStreamViewModel: ViewModel {
             .store(in: &subscription)
         
         input.sliderValueDidChange
-            .compactMap { Double($0) }
+            .compactMap { $0 }
+            .map{ Double($0) }
             .sink {
                 output.time.send($0)
             }
             .store(in: &subscription)
         
         input.playerStateDidChange
+            .compactMap { $0 }
             .sink { flag in
                 output.isPlaying.send(flag)
             }
             .store(in: &subscription)
         
         input.playerGestureDidTap
+            .compactMap { $0 }
             .sink { _ in
                 output.isplayerControlShowed.send(!output.isplayerControlShowed.value)
             }
             .store(in: &subscription)
                 
         input.playButtonDidTap
+            .compactMap { $0 }
             .sink { _ in
                 output.isPlaying.send(!output.isPlaying.value)
             }

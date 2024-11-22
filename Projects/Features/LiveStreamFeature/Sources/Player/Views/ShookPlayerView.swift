@@ -12,8 +12,8 @@ protocol ShhokPlayerViewState {
 }
 
 protocol ShookPlayerViewAciton {
-    var playerStateDidChange: AnyPublisher<Bool, Never> { get }
-    var playerGestureDidTap: AnyPublisher<Void, Never> { get }
+    var playerStateDidChange: AnyPublisher<Bool?, Never> { get }
+    var playerGestureDidTap: AnyPublisher<Void?, Never> { get }
 }
 
 private enum Constants: CGFloat {
@@ -36,8 +36,8 @@ final class ShookPlayerView: BaseView {
     private var isInitialized = false
     
     // MARK: - @Published
-    @Published private var playingStateChangedPublisher: Bool = false
-    @Published private var playerGestureTapPublisher: Void = ()
+    @Published private var playingStateChangedPublisher: Bool?
+    @Published private var playerGestureTapPublisher: Void?
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -50,8 +50,7 @@ final class ShookPlayerView: BaseView {
         view.layer.addSublayer(playerLayer)
         return view
     }()
-    private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
-    
+  
     public let playerControlView: PlayerControlView = PlayerControlView()
     
     init(with url: URL) {
@@ -116,6 +115,7 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupActions() {
+         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
         videoContainerView.addGestureRecognizer(tapGesture)
     }
     
@@ -252,11 +252,11 @@ extension ShookPlayerView: ShhokPlayerViewState {
 }
 
 extension ShookPlayerView: ShookPlayerViewAciton {
-    var playerStateDidChange: AnyPublisher<Bool, Never> {
+    var playerStateDidChange: AnyPublisher<Bool?, Never> {
         $playingStateChangedPublisher.eraseToAnyPublisher()
     }
     
-    var playerGestureDidTap: AnyPublisher<Void, Never> {
+    var playerGestureDidTap: AnyPublisher<Void?, Never> {
         $playerGestureTapPublisher.eraseToAnyPublisher()
     }
 }
