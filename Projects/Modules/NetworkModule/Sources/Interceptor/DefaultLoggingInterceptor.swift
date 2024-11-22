@@ -5,7 +5,9 @@ import OSLog
 
 public final class DefaultLoggingInterceptor: Interceptor {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "", category: "NETWORK")
-        
+    
+    public init() {}
+    
     public func willRequest(_ request: URLRequest, from endpoint: any Endpoint) throws {
         guard let url = request.url else { throw NetworkError.invaildURL }
         let method = endpoint.method
