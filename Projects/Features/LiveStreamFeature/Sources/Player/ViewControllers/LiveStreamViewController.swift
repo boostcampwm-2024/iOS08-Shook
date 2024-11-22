@@ -11,8 +11,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     
-    private var shrinkConstraint: NSLayoutConstraint?
-    private var expandConstraint: NSLayoutConstraint?
+    private var shrinkConstraints: [NSLayoutConstraint] = []
+    private var expandConstraints: [NSLayoutConstraint] = []
     private var unfoldedConstraint: NSLayoutConstraint?
     private var foldedConstraint: NSLayoutConstraint?
     
@@ -35,6 +35,21 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         return output.isExpanded.value ? .landscapeLeft: .portrait
     }
     
+    public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        chatingList.isHidden = output.isExpanded.value
+        chatInputField.isHidden = output.isExpanded.value
+        infoView.isHidden = output.isExpanded.value
+        if output.isExpanded.value {
+            NSLayoutConstraint.deactivate(shrinkConstraints)
+            NSLayoutConstraint.activate(expandConstraints)
+        } else {
+            NSLayoutConstraint.activate(shrinkConstraints)
+            NSLayoutConstraint.deactivate(expandConstraints)
+        }
+    }
+    
     public override func setupViews() {
         view.addSubview(infoView)
         view.addSubview(playerView)
@@ -53,13 +68,14 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             $0.top(to: view.safeAreaLayoutGuide)
                 .horizontal(to: view.safeAreaLayoutGuide)
         }
-        
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-        let width = windowScene.screen.bounds.width
     
-        shrinkConstraint = playerView.heightAnchor.constraint(equalTo: playerView.widthAnchor, multiplier: 9.0 / 16.0)
-        shrinkConstraint?.isActive = true
-        expandConstraint = playerView.heightAnchor.constraint(equalToConstant: width)
+        shrinkConstraints = [playerView.heightAnchor.constraint(equalTo: playerView.widthAnchor, multiplier: 9.0 / 16.0)]
+        NSLayoutConstraint.activate(shrinkConstraints)
+        
+        expandConstraints = [
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ]
         
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: playerView.bottomAnchor)
         foldedConstraint = infoView.bottomAnchor.constraint(equalTo: playerView.bottomAnchor)
@@ -126,17 +142,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
                 self.playerView.updataePlayState(isPlaying)
             }
             .store(in: &subscription)
-    }
-    
-    public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-//        if output.isExpanded.value {
-//            shrinkConstraint?.isActive = false
-//            expandConstraint?.isActive = true
-//        } else {
-//            shrinkConstraint?.isActive = false
-//            shrinkConstraint?.isActive = true
-//        }
     }
 }
 
