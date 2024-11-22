@@ -78,7 +78,10 @@ final class ThumbnailView: BaseView {
                 $0.diagonal(to: self)
             }
         } else {
-            setupLayouts()
+            imageView.ezl.makeConstraint {
+                $0.horizontal(to: containerView, padding: 16)
+                    .vertical(to: containerView)
+            }
         }
     }
     

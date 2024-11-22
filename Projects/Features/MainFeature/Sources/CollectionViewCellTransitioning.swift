@@ -16,6 +16,8 @@ final class CollectionViewCellTransitioning: NSObject {
     var transitionDuration: Double = 1.0
     let shrinkDuration: Double = 0.2
     
+    var absFrame: CGRect = .zero
+    
     private let blurEffectView = UIVisualEffectView()
     private let dimmingView = UIView()
     private let backgroundView = UIView()
@@ -58,6 +60,7 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         thumbnailView.isHidden = true
         
         let absoluteFrame = thumbnailView.convert(thumbnailView.frame, to: nil)
+        absFrame = absoluteFrame
         thumbnailViewCopy.frame = absoluteFrame
         thumbnailViewCopy.layoutIfNeeded()
         
@@ -79,8 +82,7 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         if transition == .dismiss, let fromView {
             fromView.view.isHidden = true
 
-            thumbnailViewCopy.frame = CGRect(x: 0, y: fromView.view.layoutMargins.top, width: fromView.view.frame.width, height: fromView.view.frame.width * 0.5625)
-            thumbnailViewCopy.layoutIfNeeded()
+            thumbnailViewCopy.frame = CGRect(x: 0, y: fromView.view.layoutMargins.top, width: containerView.frame.width, height: containerView.frame.width * 0.5625)
             
             moveAndConvert(thumbnailView: thumbnailViewCopy, containerView: containerView, to: absoluteFrame.origin.y) {
                 thumbnailView.isHidden = false
@@ -129,19 +131,21 @@ extension CollectionViewCellTransitioning {
     }
     
     private func makeExpandContractAnimator(of thumbnailView: ThumbnailView, in containerView: UIView, yOrigin: CGFloat) -> UIViewPropertyAnimator {
-        let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 4))
+        let springTiming = UISpringTimingParameters(dampingRatio: 0.9, initialVelocity: CGVector(dx: 0, dy: 2))
         let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
         
         animator.addAnimations {
             thumbnailView.transform = .identity
             thumbnailView.containerView.layer.cornerRadius = self.transition.next.cornerRadius
-            thumbnailView.frame.origin.y = yOrigin
             
             if self.transition == .present {
                 thumbnailView.updateStyles(for: .present)
                 thumbnailView.updateLayouts(for: .present)
+                thumbnailView.frame = CGRect(x: 0, y: yOrigin, width: containerView.frame.width, height: containerView.frame.width * 0.5625)
             } else {
                 thumbnailView.updateStyles(for: .dismiss)
+                thumbnailView.updateLayouts(for: .dismiss)
+                thumbnailView.frame = self.absFrame
             }
             
             self.blurEffectView.alpha = self.transition.blurAlpha
