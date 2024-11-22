@@ -6,7 +6,7 @@ final class CollectionViewCellTransitioning: NSObject {
         case dismiss
         
         var blurAlpha: CGFloat { return self == .present ? 1 : 0 }
-        var dimAlpha: CGFloat { return self == .present ? 0.5 : 0 }
+        var dimmingAlpha: CGFloat { return self == .present ? 0.6 : 0 }
         var closeAlpha: CGFloat { return self == .present ? 1 : 0 }
         var cornerRadius: CGFloat { return self == .present ? 16 : 0 }
         var next: Transition { return self == .present ? .dismiss : .present }
@@ -23,7 +23,7 @@ final class CollectionViewCellTransitioning: NSObject {
     
     override init() {
         super.init()
-        blurEffectView.effect = UIBlurEffect(style: .dark)
+        blurEffectView.effect = UIBlurEffect(style: .light)
         dimmingView.backgroundColor = .black
         backgroundView.backgroundColor = .systemBackground
     }
@@ -111,7 +111,7 @@ extension CollectionViewCellTransitioning {
         containerView.addSubview(blurEffectView)
         
         dimmingView.frame = containerView.frame
-        dimmingView.alpha = transition.next.dimAlpha
+        dimmingView.alpha = transition.next.dimmingAlpha
         containerView.addSubview(dimmingView)
     }
     
@@ -146,7 +146,7 @@ extension CollectionViewCellTransitioning {
             }
             
             self.blurEffectView.alpha = self.transition.blurAlpha
-            self.dimmingView.alpha = self.transition.dimAlpha
+            self.dimmingView.alpha = self.transition.dimmingAlpha
             
             self.backgroundView.layer.cornerRadius = self.transition.next.cornerRadius
             self.backgroundView.frame = containerView.frame
