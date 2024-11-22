@@ -200,7 +200,8 @@ extension BroadcastCollectionViewController {
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
-                    $0.diagonal(to: header)
+                    $0.horizontal(to: header, padding: 16)
+                        .vertical(to: header)
                 }
             }
             
