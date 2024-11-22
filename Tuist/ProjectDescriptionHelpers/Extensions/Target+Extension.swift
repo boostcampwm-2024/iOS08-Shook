@@ -56,7 +56,6 @@ extension Target {
             ]
         ]),
         sources: "BroadcastUploadExtension/Sources/**",
-        resources: "BroadcastUploadExtension/Resources/**",
         dependencies: [
             .sdk(name: "ReplayKit", type: .framework, status: .required)
         ]
