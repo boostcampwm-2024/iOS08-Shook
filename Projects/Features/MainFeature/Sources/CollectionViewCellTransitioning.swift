@@ -6,7 +6,7 @@ final class CollectionViewCellTransitioning: NSObject {
         case dismiss
         
         var blurAlpha: CGFloat { return self == .present ? 1 : 0 }
-        var dimAlpha: CGFloat { return self == .present ? 0.2 : 0 }
+        var dimAlpha: CGFloat { return self == .present ? 0.5 : 0 }
         var closeAlpha: CGFloat { return self == .present ? 1 : 0 }
         var cornerRadius: CGFloat { return self == .present ? 20.0 : 0.0 }
         var next: Transition { return self == .present ? .dismiss : .present }
@@ -143,8 +143,6 @@ extension CollectionViewCellTransitioning {
                 thumbnailView.updateLayouts(for: .present)
                 thumbnailView.frame = CGRect(x: 0, y: yOrigin, width: containerView.frame.width, height: containerView.frame.width * 0.5625)
             } else {
-                thumbnailView.updateStyles(for: .dismiss)
-                thumbnailView.updateLayouts(for: .dismiss)
                 thumbnailView.frame = self.absFrame
             }
             

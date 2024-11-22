@@ -63,12 +63,8 @@ final class ThumbnailView: BaseView {
     }
     
     func updateStyles(for transition: Transition) {
-        switch transition {
-        case .present:
+        if transition == .present {
             imageView.layer.cornerRadius = 0
-            
-        case .dismiss:
-            imageView.layer.cornerRadius = size == .large ? 16 : 8
         }
     }
     
