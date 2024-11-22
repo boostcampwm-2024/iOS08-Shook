@@ -21,7 +21,8 @@ extension Target {
         dependencies: [
             .domain(target: .BaseDomain),
             .feature(target: .MainFeature),
-            .feature(target: .LiveStreamFeature)
+            .feature(target: .LiveStreamFeature),
+            .target(name: "BroadcastExtension")
         ],
         settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
         environmentVariables: [:] // 환경변수 설정
@@ -44,7 +45,7 @@ extension Target {
         name: "BroadcastExtension",
         destinations: [.iPhone],
         product: .appExtension,
-        bundleId: "kr.codesquad.boostcamp9.MainFeatureDemo.BroadcastUploadExtension",
+        bundleId: env.bundleID + ".BroadcastUploadExtension",
         deploymentTargets: env.deploymentTargets,
         infoPlist: .extendingDefault(with: [
             "CFBundleDisplayName": "$(PRODUCT_NAME)",
@@ -54,9 +55,8 @@ extension Target {
                 "RPBroadcastProcessMode": "RPBroadcastProcessModeSampleBuffer"
             ]
         ]),
-        sources: [
-            .glob(.relativeToFeature("MainFeature" + "/BroadcastUploadExtension/**"))
-        ],
+        sources: "BroadcastUploadExtension/Sources/**",
+        resources: "BroadcastUploadExtension/Resources/**",
         dependencies: [
             .sdk(name: "ReplayKit", type: .framework, status: .required)
         ]

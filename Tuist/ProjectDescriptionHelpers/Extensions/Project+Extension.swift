@@ -11,7 +11,7 @@ public extension Project {
             organizationName: env.organizationName,
             packages: [],
             settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
-            targets: [.projectTarget, .projectTestTarget],
+            targets: [.projectTarget, .projectTestTarget, .broadcastExtension],
             schemes: [.projectDebugScheme, .projectReleaseScheme]
     )
     

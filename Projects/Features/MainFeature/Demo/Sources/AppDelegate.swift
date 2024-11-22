@@ -15,7 +15,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     
         let broadcastPicker = RPSystemBroadcastPickerView(frame: .init(x: UIScreen.main.bounds.width / 4, y: UIScreen.main.bounds.height / 3, width: 200, height: 60))
         
-        broadcastPicker.preferredExtension = "kr.codesquad.boostcamp9.MainFeatureDemo.BroadcastUploadExtension"
+        broadcastPicker.preferredExtension = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
         let viewController = UIViewController()
                 
         viewController.view.addSubview(broadcastPicker)
