@@ -22,7 +22,7 @@ final class ThumbnailView: BaseView {
     
     var size: Size
     
-    init(for size: Size) {
+    init(with size: Size) {
         self.size = size
         super.init()
     }

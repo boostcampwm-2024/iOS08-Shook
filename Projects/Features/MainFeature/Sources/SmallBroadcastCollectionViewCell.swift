@@ -5,7 +5,7 @@ import DesignSystem
 import EasyLayoutModule
 
 final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailViewContainer {
-    let thumbnailView = ThumbnailView(for: .small)
+    let thumbnailView = ThumbnailView(with: .small)
     
     private let descriptionStack = UIStackView()
     private let titleLabel = UILabel()
