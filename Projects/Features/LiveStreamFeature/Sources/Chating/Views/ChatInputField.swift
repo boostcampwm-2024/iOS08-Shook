@@ -13,6 +13,7 @@ final class ChatInputField: BaseView {
     private let heartButton = UIButton()
     private let inputField = UITextView()
     private let sendButton = UIButton()
+    private let placeholder = UILabel()
     
     private let clipView = UIView()
     
@@ -30,8 +31,11 @@ final class ChatInputField: BaseView {
         heartButton.setImage(DesignSystemAsset.Image.heart24.image, for: .normal)
         heartButton.setContentHuggingPriority(.required, for: .horizontal)
         
+        inputField.addSubview(placeholder)
         inputField.textContainerInset = .zero
         inputField.delegate = self
+        
+        placeholder.text = "재미있는 이야기를 시작해 보세요!"
 
         sendButton.setContentHuggingPriority(.required, for: .horizontal)
         sendButton.setImage(
@@ -53,6 +57,9 @@ final class ChatInputField: BaseView {
         inputField.font = .setFont(.body2())
         inputField.backgroundColor = .clear
         inputField.textColor = .white
+        
+        placeholder.font = .setFont(.body2())
+        placeholder.textColor = .systemGray6
         
         sendButton.tintColor = .white
     }
@@ -80,6 +87,11 @@ final class ChatInputField: BaseView {
         inputFieldHeightContraint = inputField.heightAnchor.constraint(equalToConstant: 20)
         inputFieldHeightContraint.priority = .defaultLow
         inputFieldHeightContraint.isActive = true
+        
+        placeholder.ezl.makeConstraint {
+            $0.top(to: inputField)
+                .leading(to: inputField, offset: 5)
+        }
         
         sendButton.ezl.makeConstraint {
             $0.trailing(to: clipView, offset: -15)
@@ -109,9 +121,11 @@ extension ChatInputField: UITextViewDelegate {
         if textView.text.isEmpty {
             clipView.layer.borderColor = UIColor.white.cgColor
             sendButton.tintColor = .white
+            placeholder.isHidden = false
         } else {
             clipView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
             sendButton.tintColor = DesignSystemAsset.Color.mainGreen.color
+            placeholder.isHidden = true
         }
         
         inputFieldHeightContraint.constant = textView.contentSize.height
