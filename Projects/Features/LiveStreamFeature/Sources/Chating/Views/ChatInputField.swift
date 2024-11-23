@@ -1,18 +1,26 @@
+import Combine
 import UIKit
 
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
+protocol ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> { get }
+}
+
 final class ChatInputField: BaseView {
     private let heartButton = UIButton()
     private let inputField = UITextView()
     private let sendButton = UIButton()
+    private let placeholder = UILabel()
     
     private let clipView = UIView()
     
     private var inputFieldHeightContraint: NSLayoutConstraint!
     
+    @Published private var sendButtonDidTapPublisher: ChatInfo?
+
     override func setupViews() {
         addSubview(heartButton)
         addSubview(clipView)
@@ -23,8 +31,11 @@ final class ChatInputField: BaseView {
         heartButton.setImage(DesignSystemAsset.Image.heart24.image, for: .normal)
         heartButton.setContentHuggingPriority(.required, for: .horizontal)
         
+        inputField.addSubview(placeholder)
         inputField.textContainerInset = .zero
         inputField.delegate = self
+        
+        placeholder.text = "재미있는 이야기를 시작해 보세요!"
 
         sendButton.setContentHuggingPriority(.required, for: .horizontal)
         sendButton.setImage(
@@ -46,6 +57,9 @@ final class ChatInputField: BaseView {
         inputField.font = .setFont(.body2())
         inputField.backgroundColor = .clear
         inputField.textColor = .white
+        
+        placeholder.font = .setFont(.body2())
+        placeholder.textColor = .systemGray6
         
         sendButton.tintColor = .white
     }
@@ -74,10 +88,31 @@ final class ChatInputField: BaseView {
         inputFieldHeightContraint.priority = .defaultLow
         inputFieldHeightContraint.isActive = true
         
+        placeholder.ezl.makeConstraint {
+            $0.top(to: inputField)
+                .leading(to: inputField, offset: 5)
+        }
+        
         sendButton.ezl.makeConstraint {
             $0.trailing(to: clipView, offset: -15)
                 .bottom(to: clipView, offset: -8)
         }
+    }
+    
+    override func setupActions() {
+        sendButton.addAction(
+            UIAction { [weak self] _ in
+                guard let self else { return }
+                #warning("Chating User Name 추후 수정")
+                sendButtonDidTapPublisher = ChatInfo(
+                    name: "홍길동",
+                    message: inputField.text
+                )
+                inputField.text = ""
+                textViewDidChange(inputField)
+            },
+            for: .touchUpInside
+        )
     }
 }
 
@@ -86,13 +121,21 @@ extension ChatInputField: UITextViewDelegate {
         if textView.text.isEmpty {
             clipView.layer.borderColor = UIColor.white.cgColor
             sendButton.tintColor = .white
+            placeholder.isHidden = false
         } else {
             clipView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
             sendButton.tintColor = DesignSystemAsset.Color.mainGreen.color
+            placeholder.isHidden = true
         }
         
         inputFieldHeightContraint.constant = textView.contentSize.height
         
         layoutIfNeeded()
+    }
+}
+
+extension ChatInputField: ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> {
+        $sendButtonDidTapPublisher.dropFirst().eraseToAnyPublisher()
     }
 }

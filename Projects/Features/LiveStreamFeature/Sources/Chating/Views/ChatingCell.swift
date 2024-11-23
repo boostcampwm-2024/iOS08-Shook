@@ -12,10 +12,7 @@ final class ChatingCell: BaseTableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(detailLabel)
         
-        nameLabel.text = "닉네임"
-        nameLabel.setContentHuggingPriority(.required, for: .horizontal)
-        
-        detailLabel.text = "채팅 내용"
+        nameLabel.setContentHuggingPriority(.required, for: .horizontal)        
     }
     
     override func setupStyles() {
@@ -39,5 +36,10 @@ final class ChatingCell: BaseTableViewCell {
                 .vertical(to: contentView, padding: 6)
                 .trailing(to: contentView, offset: -20)
         }
+    }
+    
+    func configure(chat: ChatInfo) {
+        nameLabel.text = chat.name
+        detailLabel.text = chat.message
     }
 }
