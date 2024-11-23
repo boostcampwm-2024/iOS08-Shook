@@ -11,9 +11,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let usecase = MockFetchChannelListUsecaseImpl()
-        let viewModel = BroadcastCollectionViewModel(usecase: usecase)
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel)
+        let mockUsecase = MockFetchChannelListUsecaseImpl()
+        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let mockFactory = MockLiveStreamViewControllerFractoryImpl()
+        
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
