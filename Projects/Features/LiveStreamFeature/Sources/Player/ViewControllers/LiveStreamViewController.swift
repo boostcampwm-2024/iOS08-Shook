@@ -22,10 +22,11 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.eraseToAnyPublisher(),
         sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher(),
         playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
-        chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
         playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
-        playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher()
+        playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher(),
+        chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
     )
+  
     private lazy var output = viewModel.transform(input: input)
     
     deinit {
