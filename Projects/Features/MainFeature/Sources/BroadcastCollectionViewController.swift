@@ -108,9 +108,7 @@ extension BroadcastCollectionViewController: UICollectionViewDelegate {
         let viewController = SampleLiveStreamViewController(viewModel: viewModel)
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
-        present(viewController, animated: true, completion: nil)
-        
-        CFRunLoopWakeUp(CFRunLoopGetCurrent())
+        present(viewController, animated: true, completion: nil)        
     }
 }
 

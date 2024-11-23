@@ -17,7 +17,6 @@ final class ThumbnailView: BaseView {
     }
     
     let shadowView = UIView()
-    let containerView = UIView()
     let imageView = UIImageView()
     
     var size: Size
@@ -33,28 +32,21 @@ final class ThumbnailView: BaseView {
     
     override func setupViews() {
         addSubview(shadowView)
-        addSubview(containerView)
-                
-        containerView.addSubview(imageView)
+        addSubview(imageView)
     }
     
     override func setupStyles() {
         shadowView.backgroundColor = .systemBackground
-        containerView.backgroundColor = .systemBackground
-        
+
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = size == .large ? 16 : 8
     }
     
     override func setupLayouts() {
-        containerView.ezl.makeConstraint {
-            $0.diagonal(to: self)
-        }
-        
         imageView.ezl.makeConstraint {
-            $0.horizontal(to: containerView, padding: 16)
-                .vertical(to: containerView)
+            $0.horizontal(to: self, padding: 16)
+                .vertical(to: self)
         }
         
         shadowView.ezl.makeConstraint {
@@ -65,23 +57,37 @@ final class ThumbnailView: BaseView {
     func updateStyles(for transition: Transition) {
         if transition == .present {
             imageView.layer.cornerRadius = 0
+        } else {
+            imageView.layer.cornerRadius = size == .large ? 16 : 8
         }
     }
     
     func updateLayouts(for transition: Transition) {
+        removeImageViewConstraints()
+        
         if transition == .present {
             imageView.ezl.makeConstraint {
                 $0.diagonal(to: self)
             }
         } else {
             imageView.ezl.makeConstraint {
-                $0.horizontal(to: containerView, padding: 16)
-                    .vertical(to: containerView)
+                $0.horizontal(to: self, padding: 16)
+                    .vertical(to: self)
             }
         }
     }
     
     func configure(with image: UIImage?) {
         imageView.image = image
+    }
+    
+    private func removeImageViewConstraints() {
+        if let superview = imageView.superview {
+            superview.constraints.forEach {
+                if $0.firstItem as? UIView == imageView || $0.secondItem as? UIView == imageView {
+                    superview.removeConstraint($0)
+                }
+            }
+        }
     }
 }

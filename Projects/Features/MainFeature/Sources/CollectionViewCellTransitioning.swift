@@ -62,7 +62,7 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         thumbnailViewCopy.frame = absoluteFrame
         thumbnailViewCopy.layoutIfNeeded()
         
-        backgroundView.frame = transition == .present ? thumbnailViewCopy.containerView.frame : containerView.frame
+        backgroundView.frame = transition == .present ? thumbnailViewCopy.imageView.frame : containerView.frame
         backgroundView.layer.cornerRadius = transition.cornerRadius
         thumbnailViewCopy.insertSubview(backgroundView, aboveSubview: thumbnailViewCopy.shadowView)
         
@@ -134,13 +134,13 @@ extension CollectionViewCellTransitioning {
         
         animator.addAnimations {
             thumbnailView.transform = .identity
-            thumbnailView.containerView.layer.cornerRadius = self.transition.next.cornerRadius
             
             if self.transition == .present {
                 thumbnailView.updateStyles(for: .present)
                 thumbnailView.updateLayouts(for: .present)
                 thumbnailView.frame = CGRect(x: 0, y: containerView.layoutMargins.top, width: containerView.frame.width, height: containerView.frame.width * 0.5625)
             } else {
+                thumbnailView.updateStyles(for: .dismiss)
                 thumbnailView.updateLayouts(for: .dismiss)
                 thumbnailView.frame = frame
             }
@@ -153,7 +153,7 @@ extension CollectionViewCellTransitioning {
             
             containerView.layoutIfNeeded()
             
-            self.backgroundView.frame = self.transition == .present ? containerView.frame : thumbnailView.containerView.frame
+            self.backgroundView.frame = self.transition == .present ? containerView.frame : thumbnailView.imageView.frame
         }
         
         return animator
