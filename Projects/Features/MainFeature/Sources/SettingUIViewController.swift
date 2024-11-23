@@ -88,6 +88,9 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupActions() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
         startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
         
         closeBarButton.target = self
@@ -108,6 +111,11 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
             window.rootViewController = newBroadcastUIViewController
         }
+    }
+    
+    @objc
+    private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 
