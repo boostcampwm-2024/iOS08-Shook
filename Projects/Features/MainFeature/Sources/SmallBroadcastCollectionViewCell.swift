@@ -30,7 +30,7 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         }
         
         descriptionStack.ezl.makeConstraint {
-            $0.leading(to: thumbnailView.imageView.ezl.trailing, offset: 8)
+            $0.leading(to: thumbnailView.ezl.trailing)
                 .trailing(to: contentView, offset: -16)
                 .centerY(to: thumbnailView)
         }
@@ -54,6 +54,7 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         descriptionStack.spacing = 4
         
         titleLabel.font = .setFont(.body2())
+        titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
     }
     

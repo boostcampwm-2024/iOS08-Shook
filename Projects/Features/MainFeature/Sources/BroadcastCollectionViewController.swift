@@ -73,7 +73,19 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     }
     
     public override func setupStyles() {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        
+        navigationController?.navigationBar.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+
+        collectionView.backgroundColor = .black
+        
         rightBarButton.style = .plain
+        rightBarButton.tintColor = DesignSystemAsset.Color.mainGreen.color
     }
     
     public override func setupLayouts() {
@@ -201,6 +213,7 @@ extension BroadcastCollectionViewController {
             if indexPath.section == 1 {
                 let label = UILabel()
                 label.font = .setFont(.title())
+                label.textColor = .white
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {

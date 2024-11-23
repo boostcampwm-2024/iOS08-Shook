@@ -38,10 +38,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     }
     
     override func setupStyles() {
-        titleLabel.font = .setFont(.body1())
-        titleLabel.numberOfLines = 2
-        titleLabel.lineBreakMode = .byWordWrapping
-        
         liveBadgeLabel.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
         liveBadgeLabel.textColor = .white
@@ -49,6 +45,11 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         liveBadgeLabel.font = .setFont(.caption1(weight: .bold))
         liveBadgeLabel.layer.cornerRadius = 16
         liveBadgeLabel.clipsToBounds = true
+        
+        titleLabel.font = .setFont(.body1())
+        titleLabel.textColor = .white
+        titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byWordWrapping
     }
     
     func configure(image: UIImage?, title: String) {

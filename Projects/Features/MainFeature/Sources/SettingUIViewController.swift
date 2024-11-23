@@ -38,7 +38,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupViews() {
-        closeBarButton.image = UIImage(systemName: "xmark")
+        closeBarButton.image = DesignSystemAsset.Image.xmark24.image
         
         navigationItem.title = "방송설정"
         navigationItem.rightBarButtonItem = closeBarButton
@@ -56,12 +56,13 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupStyles() {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .gray
+        
         view.backgroundColor = .black
 
         closeBarButton.style = .plain
-                
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .white
         
         settingTableView.backgroundColor = .black
         

@@ -36,11 +36,11 @@ final class ThumbnailView: BaseView {
     }
     
     override func setupStyles() {
-        shadowView.backgroundColor = .systemBackground
+        shadowView.backgroundColor = .black
 
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = size == .large ? 16 : 8
+        imageView.layer.cornerRadius = size == .large ? 16 : 12
     }
     
     override func setupLayouts() {
@@ -58,7 +58,7 @@ final class ThumbnailView: BaseView {
         if transition == .present {
             imageView.layer.cornerRadius = 0
         } else {
-            imageView.layer.cornerRadius = size == .large ? 16 : 8
+            imageView.layer.cornerRadius = size == .large ? 16 : 12
         }
     }
     
