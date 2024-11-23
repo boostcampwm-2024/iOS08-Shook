@@ -24,6 +24,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
         playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
         playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher(),
+        dismissButtonDidTap: playerView.playerControlView.dismissButtonDidTap.eraseToAnyPublisher(),
         chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
     )
   
@@ -152,6 +153,13 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         output.chatList
             .sink { [weak self] in
                 self?.chatingList.updateList($0)
+            }
+            .store(in: &subscription)
+        
+        output.dismiss
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.dismiss(animated: true)
             }
             .store(in: &subscription)
     }

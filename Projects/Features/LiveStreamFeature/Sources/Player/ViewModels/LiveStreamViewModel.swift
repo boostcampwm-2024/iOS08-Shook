@@ -13,6 +13,7 @@ public final class LiveStreamViewModel: ViewModel {
         let playerStateDidChange: AnyPublisher<Bool?, Never>
         let playerGestureDidTap: AnyPublisher<Void?, Never>
         let playButtonDidTap: AnyPublisher<Void?, Never>
+        let dismissButtonDidTap: AnyPublisher<Void?, Never>
         let chatingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
     }
@@ -24,6 +25,7 @@ public final class LiveStreamViewModel: ViewModel {
         let chatList = CurrentValueSubject<[ChatInfo], Never>([])
         let isShowedPlayerControl: CurrentValueSubject<Bool, Never> = .init(false)
         let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
+        let dismiss: PassthroughSubject<Void, Never> = .init()
     }
     
     public init() {}
@@ -84,6 +86,12 @@ public final class LiveStreamViewModel: ViewModel {
             .sink { _ in
                 input.autoDissmissDidRegister.send()
                 output.isPlaying.send(!output.isPlaying.value)
+            }
+            .store(in: &subscription)
+        
+        input.dismissButtonDidTap
+            .sink { _ in
+                output.dismiss.send()
             }
             .store(in: &subscription)
         
