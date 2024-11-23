@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 
 import BaseFeatureInterface
 
@@ -12,6 +13,7 @@ public final class LiveStreamViewModel: ViewModel {
         let playerStateDidChange: AnyPublisher<Bool?, Never>
         let playerGestureDidTap: AnyPublisher<Void?, Never>
         let playButtonDidTap: AnyPublisher<Void?, Never>
+        let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
@@ -45,6 +47,7 @@ public final class LiveStreamViewModel: ViewModel {
             .compactMap { $0 }
             .map{ Double($0) }
             .sink {
+                input.autoDissmissDidRegister.send()
                 output.time.send($0)
             }
             .store(in: &subscription)
@@ -59,7 +62,13 @@ public final class LiveStreamViewModel: ViewModel {
         input.playerGestureDidTap
             .compactMap { $0 }
             .sink { _ in
-                output.isShowedPlayerControl.send(!output.isShowedPlayerControl.value)
+                let nextValue1 = !output.isShowedPlayerControl.value
+                output.isShowedPlayerControl.send(nextValue1)
+                
+                if nextValue1 {
+                    input.autoDissmissDidRegister.send()
+                }
+                
                 if output.isExpanded.value {
                     output.isShowedInfoView.send(false)
                 } else {
@@ -71,7 +80,16 @@ public final class LiveStreamViewModel: ViewModel {
         input.playButtonDidTap
             .compactMap { $0 }
             .sink { _ in
+                input.autoDissmissDidRegister.send()
                 output.isPlaying.send(!output.isPlaying.value)
+            }
+            .store(in: &subscription)
+        
+        input.autoDissmissDidRegister
+            .debounce(for: .seconds(3), scheduler: DispatchQueue.main)
+            .sink { _ in
+                output.isShowedPlayerControl.send(false)
+                output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
         
