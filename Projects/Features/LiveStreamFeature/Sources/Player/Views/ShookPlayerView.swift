@@ -7,13 +7,12 @@ import DesignSystem
 import EasyLayoutModule
 
 protocol ShhokPlayerViewState {
-    func updatePlayerAnimation(_ isShowed: Bool)
     func updataePlayState(_ isPlaying: Bool)
 }
 
 protocol ShookPlayerViewAciton {
-    var playerStateDidChange: AnyPublisher<Bool, Never> { get }
-    var playerGestureDidTap: AnyPublisher<Void, Never> { get }
+    var playerStateDidChange: AnyPublisher<Bool?, Never> { get }
+    var playerGestureDidTap: AnyPublisher<Void?, Never> { get }
 }
 
 private enum Constants: CGFloat {
@@ -29,17 +28,15 @@ private enum BufferStateConstants: String {
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
     private var playerItem: AVPlayerItem
-    private let infoView: LiveStreamInfoView = LiveStreamInfoView()
+    
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
-    private var unfoldedConstraint: NSLayoutConstraint?
-    private var foldedConstraint: NSLayoutConstraint?
     private var isInitialized = false
     
     // MARK: - @Published
-    @Published private var playingStateChangedPublisher: Bool = false
-    @Published private var playerGestureTapPublisher: Void = ()
+    @Published private var playingStateChangedPublisher: Bool?
+    @Published private var playerGestureTapPublisher: Void?
     
     // MARK: - lazy var
     private lazy var playerLayer: AVPlayerLayer = {
@@ -52,7 +49,6 @@ final class ShookPlayerView: BaseView {
         view.layer.addSublayer(playerLayer)
         return view
     }()
-    private lazy var tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
     
     public let playerControlView: PlayerControlView = PlayerControlView()
     
@@ -61,6 +57,7 @@ final class ShookPlayerView: BaseView {
         player.replaceCurrentItem(with: playerItem)
         super.init(frame: .zero)
         addObserver()
+        player.play()
     }
     
     required init?(coder: NSCoder) {
@@ -87,7 +84,6 @@ final class ShookPlayerView: BaseView {
     
     override func setupViews() {
         super.setupViews()
-        self.addSubview(infoView)
         self.addSubview(videoContainerView)
         videoContainerView.addSubview(playerControlView)
         videoContainerView.addSubview(indicatorView)
@@ -103,14 +99,6 @@ final class ShookPlayerView: BaseView {
             $0.width(Constants.indicatorSize.rawValue).height(Constants.indicatorSize.rawValue).center(to: self)
         }
         
-        unfoldedConstraint = infoView.topAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
-        foldedConstraint = infoView.bottomAnchor.constraint(equalTo: videoContainerView.bottomAnchor)
-        foldedConstraint?.isActive = true
-        
-        infoView.ezl.makeConstraint {
-            $0.horizontal(to: self)
-        }
-        
         playerControlView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
@@ -119,16 +107,15 @@ final class ShookPlayerView: BaseView {
     override func setupStyles() {
         playerControlView.alpha = .zero
         
-        videoContainerView.backgroundColor = DesignSystemAsset.Color.darkGray.color
+        videoContainerView.backgroundColor = .black
         
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
     }
     
     override func setupActions() {
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
         videoContainerView.addGestureRecognizer(tapGesture)
-        
-        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
     }
     
     override func layoutSubviews() {
@@ -178,16 +165,14 @@ extension ShookPlayerView {
             player.removeTimeObserver(token)
         }
     }
-    
     // MARK: - observeValue Handler
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
-            player.play()
             
         case.failed, .unknown:
-            #warning("에러")
+        #warning("에러")
             break
             
         @unknown default:
@@ -236,21 +221,7 @@ extension ShookPlayerView {
     }
     
     // - MARK: animation
-    private func infoViewConstraintAnimation(_ isShowed: Bool) {
-        UIView.transition(with: self, duration: 0.3, options: .curveEaseInOut) {
-            if isShowed {
-                self.unfoldedConstraint?.isActive = true
-                self.foldedConstraint?.isActive = false
-            } else {
-                self.unfoldedConstraint?.isActive = false
-                self.foldedConstraint?.isActive = true
-                
-            }
-            self.layoutIfNeeded()
-        }
-    }
-    
-    private func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
+    func playerControlViewAlphaAnimalation(_ isShowed: Bool) {
         UIView.transition(with: self, duration: 0.2, options: .transitionCrossDissolve) {
             if isShowed {
                 self.playerControlView.alpha = 1
@@ -262,11 +233,6 @@ extension ShookPlayerView {
 }
 
 extension ShookPlayerView: ShhokPlayerViewState {
-    func updatePlayerAnimation(_ isShowed: Bool) {
-        playerControlViewAlphaAnimalation(isShowed)
-        infoViewConstraintAnimation(isShowed)
-    }
-    
     func updataePlayState(_ isPlaying: Bool) {
         if isPlaying {
             player.play()
@@ -278,11 +244,11 @@ extension ShookPlayerView: ShhokPlayerViewState {
 }
 
 extension ShookPlayerView: ShookPlayerViewAciton {
-    var playerStateDidChange: AnyPublisher<Bool, Never> {
+    var playerStateDidChange: AnyPublisher<Bool?, Never> {
         $playingStateChangedPublisher.eraseToAnyPublisher()
     }
     
-    var playerGestureDidTap: AnyPublisher<Void, Never> {
+    var playerGestureDidTap: AnyPublisher<Void?, Never> {
         $playerGestureTapPublisher.eraseToAnyPublisher()
     }
 }
