@@ -120,6 +120,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         
         output.isShowedPlayerControl
             .dropFirst()
+            .removeDuplicates()
             .sink { [weak self] flag in
                 guard let self else { return }
                 self.playerView.playerControlViewAlphaAnimalation(flag)
