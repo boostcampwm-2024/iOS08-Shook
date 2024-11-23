@@ -10,7 +10,7 @@ final class ChatingListView: BaseView {
     
     private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
         tableView: chatListView
-    ) { [weak self] tableView, indexPath, chatInfo in
+    ) { tableView, indexPath, chatInfo in
         let cell = tableView.dequeueReusableCell(
             withIdentifier: ChatingCell.identifier,
             for: indexPath
