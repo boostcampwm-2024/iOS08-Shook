@@ -100,7 +100,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupActions() {
-        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        playerView.addGestureRecognizer(panGesture)
+        playerView.isUserInteractionEnabled = true
     }
     
     public override func setupBind() {
@@ -178,6 +180,33 @@ extension LiveStreamViewController {
                 self.foldedConstraint?.isActive = true
             }
             self.view.layoutIfNeeded()
+        }
+    }
+}
+
+extension LiveStreamViewController {
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                let scale = max(1 - translation.y / 320, 0.75)
+                view.transform = CGAffineTransform(scaleX: scale, y: scale)
+                view.layer.cornerRadius = min(translation.y, 36)
+                
+                if translation.y > 56 {
+                    dismiss(animated: true)
+                }
+            }
+            
+        case .ended, .cancelled:
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut) {
+                self.view.transform = .identity
+                self.view.layer.cornerRadius = 0
+            }
+            
+        default: break
         }
     }
 }
