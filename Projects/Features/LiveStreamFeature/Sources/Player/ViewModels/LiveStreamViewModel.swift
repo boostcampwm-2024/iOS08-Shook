@@ -47,6 +47,7 @@ public final class LiveStreamViewModel: ViewModel {
             .compactMap { $0 }
             .map{ Double($0) }
             .sink {
+                input.autoDissmissDidRegister.send()
                 output.time.send($0)
             }
             .store(in: &subscription)
@@ -79,6 +80,7 @@ public final class LiveStreamViewModel: ViewModel {
         input.playButtonDidTap
             .compactMap { $0 }
             .sink { _ in
+                input.autoDissmissDidRegister.send()
                 output.isPlaying.send(!output.isPlaying.value)
             }
             .store(in: &subscription)
@@ -87,6 +89,7 @@ public final class LiveStreamViewModel: ViewModel {
             .debounce(for: .seconds(3), scheduler: DispatchQueue.main)
             .sink { _ in
                 output.isShowedPlayerControl.send(false)
+                output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
         
