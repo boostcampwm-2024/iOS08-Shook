@@ -10,7 +10,7 @@ private protocol TimeControlState {
 }
 
 private protocol TimeControlAction {
-    var valueDidChanged: AnyPublisher<Float, Never> { get }
+    var valueDidChanged: AnyPublisher<Float?, Never> { get }
 }
 
 final class TimeControlView: BaseView {
@@ -23,7 +23,7 @@ final class TimeControlView: BaseView {
         }
     }
     
-    @Published private var currentValue: Float = 0
+    @Published private var currentValue: Float?
     
     override func setupViews() {
         self.addSubview(liveStringLabel)
@@ -81,7 +81,7 @@ extension TimeControlView: TimeControlState {
 }
 
 extension TimeControlView: TimeControlAction {
-    var valueDidChanged: AnyPublisher<Float, Never> {
+    var valueDidChanged: AnyPublisher<Float?, Never> {
         $currentValue.eraseToAnyPublisher()
     }
 }
