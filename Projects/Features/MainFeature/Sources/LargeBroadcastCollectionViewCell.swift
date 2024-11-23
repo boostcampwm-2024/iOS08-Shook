@@ -4,68 +4,66 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell {    
-    private let thumbnail = UIImageView()
-    private let title = UILabel()
-    private let subtitle = UILabel()
-    private let liveBadge = PaddingUILabel()
+final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailViewContainer {
+    let thumbnailView = ThumbnailView(with: .large)
+    
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
+    private let liveBadgeLabel = PaddingLabel()
     
     override func setupViews() {
-        liveBadge.text = "L I V E"
+        liveBadgeLabel.text = "L I V E"
         
-        contentView.addSubview(thumbnail)
-        contentView.addSubview(title)
-        contentView.addSubview(subtitle)
-        contentView.addSubview(liveBadge)
+        contentView.addSubview(thumbnailView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
+        contentView.addSubview(liveBadgeLabel)
     }
     
     override func setupLayouts() {
-        thumbnail.ezl.makeConstraint {
+        thumbnailView.ezl.makeConstraint {
             $0.top(to: contentView)
                 .horizontal(to: contentView)
                 .height(contentView.frame.width * 0.5625)
         }
         
-        title.ezl.makeConstraint {
-            $0.top(to: thumbnail.ezl.bottom, offset: 4)
-                .horizontal(to: contentView)
+        titleLabel.ezl.makeConstraint {
+            $0.top(to: thumbnailView.imageView.ezl.bottom, offset: 6)
+                .horizontal(to: contentView, padding: 20)
         }
         
-        subtitle.ezl.makeConstraint {
-            $0.top(to: title.ezl.bottom, offset: 4)
-                .horizontal(to: contentView)
+        subtitleLabel.ezl.makeConstraint {
+            $0.top(to: titleLabel.ezl.bottom, offset: 6)
+                .horizontal(to: contentView, padding: 20)
                 .bottom(to: contentView)
         }
         
-        liveBadge.ezl.makeConstraint {
-            $0.top(to: thumbnail, offset: 12)
-                .leading(to: thumbnail, offset: 12)
+        liveBadgeLabel.ezl.makeConstraint {
+            $0.top(to: thumbnailView.imageView, offset: 12)
+                .leading(to: thumbnailView.imageView, offset: 12)
         }
     }
     
     override func setupStyles() {
-        thumbnail.contentMode = .scaleAspectFill
-        thumbnail.clipsToBounds = true
-        thumbnail.layer.cornerRadius = 16
+        titleLabel.font = .setFont(.body1())
+        titleLabel.numberOfLines = 2
+        titleLabel.lineBreakMode = .byWordWrapping
         
-        title.font = .setFont(.body1())
-        title.numberOfLines = 2
+        subtitleLabel.font = .setFont(.body2())
+        subtitleLabel.numberOfLines = 1
         
-        subtitle.font = .setFont(.body2())
-        subtitle.numberOfLines = 1
-        
-        liveBadge.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-        liveBadge.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveBadge.textColor = .white
-        liveBadge.textAlignment = .center
-        liveBadge.font = .setFont(.caption1(weight: .bold))
-        liveBadge.layer.cornerRadius = 16
-        liveBadge.clipsToBounds = true
+        liveBadgeLabel.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
+        liveBadgeLabel.textColor = .white
+        liveBadgeLabel.textAlignment = .center
+        liveBadgeLabel.font = .setFont(.caption1(weight: .bold))
+        liveBadgeLabel.layer.cornerRadius = 16
+        liveBadgeLabel.clipsToBounds = true
     }
     
     func configure(image: UIImage?, title: String, subtitle: String) {
-        self.thumbnail.image = image
-        self.title.text = title
-        self.subtitle.text = subtitle
+        self.thumbnailView.configure(with: image)
+        self.titleLabel.text = title
+        self.subtitleLabel.text = subtitle
     }
 }

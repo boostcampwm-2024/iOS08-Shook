@@ -9,8 +9,7 @@ import LiveStreamFeatureInterface
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
-        case big
-        case small
+        case large, small
     }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
@@ -21,11 +20,21 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private let refreshControl = UIRefreshControl()
     private let rightBarButton: UIBarButtonItem = UIBarButtonItem()
+    
     private let layout = setupCollectionViewCompositionalLayout()
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
     private var factory: LiveStreamViewControllerFactory?
     
+    private let transitioning = CollectionViewCellTransitioning()
+    
+    var selectedThumbnailView: ThumbnailView? {
+        guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
+        let cell = collectionView.cellForItem(at: indexPath)
+        guard let thumbnailViewContainer = cell as? ThumbnailViewContainer else { return nil }
+        return thumbnailViewContainer.thumbnailView
+    }
+
     public init(
         viewModel: BroadcastCollectionViewModel,
         factory: (any LiveStreamViewControllerFactory)? = nil
@@ -53,6 +62,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationItem.rightBarButtonItem = rightBarButton
         
         collectionView.refreshControl = refreshControl
+        
+        collectionView.delegate = self
         
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
@@ -88,21 +99,26 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
             }
             .store(in: &cancellables)
     }
-    
-    @objc
-    private func didTapRightBarButton() {
-        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
-        let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
-        navigationController?.present(settingNavigationController, animated: true)
+}
+
+// MARK: - CollectionView Delegate
+extension BroadcastCollectionViewController: UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let viewModel = SampleLiveStreamViewModel()
+        let viewController = SampleLiveStreamViewController(viewModel: viewModel)
+        viewController.modalPresentationStyle = .overCurrentContext
+        viewController.transitioningDelegate = transitioning
+        present(viewController, animated: true, completion: nil)        
     }
 }
 
+// MARK: - CollectionView CompositionalLayout
 extension BroadcastCollectionViewController {
     private static func setupCollectionViewCompositionalLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, _  in
             let section = Section(rawValue: sectionIndex) ?? .small
             switch section {
-            case .big:
+            case .large:
                 let size = NSCollectionLayoutSize(
                     widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
                     heightDimension: NSCollectionLayoutDimension.estimated(200)
@@ -111,8 +127,8 @@ extension BroadcastCollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 24, trailing: 16)
-                section.interGroupSpacing = 16
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 24, trailing: 0)
+                section.interGroupSpacing = 24
                 
                 return section
             
@@ -125,8 +141,8 @@ extension BroadcastCollectionViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-                section.interGroupSpacing = 14
+                section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 0, bottom: 24, trailing: 0)
+                section.interGroupSpacing = 24
                 
                 let headerSize = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
@@ -146,13 +162,14 @@ extension BroadcastCollectionViewController {
     }
 }
 
+// MARK: - CollectionView Diffable DataSource
 extension BroadcastCollectionViewController {
     private func setupDataSource() {
         dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
             guard let section = Section(rawValue: indexPath.section) else { return UICollectionViewCell() }
             
             switch section {
-            case .big:
+            case .large:
                 guard let bigCell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: LargeBroadcastCollectionViewCell.identifier,
                     for: indexPath
@@ -187,7 +204,8 @@ extension BroadcastCollectionViewController {
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
-                    $0.diagonal(to: header)
+                    $0.horizontal(to: header, padding: 16)
+                        .vertical(to: header)
                 }
             }
             
@@ -199,8 +217,8 @@ extension BroadcastCollectionViewController {
         var snapshot = Snapshot()
         
         let bigSectionItems = Array(items.prefix(3))
-        snapshot.appendSections([.big])
-        snapshot.appendItems(bigSectionItems, toSection: .big)
+        snapshot.appendSections([.large])
+        snapshot.appendItems(bigSectionItems, toSection: .large)
         
         if items.count > 3 {
             let smallSectionItems = Array(items.suffix(from: 3))
@@ -213,5 +231,15 @@ extension BroadcastCollectionViewController {
                 self?.refreshControl.endRefreshing()
             }
         }
+    }
+}
+
+// MARK: - CollectionView Methods
+extension BroadcastCollectionViewController {
+    @objc
+    private func didTapRightBarButton() {
+        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
+        let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
+        navigationController?.present(settingNavigationController, animated: true)
     }
 }
