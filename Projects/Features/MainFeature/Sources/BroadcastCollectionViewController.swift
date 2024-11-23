@@ -12,8 +12,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         case large, small
     }
     
-    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Channel>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Channel>
     
     private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
@@ -176,7 +176,7 @@ extension BroadcastCollectionViewController {
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                bigCell.configure(image: item.image, title: item.title, subtitle: item.subtitle1)
+                bigCell.configure(image: item.image, title: item.name)
                 return bigCell
                 
             case .small:
@@ -186,7 +186,7 @@ extension BroadcastCollectionViewController {
                 ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                smallCell.configure(image: item.image, title: item.title, subtitle1: item.subtitle1, subtitle2: item.subtitle2)
+                smallCell.configure(image: item.image, title: item.name)
                 return smallCell
             }
         }
@@ -213,7 +213,7 @@ extension BroadcastCollectionViewController {
         }
     }
     
-    private func applySnapshot(with items: [Item]) {
+    private func applySnapshot(with items: [Channel]) {
         var snapshot = Snapshot()
         
         let bigSectionItems = Array(items.prefix(3))

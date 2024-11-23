@@ -8,7 +8,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     let thumbnailView = ThumbnailView(with: .large)
     
     private let titleLabel = UILabel()
-    private let subtitleLabel = UILabel()
     private let liveBadgeLabel = PaddingLabel()
     
     override func setupViews() {
@@ -16,7 +15,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         
         contentView.addSubview(thumbnailView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(subtitleLabel)
         contentView.addSubview(liveBadgeLabel)
     }
     
@@ -29,11 +27,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         
         titleLabel.ezl.makeConstraint {
             $0.top(to: thumbnailView.imageView.ezl.bottom, offset: 6)
-                .horizontal(to: contentView, padding: 20)
-        }
-        
-        subtitleLabel.ezl.makeConstraint {
-            $0.top(to: titleLabel.ezl.bottom, offset: 6)
                 .horizontal(to: contentView, padding: 20)
                 .bottom(to: contentView)
         }
@@ -49,9 +42,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
         
-        subtitleLabel.font = .setFont(.body2())
-        subtitleLabel.numberOfLines = 1
-        
         liveBadgeLabel.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
         liveBadgeLabel.textColor = .white
@@ -61,9 +51,8 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         liveBadgeLabel.clipsToBounds = true
     }
     
-    func configure(image: UIImage?, title: String, subtitle: String) {
+    func configure(image: UIImage?, title: String) {
         self.thumbnailView.configure(with: image)
         self.titleLabel.text = title
-        self.subtitleLabel.text = subtitle
     }
 }

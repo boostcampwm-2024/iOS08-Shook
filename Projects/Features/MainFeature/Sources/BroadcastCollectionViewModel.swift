@@ -4,29 +4,15 @@ import UIKit
 import BaseFeatureInterface
 import LiveStationDomainInterface
 
-public struct Item: Hashable {
+public struct Channel: Hashable {
     let id = UUID().uuidString
+    var name: String
     var image: UIImage?
-    var title: String
-    var subtitle1: String
-    var subtitle2: String
     
-    public init(image: UIImage? = nil, title: String, subtitle1: String, subtitle2: String) {
+    public init(title: String, image: UIImage? = nil) {
         self.image = image
-        self.title = title
-        self.subtitle1 = subtitle1
-        self.subtitle2 = subtitle2
+        self.name = title
     }
-}
-
-class BroadcastFetcher: Fetcher {
-    func fetch() async -> [Item] {
-        return []
-    }
-}
-
-public protocol Fetcher {
-    func fetch() async -> [Item]
 }
 
 public class BroadcastCollectionViewModel: ViewModel {
@@ -36,7 +22,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     public struct Output {
-        let items: PassthroughSubject<[Item], Never> = .init()
+        let items: PassthroughSubject<[Channel], Never> = .init()
         let isActive: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
         let errorMessage: PassthroughSubject<String?, Never> = .init()
     }
@@ -69,14 +55,16 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private func fetchData() {
-
         usecase.execute()
-            .sink { error in
-                print(error)
-            } receiveValue: { ids in
-                print(ids.first?.channelId)
-                self.output.items.send(ids.map { Item(title: $0.channelId, subtitle1: "test", subtitle2: "test") })
-            }.store(in: &cancellables)
+            .sink(
+                receiveCompletion: { _ in },
+                receiveValue: { channel in
+                    self.output.items.send(channel.map {
+                        Channel(title: $0.name, image: $0.image)
+                    })
+                }
+            )
+            .store(in: &cancellables)
     }
     
     /// 방송 이름이 유효한지 확인하는 메서드
