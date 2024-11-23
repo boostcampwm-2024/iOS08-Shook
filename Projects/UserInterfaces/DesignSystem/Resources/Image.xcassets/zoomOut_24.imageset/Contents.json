@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "zoomOut.png",
+      "filename" : "48@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Property 1=zoomOut.png",
+      "filename" : "48@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
