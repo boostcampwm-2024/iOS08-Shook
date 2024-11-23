@@ -14,7 +14,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.dropFirst().eraseToAnyPublisher(),
         playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
         playerGestureDidTap: playerView.playerGestureDidTap.dropFirst().eraseToAnyPublisher(),
-        playButtonDidTap: playerView.playerControlView.playButtonDidTap.dropFirst().eraseToAnyPublisher()
+        playButtonDidTap: playerView.playerControlView.playButtonDidTap.dropFirst().eraseToAnyPublisher(),
+        chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
     )
     private lazy var output = viewModel.transform(input: input)
     
@@ -90,6 +91,12 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .sink { [weak self] isPlaying in
                 guard let self else { return }
                 self.playerView.updataePlayState(isPlaying)
+            }
+            .store(in: &subscription)
+        
+        output.chatList
+            .sink { [weak self] in
+                self?.chatingList.updateList($0)
             }
             .store(in: &subscription)
     }

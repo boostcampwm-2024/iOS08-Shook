@@ -12,6 +12,7 @@ public final class LiveStreamViewModel: ViewModel {
         let playerStateDidChange: AnyPublisher<Bool, Never>
         let playerGestureDidTap: AnyPublisher<Void, Never>
         let playButtonDidTap: AnyPublisher<Void, Never>
+        let chatingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
     }
     
     public struct Output {
@@ -19,7 +20,7 @@ public final class LiveStreamViewModel: ViewModel {
         let isPlaying: CurrentValueSubject<Bool, Never> = .init(false)
         let time: PassthroughSubject<Double, Never> = .init()
         let isplayerControlShowed: CurrentValueSubject<Bool, Never> = .init(false)
-       
+        let chatList = CurrentValueSubject<[ChatInfo], Never>([])
     }
     
     public init() {}
@@ -56,6 +57,11 @@ public final class LiveStreamViewModel: ViewModel {
         input.playButtonDidTap
             .sink { _ in
                 output.isPlaying.send(!output.isPlaying.value)
+            }
+            .store(in: &subscription)
+        
+        input.chatingSendButtonDidTap
+            .sink { chatInfo in
             }
             .store(in: &subscription)
         
