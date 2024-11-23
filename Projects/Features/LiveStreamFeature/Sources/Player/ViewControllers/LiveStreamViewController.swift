@@ -75,8 +75,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         NSLayoutConstraint.activate(shrinkConstraints)
         
         expandConstraints = [
-            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            playerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: playerView.bottomAnchor)
@@ -88,7 +88,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         }
         
         chatingList.ezl.makeConstraint {
-            $0.top(to: infoView.ezl.bottom)
+            $0.top(to: infoView.ezl.bottom, offset: 24)
                 .horizontal(to: view)
                 .bottom(to: chatInputField.ezl.top)
         }
