@@ -17,6 +17,7 @@ extension Target {
         infoPlist: .projectDefault,
         sources: .sources,
         resources: .resources,
+        entitlements: .dictionary(["com.apple.security.application-groups" : "group.kr.codesquad.boostcamp9.Shook"]),
         scripts: generationEnvironment.scripts,
         dependencies: [
             .domain(target: .BaseDomain),
