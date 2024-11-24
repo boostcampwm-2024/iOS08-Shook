@@ -122,11 +122,13 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         closeBarButton.action = #selector(didTapRightBarButton)
     }
     
+    /// X 모양 버튼이 눌렸을 때 호출되는 메서드
     @objc
     private func didTapRightBarButton() {
         dismiss(animated: true, completion: nil)
     }
     
+    /// 방송 시작 버튼이 눌렸을 때 호출되는 메서드
     @objc
     private func didTapSettingButton() {
         guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
@@ -169,6 +171,6 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        UITableView.automaticDimension
     }
 }
