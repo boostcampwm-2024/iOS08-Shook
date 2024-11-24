@@ -10,7 +10,7 @@ public extension Project {
             name: env.name,
             organizationName: env.organizationName,
             packages: [],
-            settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
+            settings: .settings(base: .makeProjectSetting(), configurations: generationEnvironment.configurations, defaultSettings: .recommended),
             targets: [.projectTarget, .projectTestTarget, .broadcastExtension],
             schemes: [.projectDebugScheme, .projectReleaseScheme]
     )
@@ -21,7 +21,7 @@ public extension Project {
         packages: [Package] = [],
         settings: Settings = .settings(
             base: baseSetting,
-            configurations: .default,
+            configurations: generationEnvironment.configurations,
             defaultSettings: .recommended
         ),
         targets: [Target],

@@ -51,7 +51,7 @@ final class MockFetcher: Fetcher {
         var items: [Item] = []
 
         for _ in 0..<itemCount {
-            let titleLength = Int.random(in: 4...20)
+            let titleLength = Int.random(in: 4...50)
             let title = String((0..<titleLength).map { _ in
                 "가나다라마바사아자차카타파하".randomElement()!
             })

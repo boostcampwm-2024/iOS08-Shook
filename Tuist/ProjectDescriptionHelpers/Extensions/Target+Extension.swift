@@ -22,12 +22,12 @@ extension Target {
         ),
         scripts: generationEnvironment.scripts,
         dependencies: [
-            .domain(target: .BaseDomain),
+            .domain(target: .LiveStationDomain),
             .feature(target: .MainFeature),
             .feature(target: .LiveStreamFeature),
             .target(name: "BroadcastExtension")
         ],
-        settings: .settings(base: .makeProjectSetting(), configurations: .default, defaultSettings: .recommended),
+        settings: .settings(base: .makeProjectSetting(), configurations: generationEnvironment.configurations, defaultSettings: .recommended),
         environmentVariables: [:] // 환경변수 설정
     )
     
@@ -201,7 +201,7 @@ public extension Target {
             $0.settings = .settings(
                 base: (spec.settings?.base ?? [:])
                     .merging(["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable"]),
-                configurations: .default,
+                configurations: generationEnvironment.configurations,
                 defaultSettings: spec.settings?.defaultSettings ?? .recommended
             )
             $0.infoPlist = spec.infoPlist ?? .default
@@ -216,7 +216,7 @@ public extension Target {
             dependencies: dependencies,
             settings: .settings(
                 base: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable"],
-                configurations: .default
+                configurations: generationEnvironment.configurations
             )
         )
         .toTarget(with: module.targetName(type: .demo), product: .app)
@@ -228,7 +228,7 @@ public extension Target {
             $0.settings = .settings(
                 base: (spec.settings?.base ?? [:])
                     .merging(["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable"]),
-                configurations: .default,
+                configurations: generationEnvironment.configurations,
                 defaultSettings: spec.settings?.defaultSettings ?? .recommended
             )
             $0.infoPlist = spec.infoPlist ?? .demoDefulat
@@ -243,7 +243,7 @@ public extension Target {
             dependencies: dependencies,
             settings: .settings(
                 base: ["OTHER_LDFLAGS": "$(inherited) -Xlinker -interposable"],
-                configurations: .default
+                configurations: generationEnvironment.configurations
             )
         )
         .toTarget(with: "\(name)Demo", product: .app)
