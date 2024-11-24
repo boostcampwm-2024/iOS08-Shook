@@ -22,7 +22,8 @@ final class SettingTableViewCell: BaseTableViewCell {
         
     override func setupViews() {
         inputTextView.delegate = self
-        
+        inputTextView.returnKeyType = .done
+
         errorMessageLabel.isHidden = true
         inputTextView.addSubview(placeholderLabel)
         
@@ -102,5 +103,11 @@ extension SettingTableViewCell: UITextViewDelegate {
         guard let tableView = self.superview as? UITableView else { return }
         tableView.beginUpdates()
         tableView.endUpdates()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text == "\n" else { return true }
+        textView.resignFirstResponder()
+        return false
     }
 }
