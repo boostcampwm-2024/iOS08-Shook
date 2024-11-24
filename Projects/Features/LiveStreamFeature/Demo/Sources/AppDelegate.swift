@@ -17,3 +17,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
+
+struct UseCase1:

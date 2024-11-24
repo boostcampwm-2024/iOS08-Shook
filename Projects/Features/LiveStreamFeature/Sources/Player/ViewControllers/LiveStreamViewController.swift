@@ -11,6 +11,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     
+    private let makeButton: UIButton = UIButton()
+    private let deleteButton: UIButton = UIButton()
+    
     private var shrinkConstraints: [NSLayoutConstraint] = []
     private var expandConstraints: [NSLayoutConstraint] = []
     private var unfoldedConstraint: NSLayoutConstraint?
@@ -57,12 +60,17 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         view.addSubview(playerView)
         view.addSubview(chatingList)
         view.addSubview(chatInputField)
+        view.addSubview(makeButton)
+        view.addSubview(deleteButton)
     }
     
     public override func setupStyles() {
         view.backgroundColor = .black
         
         infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+        
+        makeButton.setTitle("생성", for: .normal)
+        makeButton.setTitle("삭제", for: .normal)
     }
     
     public override func setupLayouts() {
@@ -97,10 +105,47 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             $0.horizontal(to: view)
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
         }
+        
+        makeButton.ezl.makeConstraint {
+            $0.center(to: view)
+        }
+        
+        deleteButton.ezl.makeConstraint {
+            $0.centerX(to: view)
+            $0.top(to: makeButton.ezl.bottom, offset: 20)
+        }
     }
     
     public override func setupActions() {
         
+        makeButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.makeChatRoomUseCase
+                .execute(id: "54321")
+                .sink { error in
+                    print(error)
+                } receiveValue: { _ in
+                    print("MAKE")
+                }
+                .store(in: &self.subscription)
+            
+        }), for: .touchUpInside)
+        
+        deleteButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.deleteChatRoomUseCase
+                .execute(id: "54321")
+                .sink { error in
+                    print(error)
+                } receiveValue: { _ in
+                    print("DELETE")
+                }
+                .store(in: &self.subscription)
+        }), for: .touchUpInside)
+        
+
+
+
     }
     
     public override func setupBind() {

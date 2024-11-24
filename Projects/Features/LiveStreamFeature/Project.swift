@@ -5,7 +5,9 @@ import ProjectDescriptionHelpers
 let project = Project.module(
     name: ModulePaths.Feature.LiveStreamFeature.rawValue,
     targets: [
-        .interface(module: .feature(.LiveStreamFeature)),
+        .interface(module: .feature(.LiveStreamFeature), dependencies: [
+            .feature(target: .BaseFeature, type: .interface)
+        ]),
         .implements(module: .feature(.LiveStreamFeature), dependencies: [
             .feature(target: .LiveStreamFeature, type: .interface),
             .feature(target: .BaseFeature),
