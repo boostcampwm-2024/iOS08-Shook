@@ -8,7 +8,8 @@ let project = Project.module(
         .interface(module: .feature(.LiveStreamFeature)),
         .implements(module: .feature(.LiveStreamFeature), dependencies: [
             .feature(target: .LiveStreamFeature, type: .interface),
-            .feature(target: .BaseFeature)
+            .feature(target: .BaseFeature),
+            .domain(target: .LiveStationDomain, type: .interface)
         ]),
         .tests(module: .feature(.LiveStreamFeature), dependencies: [
             .feature(target: .LiveStreamFeature)
