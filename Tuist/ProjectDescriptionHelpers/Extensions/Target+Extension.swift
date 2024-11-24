@@ -17,7 +17,9 @@ extension Target {
         infoPlist: .projectDefault,
         sources: .sources,
         resources: .resources,
-        entitlements: .dictionary(["com.apple.security.application-groups" : "group.kr.codesquad.boostcamp9.Shook"]),
+        entitlements: .dictionary(
+            ["com.apple.security.application-groups": .array([.string("group.kr.codesquad.boostcamp9.Shook")])]
+        ),
         scripts: generationEnvironment.scripts,
         dependencies: [
             .domain(target: .BaseDomain),
@@ -57,6 +59,9 @@ extension Target {
             ]
         ]),
         sources: "BroadcastUploadExtension/Sources/**",
+        entitlements: .dictionary(
+            ["com.apple.security.application-groups": .array([.string("group.kr.codesquad.boostcamp9.Shook")])]
+        ),
         dependencies: [
             .sdk(name: "ReplayKit", type: .framework, status: .required)
         ]
