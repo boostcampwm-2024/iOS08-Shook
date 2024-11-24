@@ -3,13 +3,13 @@ import Foundation
 
 import NetworkModule
 
-enum ChatEndpoint {
+public enum ChatEndpoint {
     case makeRoom(String)
     case deleteRoom(String)
 }
 
 extension ChatEndpoint: Endpoint {
-    var method: NetworkModule.HTTPMethod {
+    public var method: NetworkModule.HTTPMethod {
         switch self {
         case .makeRoom:
             return .post
@@ -19,17 +19,17 @@ extension ChatEndpoint: Endpoint {
         }
     }
     
-    var header: [String: String]? {
+    public var header: [String: String]? {
         [
             "Content-Type": "application/json"
         ]
     }
     
-    var host: String {
+    public var host: String {
         "http://127.0.0.1"
     }
     
-    var path: String {
+    public var path: String {
         switch self {
         case .makeRoom:
             return "/chat"
@@ -39,7 +39,7 @@ extension ChatEndpoint: Endpoint {
         }
     }
     
-    var requestTask: NetworkModule.RequestTask {
+    public var requestTask: NetworkModule.RequestTask {
         switch self {
         case let .makeRoom(id):
             return .withObject(body: MakeRoomRequestDTO(id: id))
