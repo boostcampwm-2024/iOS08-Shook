@@ -25,8 +25,13 @@ extension ChatEndpoint: Endpoint {
         ]
     }
     
+    #warning("추후 변경")
+    public var scheme: String {
+        "http"
+    }
+    
     public var host: String {
-        "http://127.0.0.1"
+        "127.0.0.1"
     }
     
     public var path: String {

@@ -16,11 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        registerDependencies()
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
         let vc = UIViewController()
         vc.view.backgroundColor = .orange
-        self.window?.rootViewController = vc
+        self.window?.rootViewController = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self).make()
         self.window?.makeKeyAndVisible()
     }
 
@@ -46,11 +47,7 @@ extension SceneDelegate {
         let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
         let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
         let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
-        
-        DIContainer.shared.register(MakeChatRoomUseCase.self, dependency: makeRoomUseCase)
-        DIContainer.shared.register(DeleteChatRoomUseCase.self, dependency: deleteRoomUseCase)
-    
     }
 }

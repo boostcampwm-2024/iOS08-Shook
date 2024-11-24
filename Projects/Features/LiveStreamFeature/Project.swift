@@ -18,7 +18,8 @@ let project = Project.module(
             .feature(target: .LiveStreamFeature)
         ]),
         .demo(module: .feature(.LiveStreamFeature), dependencies: [
-            .feature(target: .LiveStreamFeature)
+            .feature(target: .LiveStreamFeature),
+            .domain(target: .LiveStationDomain, type: .interface)
         ])
     ]
 )

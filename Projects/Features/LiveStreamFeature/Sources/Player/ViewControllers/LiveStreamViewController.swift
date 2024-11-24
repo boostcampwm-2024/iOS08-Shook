@@ -70,7 +70,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
         
         makeButton.setTitle("생성", for: .normal)
-        makeButton.setTitle("삭제", for: .normal)
+        deleteButton.setTitle("삭제", for: .normal)
     }
     
     public override func setupLayouts() {
@@ -117,7 +117,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupActions() {
-        
         makeButton.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.viewModel.makeChatRoomUseCase
@@ -142,10 +141,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
                 }
                 .store(in: &self.subscription)
         }), for: .touchUpInside)
-        
-
-
-
     }
     
     public override func setupBind() {
