@@ -25,7 +25,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     public struct Output {
         let items: PassthroughSubject<[Channel], Never> = .init()
-        let isActive: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
+        let isActive: PassthroughSubject<Bool, Never> = .init()
         let errorMessage: PassthroughSubject<String?, Never> = .init()
         let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
         let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
