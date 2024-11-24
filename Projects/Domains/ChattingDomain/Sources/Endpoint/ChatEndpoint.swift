@@ -40,7 +40,7 @@ extension ChatEndpoint: Endpoint {
             return "/chat"
             
         case let .deleteRoom(id):
-            return "/chat/\(id)"
+            return "/chat/delete/\(id)"
         }
     }
     
