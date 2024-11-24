@@ -1,4 +1,5 @@
 import Combine
+import ReplayKit
 import UIKit
 
 import BaseFeature
@@ -6,20 +7,35 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class SettingUIViewController: BaseViewController<BroadcastCollectionViewModel> {
+    deinit {
+        viewModel.sharedDefaults.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
+    }
     private let settingTableView = UITableView()
     private let closeBarButton = UIBarButtonItem()
     private let startStreamingButton = UIButton()
-    private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingDescriptionCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
-    
+    private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let placeholderStringOfCells = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
+    
+    private var broadcastPicker = RPSystemBroadcastPickerView()
+    
     private let viewModelInput = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == viewModel.isStreamingKey {
+            if let newValue = change?[.newKey] as? Bool, newValue == true {
+                didStartBroadCast()
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
     
     public override func setupBind() {
         let output = viewModel.transform(input: viewModelInput)
         
-        output.isActive
+        output.streamingStartButtonIsActive
             .sink { [weak self] isActive in
                 guard let self else { return }
                 self.startStreamingButton.isEnabled = isActive
@@ -38,6 +54,9 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupViews() {
+        viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
+        viewModel.sharedDefaults.set(false, forKey: viewModel.isStreamingKey)
+        
         closeBarButton.image = UIImage(systemName: "xmark")
         
         navigationItem.title = "방송설정"
@@ -49,7 +68,11 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         settingTableView.rowHeight = UITableView.automaticDimension
         settingTableView.estimatedRowHeight = 100
         
+        broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        broadcastPicker.preferredExtension = viewModel.extensionBundleID
+
         startStreamingButton.isEnabled = false
+        startStreamingButton.addSubview(broadcastPicker)
         
         view.addSubview(settingTableView)
         view.addSubview(startStreamingButton)
@@ -57,7 +80,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     public override func setupStyles() {
         view.backgroundColor = .black
-
+        
         closeBarButton.style = .plain
                 
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
@@ -84,6 +107,12 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
+        
+        broadcastPicker.ezl.makeConstraint {
+            $0.center(to: startStreamingButton)
+                .width(startStreamingButton.frame.width)
+                .height(startStreamingButton.frame.height)
+        }
     }
     
     public override func setupActions() {
@@ -100,12 +129,17 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     @objc
     private func didTapSettingButton() {
-        let newBroadcastUIViewController = BroadcastUIViewController(viewModel: viewModel)
+        guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+        broadcastPickerButton.sendActions(for: .touchUpInside)
+    }
+    
+    private func didStartBroadCast() {
+        let newBroadcastCollectionViewController = BroadcastUIViewController(viewModel: viewModel)
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
         
-        UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
-            window.rootViewController = newBroadcastUIViewController
+        UIView.transition(with: window, duration: 0, options: .transitionCrossDissolve) {
+            window.rootViewController = newBroadcastCollectionViewController
         }
     }
 }
