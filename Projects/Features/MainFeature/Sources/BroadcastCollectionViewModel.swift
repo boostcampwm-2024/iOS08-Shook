@@ -36,13 +36,16 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     public struct Output {
         let items: PassthroughSubject<[Item], Never> = .init()
-        let isActive: CurrentValueSubject<Bool, Never> = CurrentValueSubject(false)
+        let streamingStartButtonIsActive: PassthroughSubject<Bool, Never> = .init()
         let errorMessage: PassthroughSubject<String?, Never> = .init()
     }
     
     private let output = Output()
     private var cancellables = Set<AnyCancellable>()
     private var fetcher: Fetcher
+    let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
+    let isStreamingKey = "isStreaming"
+    let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
     public init(fetcher: Fetcher) {
         self.fetcher = fetcher
@@ -59,7 +62,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             .sink { [weak self] name in
                 guard let self else { return }
                 let validness = valid(name)
-                self.output.isActive.send(validness.isValid)
+                self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
             }
             .store(in: &cancellables)
