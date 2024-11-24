@@ -91,7 +91,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
-        startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
+        startStreamingButton.addTarget(self, action: #selector(didTapStreamingButton), for: .touchUpInside)
         
         closeBarButton.target = self
         closeBarButton.action = #selector(didTapRightBarButton)
@@ -103,14 +103,9 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     @objc
-    private func didTapSettingButton() {
-        let newBroadcastUIViewController = BroadcastUIViewController(viewModel: viewModel)
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
-        
-        UIView.transition(with: window, duration: 0.2, options: .transitionCrossDissolve) {
-            window.rootViewController = newBroadcastUIViewController
-        }
+    private func didTapStreamingButton() {
+        viewModelInput.didTapStreamingButton.send()
+        dismiss(animated: true)
     }
     
     @objc

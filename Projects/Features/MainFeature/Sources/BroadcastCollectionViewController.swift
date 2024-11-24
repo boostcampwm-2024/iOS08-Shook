@@ -98,6 +98,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         refreshControl.addAction(UIAction { [weak self] _ in
             self?.input.fetch.send()
         }, for: .valueChanged)
+        
         rightBarButton.target = self
         rightBarButton.action = #selector(didTapRightBarButton)
     }
@@ -110,6 +111,19 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
                 self?.applySnapshot(with: items)
             }
             .store(in: &cancellables)
+        
+        output.showBroadcastUIView
+            .sink { [weak self] _ in
+                self?.showBroadcastView()
+            }
+            .store(in: &cancellables)
+        
+        output.dismissBroadcastUIView
+            .sink { [weak self] _ in
+                self?.dismissBroadcastView()
+                self?.input.fetch.send()
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -119,7 +133,7 @@ extension BroadcastCollectionViewController: UICollectionViewDelegate {
         guard let viewController = factory?.make() else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
-        present(viewController, animated: true, completion: nil)        
+        present(viewController, animated: true)
     }
 }
 
@@ -248,10 +262,30 @@ extension BroadcastCollectionViewController {
 
 // MARK: - CollectionView Methods
 extension BroadcastCollectionViewController {
-    @objc
-    private func didTapRightBarButton() {
+    @objc private func didTapRightBarButton() {
         let settingUIViewController = SettingUIViewController(viewModel: viewModel)
         let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
         navigationController?.present(settingNavigationController, animated: true)
+    }
+    
+    private func showBroadcastView() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        let broadcastViewController = BroadcastUIViewController(viewModel: viewModel)
+        self.addChild(broadcastViewController)
+        self.view.addSubview(broadcastViewController.view)
+        broadcastViewController.view.frame = self.view.bounds
+        broadcastViewController.didMove(toParent: self)
+    }
+    
+    private func dismissBroadcastView() {
+        guard let broadcastViewController = children.first(where: { $0 is BroadcastUIViewController }) else { return }
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+            broadcastViewController.view.alpha = 0 }, completion: { _ in
+                broadcastViewController.willMove(toParent: nil)
+                broadcastViewController.view.removeFromSuperview()
+                broadcastViewController.removeFromParent()
+            }
+        )
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
 }

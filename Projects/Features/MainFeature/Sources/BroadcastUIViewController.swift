@@ -11,6 +11,12 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let broadcastStateText = UILabel()
     private let endBroadcastButton = UIButton()
     
+    private let viewModelInput = BroadcastCollectionViewModel.Input()
+    
+    public override func setupBind() {
+        let output = viewModel.transform(input: viewModelInput)
+    }
+    
     public override func setupViews() {
         broadcastStatusStackView.addArrangedSubview(broadcastStatusImageView)
         broadcastStatusStackView.addArrangedSubview(broadcastStateText)
@@ -61,13 +67,6 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     
     @objc
     private func didTapEndButton() {
-        let newBroadcastCollectionViewController = BroadcastCollectionViewController(viewModel: viewModel)
-        let navigationViewController = UINavigationController(rootViewController: newBroadcastCollectionViewController)
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
-        
-        UIView.transition(with: window, duration: 0, options: .transitionCrossDissolve) {
-            window.rootViewController = navigationViewController
-        }
+        viewModelInput.didTapEndStreamingButton.send()
     }
 }
