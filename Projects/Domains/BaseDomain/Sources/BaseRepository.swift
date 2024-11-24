@@ -7,7 +7,7 @@ open class BaseRepository<E: Endpoint> {
     private let decoder: JSONDecoder = JSONDecoder()
     private let client: NetworkClient<E>
     
-    init() {
+    public init() {
         var interceptors: [any Interceptor] = []
         #if DEBUG
         interceptors.append(DefaultLoggingInterceptor())
