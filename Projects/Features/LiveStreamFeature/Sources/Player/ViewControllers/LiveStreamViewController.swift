@@ -27,7 +27,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         dismissButtonDidTap: playerView.playerControlView.dismissButtonDidTap.eraseToAnyPublisher(),
         chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
     )
-  
+    
     private lazy var output = viewModel.transform(input: input)
     
     deinit {
@@ -194,6 +194,7 @@ extension LiveStreamViewController {
 
 extension LiveStreamViewController {
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard !output.isExpanded.value else { return }
         let translation = gesture.translation(in: view)
         
         switch gesture.state {
@@ -201,9 +202,9 @@ extension LiveStreamViewController {
             if translation.y > 0 {
                 let scale = max(1 - translation.y / 320, 0.75)
                 view.transform = CGAffineTransform(scaleX: scale, y: scale)
-                view.layer.cornerRadius = min(translation.y, 36)
+                view.layer.cornerRadius = min(translation.y, 48)
                 
-                if translation.y > 56 {
+                if translation.y > 72 {
                     dismiss(animated: true)
                 }
             }
