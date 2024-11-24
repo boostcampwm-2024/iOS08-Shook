@@ -17,11 +17,15 @@ extension Target {
         infoPlist: .projectDefault,
         sources: .sources,
         resources: .resources,
+        entitlements: .dictionary(
+            ["com.apple.security.application-groups": .array([.string("group.kr.codesquad.boostcamp9.Shook")])]
+        ),
         scripts: generationEnvironment.scripts,
         dependencies: [
             .domain(target: .LiveStationDomain),
             .feature(target: .MainFeature),
-            .feature(target: .LiveStreamFeature)
+            .feature(target: .LiveStreamFeature),
+            .target(name: "BroadcastExtension")
         ],
         settings: .settings(base: .makeProjectSetting(), configurations: generationEnvironment.configurations, defaultSettings: .recommended),
         environmentVariables: [:] // 환경변수 설정
@@ -37,6 +41,29 @@ extension Target {
         sources: .unitTests,
         dependencies: [
             .target(name: env.name)
+        ]
+    )
+    
+    public static let broadcastExtension: Target = .target(
+        name: "BroadcastExtension",
+        destinations: [.iPhone],
+        product: .appExtension,
+        bundleId: env.bundleID + ".BroadcastUploadExtension",
+        deploymentTargets: env.deploymentTargets,
+        infoPlist: .extendingDefault(with: [
+            "CFBundleDisplayName": "$(PRODUCT_NAME)",
+            "NSExtension" : [
+                "NSExtensionPointIdentifier": "com.apple.broadcast-services-upload",
+                "NSExtensionPrincipalClass": "$(PRODUCT_MODULE_NAME).SampleHandler",
+                "RPBroadcastProcessMode": "RPBroadcastProcessModeSampleBuffer"
+            ]
+        ]),
+        sources: "BroadcastUploadExtension/Sources/**",
+        entitlements: .dictionary(
+            ["com.apple.security.application-groups": .array([.string("group.kr.codesquad.boostcamp9.Shook")])]
+        ),
+        dependencies: [
+            .sdk(name: "ReplayKit", type: .framework, status: .required)
         ]
     )
 }
