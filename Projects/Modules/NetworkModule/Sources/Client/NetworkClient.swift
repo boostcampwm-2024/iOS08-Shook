@@ -28,7 +28,6 @@ private extension NetworkClient {
         try endpoint.requestTask.configureRequest(request: &request)
         request.allHTTPHeaderFields = endpoint.header
         
-        
         return request
     }
     
