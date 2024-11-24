@@ -12,15 +12,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-    
-        let broadcastPicker = RPSystemBroadcastPickerView(frame: .init(x: UIScreen.main.bounds.width / 4, y: UIScreen.main.bounds.height / 3, width: 200, height: 60))
         
-        broadcastPicker.preferredExtension = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
-        let viewController = UIViewController()
-                
-        viewController.view.addSubview(broadcastPicker)
-        viewController.view.backgroundColor = .white
-        window?.rootViewController = viewController
+        let fetcher = MockFetcher()
+        let viewModel = BroadcastCollectionViewModel(fetcher: fetcher)
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
         return true
