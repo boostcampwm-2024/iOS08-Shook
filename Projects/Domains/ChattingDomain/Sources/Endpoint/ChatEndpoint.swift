@@ -34,6 +34,10 @@ extension ChatEndpoint: Endpoint {
         "127.0.0.1"
     }
     
+    public var port: Int? {
+        return 8080
+    }
+    
     public var path: String {
         switch self {
         case .makeRoom:
