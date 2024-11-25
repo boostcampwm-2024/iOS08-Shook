@@ -15,4 +15,10 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
             .map { $0.content.map { $0.toDomain() }}
             .eraseToAnyPublisher()
     }
+    
+    public func receiveBroadcast(channelId: String) -> AnyPublisher<[BroadcastEntity], any Error> {
+        return request(.receiveBroadcast(channelId: channelId), type: BroadcastResponseDTO.self)
+            .map { $0.content.map { $0.toDomain() } }
+            .eraseToAnyPublisher()
+    }
 }
