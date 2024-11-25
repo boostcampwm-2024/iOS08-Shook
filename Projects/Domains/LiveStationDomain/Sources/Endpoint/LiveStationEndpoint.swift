@@ -8,7 +8,7 @@ public enum LiveStationEndpoint {
     case receiveBroadcast(channelId: String)
     case fetchThumbnail(channelId: String)
     case makeChannel(channelName: String)
-    /// 채널 삭제
+    case deleteChannel(channelId: String)
 }
 
 extension LiveStationEndpoint: Endpoint {
@@ -16,6 +16,7 @@ extension LiveStationEndpoint: Endpoint {
         switch self {
         case .fetchChannelList, .receiveBroadcast, .fetchThumbnail: .get
         case .makeChannel: .post
+        case .deleteChannel: .delete
         }
     }
     
@@ -36,13 +37,13 @@ extension LiveStationEndpoint: Endpoint {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
         case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
+        case let .deleteChannel(channelId): "/api/v2/channels/\(channelId)"
         }
     }
     
     public var requestTask: NetworkModule.RequestTask {
         switch self {
-        case .fetchChannelList:
-            return .empty
+        case .fetchChannelList: return .empty
             
         case .receiveBroadcast:
             return .withParameters(
@@ -67,7 +68,7 @@ extension LiveStationEndpoint: Endpoint {
                         "regionType": "KOREA"
                     ],
                     "qualitySetId": 123, /// 확인 후 변경해야함
-                    "useDvr": false,
+                    "useDvr": true,
                     "record": [
                         "record.type": "NO_RECORD"
                     ],
@@ -75,6 +76,8 @@ extension LiveStationEndpoint: Endpoint {
                     "timemachineMin": 360
                 ]
             )
+            
+        case .deleteChannel: return .empty
         }
     }
 }
