@@ -35,6 +35,7 @@ final class WebSocket: NSObject {
         self.webSocketTask = webSocketTask
         
         self.startPing()
+        
     }
 
     func send(data: ChatMessage) {
@@ -60,6 +61,7 @@ final class WebSocket: NSObject {
     func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
         self.onReceiveClosure = onReceive
         self.webSocketTask?.receive(completionHandler: { [weak self] result in
+            print("Receive \(result)")
             guard let self else { return }
             switch result {
             case let .success(message):
@@ -77,6 +79,7 @@ final class WebSocket: NSObject {
             case let .failure(error):
                 self.closeWebSocket()
             }
+            receive(onReceive: onReceive)
         })
     }
     

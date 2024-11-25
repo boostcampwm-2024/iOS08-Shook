@@ -27,7 +27,6 @@ public class SoketTestViewController: UIViewController {
         button.addAction(UIAction(handler: { [weak self] _  in
             guard let self else { return }
             self.webSocket.send(data: ChatMessage(type: .CHAT, content: "HELLo", sender: "iOS", roomId: "1234"))
-           // self.webSocket.send(message: ChatMessage(type: .CHAT, content: "HELLo", sender: "iOS", roomId: "1234"))
         }), for: .touchUpInside)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -47,13 +46,18 @@ public class SoketTestViewController: UIViewController {
         
         webSocket.url = URL(string: "ws://127.0.0.1:8080/ws/chat")
         try? webSocket.openWebSocket()
+        webSocket.send(data: ChatMessage(type: .ENTER, content: "HELLo", sender: "iOS", roomId: "1234"))
         webSocket.delegate = self
         
-        webSocket.onReceiveClosure = { [weak self] data in
+        webSocket.receive {[weak self] data in
             guard let self else { return }
-            guard let data else { self.data.append("nil 데이터") ; return }
-            self.data.append(data.sender)
+          
+            DispatchQueue.main.async {
+                guard let data else { self.data.append("nil 데이터") ; return }
+                self.data.append(data.sender)
+            }
         }
+        
     }
     
 }
