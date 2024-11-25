@@ -36,7 +36,7 @@ private extension NetworkClient {
         let (data, urlResponse) = try await session.data(for: request)
         let response = Response(request: request, data: data, response: urlResponse)
         try interceptResponse(with: response, from: endpoint)
-        
+                
         guard let httpResponse = urlResponse as? HTTPURLResponse else { throw NetworkError.invaildResponse }
         
         let statusCode = httpResponse.statusCode
