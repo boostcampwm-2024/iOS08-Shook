@@ -58,8 +58,8 @@ public class BroadcastCollectionViewModel: ViewModel {
         usecase.execute()
             .sink(
                 receiveCompletion: { _ in },
-                receiveValue: { channel in
-                    self.output.items.send(channel.map {
+                receiveValue: { entity in
+                    self.output.items.send(entity.map {
                         Channel(title: $0.name, image: $0.image)
                     })
                 }
