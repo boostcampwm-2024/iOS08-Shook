@@ -6,28 +6,26 @@ import NetworkModule
 public enum LiveStationEndpoint {
     case fetchChannelList
     case receiveBroadcast(channelId: String)
-    ///썸네일
-    ///채널 생성
-    ///채널 삭제
+    /// 썸네일
+    case makeChannel(channelName: String)
+    /// 채널 삭제
 }
 
 extension LiveStationEndpoint: Endpoint {
     public var method: NetworkModule.HTTPMethod {
         switch self {
         case .fetchChannelList, .receiveBroadcast: .get
+        case .makeChannel: .post
         }
     }
     
     public var header: [String: String]? {
-        switch self {
-        case .fetchChannelList, .receiveBroadcast:
-            return [
-                "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
-                "x-ncp-iam-access-key": config(key: .accessKey),
-                "x-ncp-apigw-signature-v2": makeSignature(),
-                "x-ncp-region_code": "KR"
-            ]
-        }
+        [
+            "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
+            "x-ncp-iam-access-key": config(key: .accessKey),
+            "x-ncp-apigw-signature-v2": makeSignature(),
+            "x-ncp-region_code": "KR"
+        ]
     }
     
     public var host: String {
@@ -36,7 +34,7 @@ extension LiveStationEndpoint: Endpoint {
     
     public var path: String {
         switch self {
-        case .fetchChannelList: "/api/v2/channels"
+        case .fetchChannelList, .makeChannel: "/api/v2/channels"
         case let .receiveBroadcast(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
         }
     }
@@ -45,9 +43,32 @@ extension LiveStationEndpoint: Endpoint {
         switch self {
         case .fetchChannelList:
             return .empty
+            
         case .receiveBroadcast:
             return .withParameters(
                 query: ["serviceUrlType": ServiceUrlType.general.rawValue]
+            )
+            
+        case let .makeChannel(channelName):
+            return .withParameters(
+                body: [
+                    "channelName": channelName,
+                    "cdn": [
+                        "createCdn": false,
+                        "cdnType": "GLOBAL_EDGE",
+                        "cdnDomain": config(key: .cdnDomain), /// 확인 후 변경해야함
+                        "profileId": config(key: .profileID), /// 확인 후 변경해야함
+                        "cdnInstanceNo": config(key: .cdnInstanceNo), /// 확인 후 변경해야함
+                        "regionType": "KOREA"
+                    ],
+                    "qualitySetId": 123, /// 확인 후 변경해야함
+                    "useDvr": false,
+                    "record": [
+                        "record.type": "NO_RECORD"
+                    ],
+                    "drmEnabledYn": false,
+                    "timemachineMin": 360
+                ]
             )
         }
     }
@@ -70,6 +91,7 @@ private extension LiveStationEndpoint {
         switch requestTask {
         case .empty:
             break
+            
         case let .withParameters(_, query, _, _), let .withObject(_, query, _):
             if let query {
                 let queryString = makeQueryString(with: query)
