@@ -6,7 +6,7 @@ import NetworkModule
 public enum LiveStationEndpoint {
     case fetchChannelList
     case receiveBroadcast(channelId: String)
-    /// 썸네일
+    case fetchThumbnail(channelId: String)
     case makeChannel(channelName: String)
     /// 채널 삭제
 }
@@ -14,7 +14,7 @@ public enum LiveStationEndpoint {
 extension LiveStationEndpoint: Endpoint {
     public var method: NetworkModule.HTTPMethod {
         switch self {
-        case .fetchChannelList, .receiveBroadcast: .get
+        case .fetchChannelList, .receiveBroadcast, .fetchThumbnail: .get
         case .makeChannel: .post
         }
     }
@@ -35,7 +35,7 @@ extension LiveStationEndpoint: Endpoint {
     public var path: String {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
-        case let .receiveBroadcast(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
+        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
         }
     }
     
@@ -47,6 +47,11 @@ extension LiveStationEndpoint: Endpoint {
         case .receiveBroadcast:
             return .withParameters(
                 query: ["serviceUrlType": ServiceUrlType.general.rawValue]
+            )
+            
+        case .fetchThumbnail:
+            return .withParameters(
+                query: ["serviceUrlType": ServiceUrlType.thumbnail.rawValue]
             )
             
         case let .makeChannel(channelName):
