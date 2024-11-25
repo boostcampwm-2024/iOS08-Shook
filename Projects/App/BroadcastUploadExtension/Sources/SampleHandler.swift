@@ -13,8 +13,8 @@ final class SampleHandler: RPBroadcastSampleHandler {
     private lazy var stream = RTMPStream(connection: connection)
     
     // MARK: - RTMP and Key
-    private let RTMP_SERVER_URL = "RTMP_SERVER_URL"
-    private let STREAMING_KEY = "STREAMING_KEY"
+    private let rtmp = "RTMP_SERVER_URL"
+    private let key = "STREAMING_KEY"
     
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
         Task {
@@ -29,6 +29,7 @@ final class SampleHandler: RPBroadcastSampleHandler {
     override func broadcastFinished() {
         Task {
             try await endStreaming()
+            
             sharedDefaults.set(false, forKey: isStreamingKey)
         }
     }
@@ -52,8 +53,8 @@ extension SampleHandler {
     }
     
     private func startStreaming() async throws {
-        try await connection.connect(RTMP_SERVER_URL)
-        try await stream.publish(STREAMING_KEY)
+        try await connection.connect(rtmp)
+        try await stream.publish(key)
     }
     
     private func endStreaming() async throws {
