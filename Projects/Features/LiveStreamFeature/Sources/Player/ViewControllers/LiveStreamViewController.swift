@@ -24,9 +24,10 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         playerStateDidChange: playerView.playerStateDidChange.eraseToAnyPublisher(),
         playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
         playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher(),
+        dismissButtonDidTap: playerView.playerControlView.dismissButtonDidTap.eraseToAnyPublisher(),
         chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
     )
-  
+    
     private lazy var output = viewModel.transform(input: input)
     
     deinit {
@@ -100,7 +101,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupActions() {
-        
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        playerView.addGestureRecognizer(panGesture)
+        playerView.isUserInteractionEnabled = true
     }
     
     public override func setupBind() {
@@ -152,6 +155,13 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
                 self?.chatingList.updateList($0)
             }
             .store(in: &subscription)
+        
+        output.dismiss
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.dismiss(animated: true)
+            }
+            .store(in: &subscription)
     }
 }
 
@@ -178,6 +188,37 @@ extension LiveStreamViewController {
                 self.foldedConstraint?.isActive = true
             }
             self.view.layoutIfNeeded()
+        }
+    }
+}
+
+extension LiveStreamViewController {
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        guard !output.isExpanded.value else { return }
+        let translation = gesture.translation(in: view)
+        let dragScalingFactor: CGFloat = 320
+        let minViewScale: CGFloat = 0.75
+        let maxDraggingCornerRadius: CGFloat = 48
+        
+        switch gesture.state {
+        case .changed:
+            if translation.y > 0 {
+                let scale = max(1 - translation.y / dragScalingFactor, minViewScale)
+                view.transform = CGAffineTransform(scaleX: scale, y: scale)
+                view.layer.cornerRadius = min(translation.y, maxDraggingCornerRadius)
+                
+                if translation.y > 72 {
+                    dismiss(animated: true)
+                }
+            }
+            
+        case .ended, .cancelled:
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseOut) {
+                self.view.transform = .identity
+                self.view.layer.cornerRadius = 0
+            }
+            
+        default: break
         }
     }
 }

@@ -8,6 +8,7 @@ import DesignSystem
 public protocol PlayerControlViewAction {
     var playButtonDidTap: AnyPublisher<Void?, Never> { get }
     var expandButtonDidTap: AnyPublisher<Void?, Never> { get }
+    var dismissButtonDidTap: AnyPublisher<Void?, Never> { get }
 }
 
 private enum ImageConstants {
@@ -15,6 +16,7 @@ private enum ImageConstants {
     case pause
     case zoomIn
     case zoomOut
+    case dismiss
     
     var image: UIImage {
         switch self {
@@ -29,6 +31,9 @@ private enum ImageConstants {
             
         case .pause:
             return DesignSystemAsset.Image.pause48.image
+            
+        case .dismiss:
+            return DesignSystemAsset.Image.chevronDown24.image
         }
     }
 }
@@ -36,16 +41,19 @@ private enum ImageConstants {
 final class PlayerControlView: BaseView {
     private let playButton: UIButton = UIButton()
     private let expandButton: UIButton = UIButton()
+    private let dismissButton: UIButton = UIButton()
     var timeControlView: TimeControlView = TimeControlView()
     
     @Published private var playButtonTapPublisher: Void?
     @Published private var sliderValuePublisher: Double?
     @Published private var expandButtonTapPublisher: Void?
+    @Published private var dismissButtonTapPublisher: Void?
     
     override func setupViews() {
         self.addSubview(playButton)
         self.addSubview(expandButton)
         self.addSubview(timeControlView)
+        self.addSubview(dismissButton)
     }
     
     override func setupLayouts() {
@@ -63,6 +71,11 @@ final class PlayerControlView: BaseView {
             $0.trailing(to: self, offset: -13)
                 .top(to: self, offset: 16)
         }
+        
+        dismissButton.ezl.makeConstraint {
+            $0.leading(to: self, offset: 13)
+                .top(to: self, offset: 16)
+        }
     }
     
     override func setupStyles() {
@@ -75,6 +88,10 @@ final class PlayerControlView: BaseView {
         var expandButtonConfig = UIButton.Configuration.plain()
         expandButtonConfig.image = ImageConstants.zoomIn.image
         expandButton.configuration = expandButtonConfig
+        
+        var dismissButtonConfig = UIButton.Configuration.plain()
+        dismissButtonConfig.image = ImageConstants.dismiss.image
+        dismissButton.configuration = dismissButtonConfig
     }
     
     override func setupActions() {
@@ -87,12 +104,18 @@ final class PlayerControlView: BaseView {
             guard let self else { return }
             self.expandButtonTapPublisher = ()
         }, for: .touchUpInside)
+        
+        dismissButton.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
+            self.dismissButtonTapPublisher = ()
+        }, for: .touchUpInside)
     }
 }
 
 extension PlayerControlView {
     func toggleExpandButtonImage(_ expanded: Bool) {
         expandButton.configuration?.image = expanded ? ImageConstants.zoomOut.image : ImageConstants.zoomIn.image
+        dismissButton.configuration?.image = expanded ? nil : ImageConstants.dismiss.image
     }
     
     func togglePlayerButtonAnimation(_ isPlaying: Bool) {
@@ -120,5 +143,9 @@ extension PlayerControlView: PlayerControlViewAction {
     
     var playButtonDidTap: AnyPublisher<Void?, Never> {
         $playButtonTapPublisher.eraseToAnyPublisher()
+    }
+    
+    var dismissButtonDidTap: AnyPublisher<Void?, Never> {
+        $dismissButtonTapPublisher.eraseToAnyPublisher()
     }
 }

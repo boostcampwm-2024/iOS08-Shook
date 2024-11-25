@@ -155,16 +155,19 @@ extension ShookPlayerView {
     }
     
     private func removeObserver() {
-        self.removeObserver(self, forKeyPath: #keyPath(AVPlayer.timeControlStatus))
-        self.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
-        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
-        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
-        self.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
-        
         if let token = timeObserverToken {
             player.removeTimeObserver(token)
+            timeObserverToken = nil
         }
+        
+        player.removeObserver(self, forKeyPath: "timeControlStatus")
+        
+        playerItem.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
+        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
+        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
+        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
     }
+    
     // MARK: - observeValue Handler
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {

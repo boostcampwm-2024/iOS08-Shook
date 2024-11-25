@@ -1,8 +1,10 @@
 import UIKit
 
-import MainFeature
+import LiveStationDomain
+import LiveStationDomainInterface
 import LiveStreamFeature
 import LiveStreamFeatureInterface
+import MainFeature
 import ThirdPartyLibModule
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -13,11 +15,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        registerDependencies()
+
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
-        let vc = UIViewController()
-        vc.view.backgroundColor = .orange
-        self.window?.rootViewController = vc
+        
+        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
+
+        let mockUsecase = MockFetchChannelListUsecaseImpl()
+        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
+        self.window?.rootViewController = UINavigationController(rootViewController: viewController)
         self.window?.makeKeyAndVisible()
     }
 
@@ -42,5 +51,9 @@ extension SceneDelegate {
     private func registerDependencies() {
         let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
+        
+        let liveStationRepository = LiveStationRepositoryImpl()
+        let fetchChannelListUsecase = FetchChannelListUsecaseImpl(repository: liveStationRepository)
+        DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecase)
     }
 }
