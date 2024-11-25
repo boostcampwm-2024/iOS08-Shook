@@ -9,8 +9,6 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     
     private let descriptionStack = UIStackView()
     private let titleLabel = UILabel()
-    private let subtitle1Label = UILabel()
-    private let subtitle2Label = UILabel()
     private let liveBadgeLabel = PaddingLabel()
 
     override func setupViews() {
@@ -21,8 +19,6 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         contentView.addSubview(descriptionStack)
         
         descriptionStack.addArrangedSubview(titleLabel)
-        descriptionStack.addArrangedSubview(subtitle1Label)
-        descriptionStack.addArrangedSubview(subtitle2Label)
     }
     
     override func setupLayouts() {
@@ -34,7 +30,7 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         }
         
         descriptionStack.ezl.makeConstraint {
-            $0.leading(to: thumbnailView.imageView.ezl.trailing, offset: 8)
+            $0.leading(to: thumbnailView.ezl.trailing)
                 .trailing(to: contentView, offset: -16)
                 .centerY(to: thumbnailView)
         }
@@ -58,19 +54,12 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         descriptionStack.spacing = 4
         
         titleLabel.font = .setFont(.body2())
+        titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
-        
-        subtitle1Label.font = .setFont(.caption1())
-        subtitle1Label.numberOfLines = 1
-        
-        subtitle2Label.font = .setFont(.caption1())
-        subtitle1Label.numberOfLines = 1
     }
     
-    func configure(image: UIImage?, title: String, subtitle1: String, subtitle2: String) {
+    func configure(image: UIImage?, title: String) {
         self.thumbnailView.configure(with: image)
         self.titleLabel.text = title
-        self.subtitle1Label.text = subtitle1
-        self.subtitle2Label.text = subtitle2
     }
 }

@@ -1,9 +1,13 @@
-import Foundation
+import UIKit
 
 public struct ChannelEntity {
-    public let channelId: String
+    public let id: String
+    public let name: String
+    public let image: UIImage?
     
-    public init(channelId: String) {
-        self.channelId = channelId
+    public init(id: String, name: String, image: UIImage? = nil) {
+        self.id = id
+        self.name = name
+        self.image = image
     }
 }

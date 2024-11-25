@@ -54,10 +54,10 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupViews() {
+        closeBarButton.image = DesignSystemAsset.Image.xmark24.image
+        
         viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
         viewModel.sharedDefaults.set(false, forKey: viewModel.isStreamingKey)
-        
-        closeBarButton.image = UIImage(systemName: "xmark")
         
         navigationItem.title = "방송설정"
         navigationItem.rightBarButtonItem = closeBarButton
@@ -79,12 +79,13 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupStyles() {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .gray
+        
         view.backgroundColor = .black
         
         closeBarButton.style = .plain
-                
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .white
         
         settingTableView.backgroundColor = .black
         
@@ -116,6 +117,9 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupActions() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
         startStreamingButton.addTarget(self, action: #selector(didTapSettingButton), for: .touchUpInside)
         
         closeBarButton.target = self
@@ -143,6 +147,11 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         UIView.transition(with: window, duration: 0, options: .transitionCrossDissolve) {
             window.rootViewController = newBroadcastCollectionViewController
         }
+    }
+    
+    @objc
+    private func dismissKeyboard() {
+        view.endEditing(true)
     }
 }
 

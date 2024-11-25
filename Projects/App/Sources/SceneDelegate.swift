@@ -1,10 +1,10 @@
 import UIKit
 
-import MainFeature
 import LiveStationDomain
 import LiveStationDomainInterface
 import LiveStreamFeature
 import LiveStreamFeatureInterface
+import MainFeature
 import ThirdPartyLibModule
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -19,10 +19,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
-        let uc = DIContainer.shared.resolve(FetchChannelListUsecase.self)
-        let vm = BroadcastCollectionViewModel(usecase: uc)
-        let vc = BroadcastCollectionViewController(viewModel: vm)
-        self.window?.rootViewController = vc
+        
+        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
+
+        let mockUsecase = MockFetchChannelListUsecaseImpl()
+        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
+        self.window?.rootViewController = UINavigationController(rootViewController: viewController)
         self.window?.makeKeyAndVisible()
     }
 

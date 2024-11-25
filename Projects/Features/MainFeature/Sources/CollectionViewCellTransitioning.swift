@@ -25,7 +25,7 @@ final class CollectionViewCellTransitioning: NSObject {
         super.init()
         blurEffectView.effect = UIBlurEffect(style: .light)
         dimmingView.backgroundColor = .black
-        backgroundView.backgroundColor = .systemBackground
+        backgroundView.backgroundColor = .black
     }
 }
 
@@ -129,7 +129,7 @@ extension CollectionViewCellTransitioning {
     }
     
     private func makeExpandContractAnimator(of thumbnailView: ThumbnailView, in containerView: UIView, to frame: CGRect) -> UIViewPropertyAnimator {
-        let springTiming = UISpringTimingParameters(dampingRatio: 0.9, initialVelocity: CGVector(dx: 0, dy: 2))
+        let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 2))
         let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
         
         animator.addAnimations {

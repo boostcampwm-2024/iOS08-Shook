@@ -12,8 +12,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         case large, small
     }
     
-    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
-    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    private typealias DataSource = UICollectionViewDiffableDataSource<Section, Channel>
+    private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Channel>
     
     private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
@@ -73,7 +73,19 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     }
     
     public override func setupStyles() {
+        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.titleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        
+        navigationController?.navigationBar.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+
+        collectionView.backgroundColor = .black
+        
         rightBarButton.style = .plain
+        rightBarButton.tintColor = DesignSystemAsset.Color.mainGreen.color
     }
     
     public override func setupLayouts() {
@@ -92,10 +104,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupBind() {
         let output = viewModel.transform(input: input)
-        output.items
+        output.channels
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] items in
-                self?.applySnapshot(with: items)
+            .sink { [weak self] channels in
+                self?.applySnapshot(with: channels)
             }
             .store(in: &cancellables)
     }
@@ -104,8 +116,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 // MARK: - CollectionView Delegate
 extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let viewModel = SampleLiveStreamViewModel()
-        let viewController = SampleLiveStreamViewController(viewModel: viewModel)
+        guard let viewController = factory?.make() else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true, completion: nil)        
@@ -176,7 +187,7 @@ extension BroadcastCollectionViewController {
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                bigCell.configure(image: item.image, title: item.title, subtitle: item.subtitle1)
+                bigCell.configure(image: item.image, title: item.name)
                 return bigCell
                 
             case .small:
@@ -186,7 +197,7 @@ extension BroadcastCollectionViewController {
                 ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                smallCell.configure(image: item.image, title: item.title, subtitle1: item.subtitle1, subtitle2: item.subtitle2)
+                smallCell.configure(image: item.image, title: item.name)
                 return smallCell
             }
         }
@@ -201,6 +212,7 @@ extension BroadcastCollectionViewController {
             if indexPath.section == 1 {
                 let label = UILabel()
                 label.font = .setFont(.title())
+                label.textColor = .white
                 label.text = "나머지 리스트"
                 header.addSubview(label)
                 label.ezl.makeConstraint {
@@ -213,15 +225,15 @@ extension BroadcastCollectionViewController {
         }
     }
     
-    private func applySnapshot(with items: [Item]) {
+    private func applySnapshot(with channels: [Channel]) {
         var snapshot = Snapshot()
         
-        let bigSectionItems = Array(items.prefix(3))
+        let bigSectionItems = Array(channels.prefix(3))
         snapshot.appendSections([.large])
         snapshot.appendItems(bigSectionItems, toSection: .large)
         
-        if items.count > 3 {
-            let smallSectionItems = Array(items.suffix(from: 3))
+        if channels.count > 3 {
+            let smallSectionItems = Array(channels.suffix(from: 3))
             snapshot.appendSections([.small])
             snapshot.appendItems(smallSectionItems, toSection: .small)
         }
