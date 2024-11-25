@@ -63,7 +63,7 @@ extension LiveStationEndpoint: Endpoint {
                         "regionType": "KOREA"
                     ],
                     "qualitySetId": 123, /// 확인 후 변경해야함
-                    "useDvr": false,
+                    "useDvr": true,
                     "record": [
                         "record.type": "NO_RECORD"
                     ],
