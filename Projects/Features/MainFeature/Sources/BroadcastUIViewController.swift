@@ -1,4 +1,5 @@
 import Combine
+import ReplayKit
 import UIKit
 
 import BaseFeature
@@ -6,6 +7,10 @@ import BaseFeatureInterface
 import DesignSystem
 
 public final class BroadcastUIViewController: BaseViewController<BroadcastCollectionViewModel> {
+    deinit {
+        viewModel.sharedDefaults.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
+    }
+    
     private let broadcastStatusStackView = UIStackView()
     private let broadcastStatusImageView = UIImageView()
     private let broadcastStateText = UILabel()
@@ -17,10 +22,29 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
         let output = viewModel.transform(input: viewModelInput)
     }
     
+    private var broadcastPicker = RPSystemBroadcastPickerView()
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == viewModel.isStreamingKey {
+            if let newValue = change?[.newKey] as? Bool, !newValue {
+                didFinishBroadCast()
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+
     public override func setupViews() {
+        broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+        broadcastPicker.preferredExtension = viewModel.extensionBundleID
+        
+        endBroadcastButton.addSubview(broadcastPicker)
+        
+        viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
+        
         broadcastStatusStackView.addArrangedSubview(broadcastStatusImageView)
         broadcastStatusStackView.addArrangedSubview(broadcastStateText)
-
+        
         view.addSubview(broadcastStatusStackView)
         view.addSubview(endBroadcastButton)
     }
@@ -59,6 +83,12 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
+        
+        broadcastPicker.ezl.makeConstraint {
+            $0.center(to: endBroadcastButton)
+                .width(endBroadcastButton.frame.width)
+                .height(endBroadcastButton.frame.height)
+        }
     }
     
     public override func setupActions() {
@@ -67,6 +97,11 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     
     @objc
     private func didTapEndButton() {
+        guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+        broadcastPickerButton.sendActions(for: .touchUpInside)
+    }
+    
+    private func didFinishBroadCast() {
         viewModelInput.didTapEndStreamingButton.send()
     }
 }

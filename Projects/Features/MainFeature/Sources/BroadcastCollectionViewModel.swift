@@ -24,8 +24,8 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     public struct Output {
-        let items: PassthroughSubject<[Channel], Never> = .init()
-        let isActive: PassthroughSubject<Bool, Never> = .init()
+        let channels: PassthroughSubject<[Channel], Never> = .init()
+        let streamingStartButtonIsActive: PassthroughSubject<Bool, Never> = .init()
         let errorMessage: PassthroughSubject<String?, Never> = .init()
         let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
         let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
@@ -34,7 +34,10 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let output = Output()
     private let usecase: any FetchChannelListUsecase
     private var cancellables = Set<AnyCancellable>()
-    
+    let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
+    let isStreamingKey = "isStreaming"
+    let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+
     public init(usecase: FetchChannelListUsecase) {
         self.usecase = usecase
     }
@@ -50,7 +53,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             .sink { [weak self] name in
                 guard let self else { return }
                 let validness = valid(name)
-                self.output.isActive.send(validness.isValid)
+                self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
             }
             .store(in: &cancellables)
@@ -74,8 +77,8 @@ public class BroadcastCollectionViewModel: ViewModel {
         usecase.execute()
             .sink(
                 receiveCompletion: { _ in },
-                receiveValue: { channel in
-                    self.output.items.send(channel.map {
+                receiveValue: { entity in
+                    self.output.channels.send(entity.map {
                         Channel(title: $0.name, image: $0.image)
                     })
                 }
