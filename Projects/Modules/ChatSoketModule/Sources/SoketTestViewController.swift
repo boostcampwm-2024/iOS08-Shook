@@ -53,8 +53,8 @@ public class SoketTestViewController: UIViewController {
             guard let self else { return }
           
             DispatchQueue.main.async {
-                guard let data else { self.data.append("nil 데이터") ; return }
-                self.data.append(data.sender)
+                guard let data else {return }
+                self.data.append(data.content ?? "")
             }
         }
         

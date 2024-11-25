@@ -67,8 +67,13 @@ final class WebSocket: NSObject {
             case let .success(message):
                 switch message {
                 case let .string(string):
-                    onReceive(nil)
-                    
+                    guard let data =  string.data(using: .utf8) else {
+                        onReceive(nil)
+                        return
+                    }
+                    let message = try? decoder.decode(ChatMessage.self, from: data)
+                    onReceive(message)
+                   
                 case let .data(data):
                     let message = try? decoder.decode(ChatMessage.self, from: data)
                     onReceive(message)
