@@ -5,19 +5,22 @@ import NetworkModule
 
 public enum LiveStationEndpoint {
     case fetchChannelList
+    case receiveBroadcast(channelId: String)
+    ///썸네일
+    ///채널 생성
+    ///채널 삭제
 }
 
 extension LiveStationEndpoint: Endpoint {
     public var method: NetworkModule.HTTPMethod {
         switch self {
-        case .fetchChannelList:
-            return .get
+        case .fetchChannelList, .receiveBroadcast: .get
         }
     }
     
     public var header: [String: String]? {
         switch self {
-        case .fetchChannelList:
+        case .fetchChannelList, .receiveBroadcast:
             return [
                 "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
                 "x-ncp-iam-access-key": config(key: .accessKey),
@@ -33,15 +36,21 @@ extension LiveStationEndpoint: Endpoint {
     
     public var path: String {
         switch self {
-        case .fetchChannelList:
-            return "/api/v2/channels"
+        case .fetchChannelList: "/api/v2/channels"
+        case let .receiveBroadcast(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
         }
     }
     
     public var requestTask: NetworkModule.RequestTask {
-        return .empty
+        switch self {
+        case .fetchChannelList:
+            return .empty
+        case .receiveBroadcast:
+            return .withParameters(
+                query: ["serviceUrlType": ServiceUrlType.general.rawValue]
+            )
+        }
     }
-    
 }
 
 private extension LiveStationEndpoint {
