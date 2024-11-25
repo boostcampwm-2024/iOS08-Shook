@@ -268,11 +268,24 @@ extension BroadcastCollectionViewController {
     }
     
     private func showBroadcastUIView() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
         let broadcastViewController = BroadcastUIViewController(viewModel: viewModel)
-        present(broadcastViewController, animated: false)
+        self.addChild(broadcastViewController)
+        self.view.addSubview(broadcastViewController.view)
+        broadcastViewController.view.frame = self.view.bounds
+        broadcastViewController.didMove(toParent: self)
     }
     
     private func dismissBroadcastUIView() {
+        guard let broadcastViewController = children.first(where: { $0 is BroadcastUIViewController }) else { return }
+        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+            broadcastViewController.view.alpha = 0 }, completion: { _ in
+                broadcastViewController.willMove(toParent: nil)
+                broadcastViewController.view.removeFromSuperview()
+                broadcastViewController.removeFromParent()
+            }
+        )
+        navigationController?.setNavigationBarHidden(false, animated: false)
         input.fetch.send()
     }
 }

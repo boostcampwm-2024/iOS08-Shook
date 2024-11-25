@@ -10,9 +10,10 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     deinit {
         viewModel.sharedDefaults.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
     }
+    
     private let settingTableView = UITableView()
     private let closeBarButton = UIBarButtonItem()
-    private let startStreamingButton = UIButton()
+    private let startBroadcastButton = UIButton()
     private let streamingDescriptionCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let placeholderStringOfCells = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
@@ -38,8 +39,8 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         output.streamingStartButtonIsActive
             .sink { [weak self] isActive in
                 guard let self else { return }
-                self.startStreamingButton.isEnabled = isActive
-                self.startStreamingButton.backgroundColor = isActive
+                self.startBroadcastButton.isEnabled = isActive
+                self.startBroadcastButton.backgroundColor = isActive
                     ? DesignSystemAsset.Color.mainGreen.color
                     : DesignSystemAsset.Color.gray.color
             }
@@ -71,11 +72,11 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         broadcastPicker.preferredExtension = viewModel.extensionBundleID
 
-        startStreamingButton.isEnabled = false
-        startStreamingButton.addSubview(broadcastPicker)
+        startBroadcastButton.isEnabled = false
+        startBroadcastButton.addSubview(broadcastPicker)
         
         view.addSubview(settingTableView)
-        view.addSubview(startStreamingButton)
+        view.addSubview(startBroadcastButton)
     }
     
     public override func setupStyles() {
@@ -89,30 +90,30 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         
         settingTableView.backgroundColor = .black
         
-        startStreamingButton.setTitle("방송시작", for: .normal)
-        startStreamingButton.layer.cornerRadius = 16
-        startStreamingButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))
-        startStreamingButton.backgroundColor = DesignSystemAsset.Color.gray.color
-        startStreamingButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
+        startBroadcastButton.setTitle("방송시작", for: .normal)
+        startBroadcastButton.layer.cornerRadius = 16
+        startBroadcastButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))
+        startBroadcastButton.backgroundColor = DesignSystemAsset.Color.gray.color
+        startBroadcastButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
     }
         
     public override func setupLayouts() {
         settingTableView.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide, offset: 21)
-                .bottom(to: startStreamingButton.ezl.top)
+                .bottom(to: startBroadcastButton.ezl.top)
                 .horizontal(to: view, padding: 20)
         }
         
-        startStreamingButton.ezl.makeConstraint {
+        startBroadcastButton.ezl.makeConstraint {
             $0.height(56)
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
         
         broadcastPicker.ezl.makeConstraint {
-            $0.center(to: startStreamingButton)
-                .width(startStreamingButton.frame.width)
-                .height(startStreamingButton.frame.height)
+            $0.center(to: startBroadcastButton)
+                .width(startBroadcastButton.frame.width)
+                .height(startBroadcastButton.frame.height)
         }
     }
     
@@ -120,7 +121,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
-        startStreamingButton.addTarget(self, action: #selector(didTapStreamingButton), for: .touchUpInside)
+        startBroadcastButton.addTarget(self, action: #selector(didTapStartBroadcastButton), for: .touchUpInside)
         
         closeBarButton.target = self
         closeBarButton.action = #selector(didTapRightBarButton)
@@ -129,18 +130,18 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     /// X 모양 버튼이 눌렸을 때 호출되는 메서드
     @objc
     private func didTapRightBarButton() {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     /// 방송 시작 버튼이 눌렸을 때 호출되는 메서드
     @objc
-    private func didTapSettingButton() {
+    private func didTapStartBroadcastButton() {
         guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
         broadcastPickerButton.sendActions(for: .touchUpInside)
     }
     
     private func didStartBroadCast() {
-        viewModelInput.didTapStreamingButton.send()
+        viewModelInput.didTapBroadcastButton.send()
         dismiss(animated: true)
     }
     
@@ -160,8 +161,8 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
             streamingNameCell.configure(
                 label: "방송이름",
                 placeholder: placeholderStringOfCells[indexPath.row]
-            ) { inputValue in
-                self.viewModelInput.didWriteStreamingName.send(inputValue)
+            ) { [weak self] inputValue in
+                self?.viewModelInput.didWriteStreamingName.send(inputValue)
             }
             return streamingNameCell
         } else {
