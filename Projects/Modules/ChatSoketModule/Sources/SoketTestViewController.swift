@@ -44,7 +44,6 @@ public class SoketTestViewController: UIViewController {
         
         tableView.dataSource = self
         
-        webSocket.url = URL(string: "ws://127.0.0.1:8080/ws/chat")
         try? webSocket.openWebSocket()
         webSocket.send(data: ChatMessage(type: .ENTER, content: "HELLo", sender: "iOS", roomId: "1234"))
         webSocket.delegate = self

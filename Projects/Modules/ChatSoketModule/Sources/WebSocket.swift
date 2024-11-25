@@ -22,6 +22,7 @@ final class WebSocket: NSObject {
     private override init() {}
     
     func openWebSocket() throws {
+        url = URL(string: "ws:/\(host):\(port)/ws/chat" )
         guard let url = url else { throw WebSocketError.invalidURL }
         
         let urlSession = URLSession(
@@ -43,10 +44,10 @@ final class WebSocket: NSObject {
         
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
         print("Send message \(taskMessage)")
-        self.webSocketTask?.send(taskMessage, completionHandler: { error in
+        self.webSocketTask?.send(taskMessage) { error in
             guard let error = error else { return }
             print("WebSOcket sending error: \(error)")
-        })
+        }
     }
     
     func closeWebSocket() {
@@ -60,7 +61,7 @@ final class WebSocket: NSObject {
     
     func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
         self.onReceiveClosure = onReceive
-        self.webSocketTask?.receive(completionHandler: { [weak self] result in
+        self.webSocketTask?.receive { [weak self] result in
             print("Receive \(result)")
             guard let self else { return }
             switch result {
@@ -81,27 +82,28 @@ final class WebSocket: NSObject {
                 @unknown default:
                     onReceive(nil)
                 }
-            case let .failure(error):
+                
+            case .failure:
                 self.closeWebSocket()
             }
             receive(onReceive: onReceive)
-        })
+        }
     }
     
     private func startPing() {
         self.timer?.invalidate()
         self.timer = Timer.scheduledTimer(
             withTimeInterval: 10,
-            repeats: true,
-            block: { [weak self] _ in self?.ping() }
-        )
+            repeats: true) { [weak self] _ in
+                self?.ping()
+            }
     }
     private func ping() {
-        self.webSocketTask?.sendPing(pongReceiveHandler: { [weak self] error in
+        self.webSocketTask?.sendPing { [weak self] error in
             guard let error = error else { return }
             print("Ping failed \(error)")
             self?.startPing()
-        })
+        }
     }
 }
 
@@ -130,5 +132,23 @@ extension WebSocket: URLSessionWebSocketDelegate {
             didCloseWith: closeCode,
             reason: reason
         )
+    }
+}
+
+extension WebSocket {
+    func config(key: String) -> String {
+        guard let secrets = Bundle.main.object(forInfoDictionaryKey: "SECRETS") as? [String: Any] else {
+            print("NO SECRETS")
+            return ""
+        }
+        return secrets[key] as? String ?? "not found key"
+    }
+    
+    var host: String {
+        return config(key: "HOST")
+    }
+    
+    var port: String {
+        return config(key: "PORT")
     }
 }

@@ -1,6 +1,7 @@
 import CommonCrypto
 import Foundation
 
+import BaseDomain
 import NetworkModule
 
 public enum ChatEndpoint {
@@ -25,17 +26,16 @@ extension ChatEndpoint: Endpoint {
         ]
     }
     
-    #warning("추후 변경")
     public var scheme: String {
         "http"
     }
     
     public var host: String {
-        "127.0.0.1"
+        config(key: .host)
     }
     
     public var port: Int? {
-        return 8080
+        Int(config(key: .port)) ?? 0
     }
     
     public var path: String {

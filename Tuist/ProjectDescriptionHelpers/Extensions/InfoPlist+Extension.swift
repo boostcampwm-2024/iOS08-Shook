@@ -26,8 +26,10 @@ extension InfoPlist {
                 ]
             ],
             "SECRETS": [
-                "ACCESS_KEY" : "$(ACCESS_KEY)",
-                "SECRET_KEY": "$(SECRET_KEY)"
+                "ACCESS_KEY": "$(ACCESS_KEY)",
+                "SECRET_KEY": "$(SECRET_KEY)",
+                "PORT": "${PORT}",
+                "HOST": "${HOST}"
             ]
         ]
     )
