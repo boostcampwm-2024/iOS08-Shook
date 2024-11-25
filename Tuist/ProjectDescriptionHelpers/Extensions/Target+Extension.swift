@@ -63,7 +63,8 @@ extension Target {
             ["com.apple.security.application-groups": .array([.string("group.kr.codesquad.boostcamp9.Shook")])]
         ),
         dependencies: [
-            .sdk(name: "ReplayKit", type: .framework, status: .required)
+            .sdk(name: "ReplayKit", type: .framework, status: .required),
+            .SPM.HaishinKit,
         ]
     )
 }
