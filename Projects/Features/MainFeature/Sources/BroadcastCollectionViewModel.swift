@@ -19,7 +19,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
-        let didTapStreamingButton: PassthroughSubject<Void, Never> = .init()
+        let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
         let didTapEndStreamingButton: PassthroughSubject<Void, Never> = .init()
     }
     
@@ -58,7 +58,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
-        input.didTapStreamingButton
+        input.didTapBroadcastButton
             .sink { [weak self] _ in
                 self?.output.showBroadcastUIView.send()
             }

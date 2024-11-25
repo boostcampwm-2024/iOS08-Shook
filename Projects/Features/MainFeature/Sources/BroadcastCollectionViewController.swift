@@ -114,14 +114,13 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         
         output.showBroadcastUIView
             .sink { [weak self] _ in
-                self?.showBroadcastView()
+                self?.showBroadcastUIView()
             }
             .store(in: &cancellables)
         
         output.dismissBroadcastUIView
             .sink { [weak self] _ in
-                self?.dismissBroadcastView()
-                self?.input.fetch.send()
+                self?.dismissBroadcastUIView()
             }
             .store(in: &cancellables)
     }
@@ -268,24 +267,12 @@ extension BroadcastCollectionViewController {
         navigationController?.present(settingNavigationController, animated: true)
     }
     
-    private func showBroadcastView() {
-        navigationController?.setNavigationBarHidden(true, animated: false)
+    private func showBroadcastUIView() {
         let broadcastViewController = BroadcastUIViewController(viewModel: viewModel)
-        self.addChild(broadcastViewController)
-        self.view.addSubview(broadcastViewController.view)
-        broadcastViewController.view.frame = self.view.bounds
-        broadcastViewController.didMove(toParent: self)
+        present(broadcastViewController, animated: false)
     }
     
-    private func dismissBroadcastView() {
-        guard let broadcastViewController = children.first(where: { $0 is BroadcastUIViewController }) else { return }
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
-            broadcastViewController.view.alpha = 0 }, completion: { _ in
-                broadcastViewController.willMove(toParent: nil)
-                broadcastViewController.view.removeFromSuperview()
-                broadcastViewController.removeFromParent()
-            }
-        )
-        navigationController?.setNavigationBarHidden(false, animated: false)
+    private func dismissBroadcastUIView() {
+        input.fetch.send()
     }
 }
