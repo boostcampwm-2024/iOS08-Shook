@@ -34,10 +34,8 @@ final class SampleHandler: RPBroadcastSampleHandler {
     }
     
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
-        if CMSampleBufferIsValid(sampleBuffer) {
-            Task {
-                await mixer.append(sampleBuffer)
-            }
+        Task {
+            await appendToMixer(by: sampleBuffer)
         }
     }
 }
@@ -61,5 +59,11 @@ extension SampleHandler {
     private func endStreaming() async throws {
         try await stream.close()
         try await connection.close()
+    }
+    
+    private func appendToMixer(by sampleBuffer: CMSampleBuffer) async {
+        if CMSampleBufferIsValid(sampleBuffer) {
+            await mixer.append(sampleBuffer)
+        }
     }
 }
