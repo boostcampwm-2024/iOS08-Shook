@@ -22,7 +22,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     public struct Output {
-        let items: PassthroughSubject<[Item], Never> = .init()
+        let channels: PassthroughSubject<[Channel], Never> = .init()
         let streamingStartButtonIsActive: PassthroughSubject<Bool, Never> = .init()
         let errorMessage: PassthroughSubject<String?, Never> = .init()
     }
@@ -34,7 +34,6 @@ public class BroadcastCollectionViewModel: ViewModel {
     let isStreamingKey = "isStreaming"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
 
-    
     public init(usecase: FetchChannelListUsecase) {
         self.usecase = usecase
     }
@@ -63,7 +62,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { entity in
-                    self.output.items.send(entity.map {
+                    self.output.channels.send(entity.map {
                         Channel(title: $0.name, image: $0.image)
                     })
                 }

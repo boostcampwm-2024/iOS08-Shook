@@ -104,10 +104,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupBind() {
         let output = viewModel.transform(input: input)
-        output.items
+        output.channels
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] items in
-                self?.applySnapshot(with: items)
+            .sink { [weak self] channels in
+                self?.applySnapshot(with: channels)
             }
             .store(in: &cancellables)
     }
@@ -225,15 +225,15 @@ extension BroadcastCollectionViewController {
         }
     }
     
-    private func applySnapshot(with items: [Channel]) {
+    private func applySnapshot(with channels: [Channel]) {
         var snapshot = Snapshot()
         
-        let bigSectionItems = Array(items.prefix(3))
+        let bigSectionItems = Array(channels.prefix(3))
         snapshot.appendSections([.large])
         snapshot.appendItems(bigSectionItems, toSection: .large)
         
-        if items.count > 3 {
-            let smallSectionItems = Array(items.suffix(from: 3))
+        if channels.count > 3 {
+            let smallSectionItems = Array(channels.suffix(from: 3))
             snapshot.appendSections([.small])
             snapshot.appendItems(smallSectionItems, toSection: .small)
         }
