@@ -41,5 +41,4 @@ public extension TargetDependency {
             path: .relativeToUserInterfaces(target.rawValue)
         )
     }
-
 }
