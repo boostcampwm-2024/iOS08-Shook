@@ -16,6 +16,12 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let broadcastStateText = UILabel()
     private let endBroadcastButton = UIButton()
     
+    private let viewModelInput = BroadcastCollectionViewModel.Input()
+    
+    public override func setupBind() {
+        let _ = viewModel.transform(input: viewModelInput)
+    }
+    
     private var broadcastPicker = RPSystemBroadcastPickerView()
     
     public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
@@ -96,13 +102,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     }
     
     private func didFinishBroadCast() {
-        let newBroadcastCollectionViewController = BroadcastCollectionViewController(viewModel: viewModel)
-        let navigationViewController = UINavigationController(rootViewController: newBroadcastCollectionViewController)
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
-        
-        UIView.transition(with: window, duration: 0, options: .transitionCrossDissolve) {
-            window.rootViewController = navigationViewController
-        }
+        dismiss(animated: false)
+        viewModelInput.didTapEndStreamingButton.send()
     }
 }

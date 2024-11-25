@@ -19,12 +19,16 @@ public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
+        let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
+        let didTapEndStreamingButton: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
         let channels: PassthroughSubject<[Channel], Never> = .init()
         let streamingStartButtonIsActive: PassthroughSubject<Bool, Never> = .init()
         let errorMessage: PassthroughSubject<String?, Never> = .init()
+        let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
+        let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
     }
     
     private let output = Output()
@@ -51,6 +55,18 @@ public class BroadcastCollectionViewModel: ViewModel {
                 let validness = valid(name)
                 self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
+            }
+            .store(in: &cancellables)
+        
+        input.didTapBroadcastButton
+            .sink { [weak self] _ in
+                self?.output.showBroadcastUIView.send()
+            }
+            .store(in: &cancellables)
+        
+        input.didTapEndStreamingButton
+            .sink { [weak self] _ in
+                self?.output.dismissBroadcastUIView.send()
             }
             .store(in: &cancellables)
         
