@@ -5,9 +5,14 @@ extension InfoPlist {
         "UIMainStoryboardFile": "",
         "UILaunchStoryboardName": "LaunchScreen",
         "ENABLE_TESTS": .boolean(true),
+        "NSAppTransportSecurity": [
+            "NSAllowsArbitraryLoads": .boolean(true)
+        ],
         "SECRETS": [
             "ACCESS_KEY" : "$(ACCESS_KEY)",
-            "SECRET_KEY": "$(SECRET_KEY)"
+            "SECRET_KEY": "$(SECRET_KEY)",
+            "PORT": "${PORT}",
+            "HOST": "${HOST}"
         ]
     ])
     
@@ -25,9 +30,17 @@ extension InfoPlist {
                     ]
                 ]
             ],
+            "NSAppTransportSecurity": [
+                "NSAllowsArbitraryLoads": .boolean(true)
+            ],
             "SECRETS": [
-                "ACCESS_KEY" : "$(ACCESS_KEY)",
-                "SECRET_KEY": "$(SECRET_KEY)"
+                "ACCESS_KEY": "$(ACCESS_KEY)",
+                "SECRET_KEY": "$(SECRET_KEY)",
+                "PORT": "${PORT}",
+                "HOST": "${HOST}",
+                "CDN_DOMAIN": "$(CDN_DOMAIN)",
+                "PROFILE_ID": "$(PROFILE_ID)",
+                "CDN_INSTANCE_NO": "$(CDN_INSTANCE_NO)"
             ]
         ]
     )

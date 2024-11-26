@@ -1,11 +1,14 @@
 import UIKit
 
+import ChattingDomain
+import ChattingDomainInterface
 import LiveStationDomain
 import LiveStationDomainInterface
 import LiveStreamFeature
 import LiveStreamFeatureInterface
 import MainFeature
 import ThirdPartyLibModule
+
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -49,7 +52,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     private func registerDependencies() {
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
+        let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
+        let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
+        let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
         
         let liveStationRepository = LiveStationRepositoryImpl()

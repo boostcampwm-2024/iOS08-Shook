@@ -23,7 +23,6 @@ private extension NetworkClient {
         let requestURL = try URL(from: endpoint)
         #warning("캐싱 정책 나중에 설정")
         var request = URLRequest(url: requestURL, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: endpoint.timeout)
-        
         request.httpMethod = endpoint.method.description
         
         try endpoint.requestTask.configureRequest(request: &request)
@@ -36,7 +35,7 @@ private extension NetworkClient {
         let (data, urlResponse) = try await session.data(for: request)
         let response = Response(request: request, data: data, response: urlResponse)
         try interceptResponse(with: response, from: endpoint)
-        
+                
         guard let httpResponse = urlResponse as? HTTPURLResponse else { throw NetworkError.invaildResponse }
         
         let statusCode = httpResponse.statusCode
