@@ -9,7 +9,7 @@ public final class SplashViewModel: ViewModel {
     }
     
     public struct Output {
-        let isBeign =  PassthroughSubject<Bool, Never>()
+        let isRunnigAnimation =  PassthroughSubject<Bool, Never>()
     }
     
     private var subscriptions = Set<AnyCancellable>()
@@ -22,7 +22,7 @@ public final class SplashViewModel: ViewModel {
         input.viewDidLoad
             .compactMap{ $0 }
             .sink { _ in
-                output.isBeign.send(true)
+                output.isRunnigAnimation.send(true)
             }
             .store(in: &subscriptions)
         
