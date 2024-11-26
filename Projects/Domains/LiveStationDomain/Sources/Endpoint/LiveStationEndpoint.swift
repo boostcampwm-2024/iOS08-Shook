@@ -69,8 +69,9 @@ extension LiveStationEndpoint: Endpoint {
                     ],
                     "qualitySetId": 123, /// 확인 후 변경해야함
                     "useDvr": true,
+                    "immediateOnAir": true,
                     "record": [
-                        "record.type": "NO_RECORD"
+                        "record.type": "MANUAL_UPLOAD"
                     ],
                     "drmEnabledYn": false,
                     "timemachineMin": 360
