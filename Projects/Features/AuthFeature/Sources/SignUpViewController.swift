@@ -23,6 +23,11 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     private let input = SignUpViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textField.becomeFirstResponder()
+    }
+    
     public override func setupBind() {
         let output = viewModel.transform(input: input)
         
