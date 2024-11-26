@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 import BaseFeatureInterface
+import ChatSoketModule
 import ChattingDomainInterface
 
 public final class LiveStreamViewModel: ViewModel {
@@ -11,6 +12,10 @@ public final class LiveStreamViewModel: ViewModel {
     // MARK: - 추후 제거
     let makeChatRoomUseCase: any MakeChatRoomUseCase
     let deleteChatRoomUseCase: any DeleteChatRoomUseCase
+    
+    private let chattingSocket: WebSocket
+    
+    private let channelID: String
         
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
@@ -33,7 +38,14 @@ public final class LiveStreamViewModel: ViewModel {
         let dismiss: PassthroughSubject<Void, Never> = .init()
     }
     
-    public init(makeChatRoomUseCase: any MakeChatRoomUseCase, deleteChatRoomUseCase: any DeleteChatRoomUseCase) {
+    public init(
+        channelID: String,
+        chattingSocket: WebSocket = .shared,
+        makeChatRoomUseCase: any MakeChatRoomUseCase,
+        deleteChatRoomUseCase: any DeleteChatRoomUseCase
+    ) {
+        self.channelID = channelID
+        self.chattingSocket = chattingSocket
         self.makeChatRoomUseCase = makeChatRoomUseCase
         self.deleteChatRoomUseCase = deleteChatRoomUseCase
     }

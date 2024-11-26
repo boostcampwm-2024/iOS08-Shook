@@ -14,8 +14,8 @@ public struct LiveStreamViewControllerFractoryImpl: LiveStreamViewControllerFact
         self.deleteChatRoomUseCase = deleteChatRoomUseCase
     }
     
-    public func make() -> UIViewController {
-        let viewModel = LiveStreamViewModel(makeChatRoomUseCase: makeChatRoomUseCase, deleteChatRoomUseCase: deleteChatRoomUseCase)
+    public func make(channelID: String) -> UIViewController {
+        let viewModel = LiveStreamViewModel(channelID: channelID, makeChatRoomUseCase: makeChatRoomUseCase, deleteChatRoomUseCase: deleteChatRoomUseCase)
         return LiveStreamViewController(viewModel: viewModel)
     }
 }
