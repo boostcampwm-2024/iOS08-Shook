@@ -26,6 +26,7 @@ final class ChattingListView: BaseView {
         titleLabel.text = "실시간 채팅"
         
         chatListView.register(ChattingCell.self, forCellReuseIdentifier: ChattingCell.identifier)
+        chatListView.register(SystemAlarmCell.self, forCellReuseIdentifier: SystemAlarmCell.identifier)
         chatListView.backgroundView = chatEmptyView
     }
     
