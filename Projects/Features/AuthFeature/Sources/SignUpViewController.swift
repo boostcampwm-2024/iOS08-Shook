@@ -28,9 +28,9 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         
         output.isValid
             .sink { [weak self] isValid in
-                self?.button.isEnabled = isValid
-                self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
-                self?.validateLabel.isHidden = isValid
+                self?.animateTextFieldContainerView(by: isValid)
+                self?.animateButton(by: isValid)
+                self?.animateValidateLabel(by: isValid)
             }
             .store(in: &cancellables)
     }
@@ -51,7 +51,6 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         textField.delegate = self
         
         button.isEnabled = false
-        validateLabel.isHidden = true
         
         view.addSubview(signUpGradientView)
         view.addSubview(welcomeLabel)
@@ -80,6 +79,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         
         validateLabel.font = .setFont(.caption1())
         validateLabel.textColor = .red
+        validateLabel.alpha = 0
         
         button.setTitle("시작하기", for: .normal)
         button.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
@@ -145,12 +145,45 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     private func updateTextFieldBorderColor() {
-        if let text = textField.text, !text.isEmpty {
-            textFieldContainerView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
-            input.didWriteUserName.send(text)
-        } else {
-            textFieldContainerView.layer.borderColor = DesignSystemColors.Color.white.cgColor
-            validateLabel.isHidden = true
+        input.didWriteUserName.send(textField.text)
+    }
+}
+
+// MARK: - Animation
+extension SignUpViewController {
+    private func animateTextFieldContainerView(by isValid: Bool) {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.textFieldContainerView.layer.borderColor = isValid ? DesignSystemAsset.Color.mainGreen.color.cgColor : DesignSystemColors.Color.white.cgColor
+        }
+    }
+    
+    private func animateValidateLabel(by isValid: Bool) {
+        guard let text = textField.text else { return }
+        
+        UIView.animateKeyframes(withDuration: 0.4, delay: 0) { [weak self] in
+            self?.validateLabel.alpha = (isValid || text.isEmpty) ? 0 : 1
+            
+            if !isValid {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.2) {
+                    self?.validateLabel.transform = CGAffineTransform(translationX: -2, y: 0)
+                }
+                
+                UIView.addKeyframe(withRelativeStartTime: 0.2, relativeDuration: 0.2) {
+                    self?.validateLabel.transform = CGAffineTransform(translationX: 2, y: 0)
+                }
+                
+                UIView.addKeyframe(withRelativeStartTime: 0.4, relativeDuration: 0.2) {
+                    self?.validateLabel.transform = .identity
+                }
+            }
+        }
+    }
+    
+    private func animateButton(by isValid: Bool) {
+        button.isEnabled = isValid
+        
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
         }
     }
 }

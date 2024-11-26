@@ -5,7 +5,7 @@ import BaseFeatureInterface
 
 public class SignUpViewModel: ViewModel {
     public struct Input {
-        let didWriteUserName: PassthroughSubject<String, Never> = .init()
+        let didWriteUserName: PassthroughSubject<String?, Never> = .init()
         let saveUserName: PassthroughSubject<String?, Never> = .init()
     }
     public struct Output {
@@ -36,8 +36,9 @@ public class SignUpViewModel: ViewModel {
     
     public init() { }
     
-    private func validate(with name: String) -> Bool {
-        name.count >= 2 && name.count <= 10 && name.allSatisfy { $0.isLetter || $0.isNumber }
+    private func validate(with name: String?) -> Bool {
+        guard let name else { return false }
+        return name.count >= 2 && name.count <= 10 && name.allSatisfy { $0.isLetter || $0.isNumber }
     }
     
     private func save(for name: String?) {
