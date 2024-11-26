@@ -9,7 +9,7 @@ public class SignUpViewModel: ViewModel {
         let saveUserName: PassthroughSubject<String?, Never> = .init()
     }
     public struct Output {
-        let isValidate: PassthroughSubject<Bool, Never> = .init()
+        let isValid: PassthroughSubject<Bool, Never> = .init()
     }
     
     private let output = Output()
@@ -18,8 +18,8 @@ public class SignUpViewModel: ViewModel {
     public func transform(input: Input) -> Output {
         input.didWriteUserName
             .sink { [weak self] name in
-                if let isValidate = self?.validate(with: name) {
-                    self?.output.isValidate.send(isValidate)
+                if let isValid = self?.validate(with: name) {
+                    self?.output.isValid.send(isValid)
                 }
             }
             .store(in: &cancellables)

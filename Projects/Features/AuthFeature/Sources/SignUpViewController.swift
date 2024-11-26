@@ -26,11 +26,11 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     public override func setupBind() {
         let output = viewModel.transform(input: input)
         
-        output.isValidate
-            .sink { [weak self] isValidate in
-                self?.button.isEnabled = isValidate
-                self?.button.backgroundColor = isValidate ? DesignSystemAsset.Color.mainGreen.color : .gray
-                self?.validateLabel.isHidden = isValidate
+        output.isValid
+            .sink { [weak self] isValid in
+                self?.button.isEnabled = isValid
+                self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
+                self?.validateLabel.isHidden = isValid
             }
             .store(in: &cancellables)
     }
