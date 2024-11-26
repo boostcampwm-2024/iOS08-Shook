@@ -5,10 +5,10 @@ import DesignSystem
 import EasyLayoutModule
 
 final class SettingTableViewCell: BaseTableViewCell {
-    private let stackView = UIStackView()
+    private let infoInputStackView = UIStackView()
     private let titleLabel = UILabel()
-    private let textView = UITextView()
-    private let placeholder = UILabel()
+    private let inputTextView = UITextView()
+    private let placeholderLabel = UILabel()
     private var placeholderValue = ""
     private let errorMessageLabel = UILabel()
     private var textDidChange: ((String) -> Void)?
@@ -16,68 +16,75 @@ final class SettingTableViewCell: BaseTableViewCell {
     func configure(label: String, placeholder: String, textDidChange: ((String) -> Void)?) {
         titleLabel.text = label
         self.placeholderValue = placeholder
-        self.placeholder.text = placeholderValue
+        self.placeholderLabel.text = placeholderValue
         self.textDidChange = textDidChange
     }
         
     override func setupViews() {
-        textView.delegate = self
-        
+        inputTextView.delegate = self
+        inputTextView.returnKeyType = .done
+
         errorMessageLabel.isHidden = true
-        textView.addSubview(placeholder)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(textView)
-        contentView.addSubview(stackView)
+        inputTextView.addSubview(placeholderLabel)
+        
+        infoInputStackView.addArrangedSubview(titleLabel)
+        infoInputStackView.addArrangedSubview(inputTextView)
+        
+        contentView.addSubview(infoInputStackView)
         contentView.addSubview(errorMessageLabel)
     }
     
     override func setupStyles() {
+        selectionStyle = .none
+        contentView.backgroundColor = .black
+        
+        infoInputStackView.axis = .horizontal
+        infoInputStackView.spacing = 10
+        infoInputStackView.backgroundColor = .black
+        
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        textView.textContainerInset = .zero
-        stackView.axis = .horizontal
-        stackView.spacing = 10
-        selectionStyle = .none
-        textView.isScrollEnabled = false
-        
-        // Fonts
         titleLabel.font = .setFont(.body1(weight: .semiBold))
-        textView.font = .setFont(.body1(weight: .regular))
-        placeholder.font = .setFont(.body1(weight: .regular))
-        errorMessageLabel.font = .setFont(.caption1(weight: .regular))
-        
-        // Colors
-        contentView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
-        stackView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
-        placeholder.textColor = DesignSystemAsset.Color.gray.color
-        textView.backgroundColor = UIColor(red: 28/255, green: 28/255, blue: 28/255, alpha: 1)
         titleLabel.textColor = .white
-        textView.textColor = .white
-        errorMessageLabel.textColor = UIColor(red: 255/255, green: 88/255, blue: 65/255, alpha: 1)
         
-        // Alpha
-        placeholder.alpha = 0.5
+        inputTextView.textColor = .white
+        inputTextView.textContainerInset = .zero
+        inputTextView.isScrollEnabled = false
+        inputTextView.font = .setFont(.body1(weight: .regular))
+        inputTextView.backgroundColor = .black
+        
+        placeholderLabel.font = .setFont(.body1(weight: .regular))
+        placeholderLabel.textColor = DesignSystemAsset.Color.gray.color
+        placeholderLabel.alpha = 0.5
+ 
+        errorMessageLabel.preferredMaxLayoutWidth = errorMessageLabel.frame.width
+        errorMessageLabel.font = .setFont(.caption1(weight: .regular))
+        errorMessageLabel.numberOfLines = 0
+        errorMessageLabel.lineBreakMode = .byWordWrapping
+        errorMessageLabel.textColor = DesignSystemAsset.Color.errorRed.color
     }
     
     override func setupLayouts() {
-        stackView.ezl.makeConstraint {
+        infoInputStackView.ezl.makeConstraint {
             $0.horizontal(to: contentView, padding: 10)
-                .vertical(to: contentView, padding: 27)
+                .top(to: contentView, offset: 27)
         }
         
-        placeholder.ezl.makeConstraint {
-            $0.centerY(to: textView)
-                .leading(to: textView, offset: 10)
+        placeholderLabel.ezl.makeConstraint {
+            $0.centerY(to: inputTextView)
+                .leading(to: inputTextView, offset: 10)
         }
         
         errorMessageLabel.ezl.makeConstraint {
-            $0.top(to: textView.ezl.bottom, offset: 10)
-                .leading(to: textView)
+            $0.top(to: inputTextView.ezl.bottom, offset: 10)
+                .leading(to: inputTextView)
+                .trailing(to: inputTextView)
+                .bottom(to: contentView)
         }
     }
     
     func setErrorMessage(message: String?) {
-        if let message, placeholder.text != placeholderValue {
+        if let message, placeholderLabel.text != placeholderValue {
             errorMessageLabel.text = message
             errorMessageLabel.isHidden = false
         } else {
@@ -90,12 +97,17 @@ final class SettingTableViewCell: BaseTableViewCell {
 // MARK: Text View의 Delegate
 extension SettingTableViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        placeholder.text = textView.text.isEmpty ? placeholderValue : ""
+        placeholderLabel.text = textView.text.isEmpty ? placeholderValue : ""
         textDidChange?(textView.text)
         
-        if let tableView = self.superview as? UITableView {
-            tableView.beginUpdates()
-            tableView.endUpdates()
-        }
+        guard let tableView = self.superview as? UITableView else { return }
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text == "\n" else { return true }
+        textView.resignFirstResponder()
+        return false
     }
 }

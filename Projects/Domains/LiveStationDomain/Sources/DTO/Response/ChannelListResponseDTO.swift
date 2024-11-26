@@ -12,6 +12,6 @@ public struct ChannelResponse: Decodable {
 
 extension ChannelResponse {
     public func toDomain() -> ChannelEntity {
-        ChannelEntity(channelId: self.channelId)
+        ChannelEntity(id: self.channelId, name: self.channelId)
     }
 }
