@@ -78,7 +78,7 @@ extension SplashViewController {
                            animations: {
                 self.logoImageView.transform = .identity // 원래 상태로 복귀 (기울기 해제)
             }) { [weak self] _ in
-                #warning("이동 코드")
+                self?.move()
             }
         }
     }
@@ -93,7 +93,7 @@ extension SplashViewController {
     }
     
     private func move() {
-        
+    #warning("추후 이동 구현")
     }
     
 }
