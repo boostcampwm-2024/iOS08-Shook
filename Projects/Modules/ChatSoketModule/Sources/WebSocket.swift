@@ -4,8 +4,8 @@ enum WebSocketError: Error {
     case invalidURL
 }
 
-final class WebSocket: NSObject {
-    static let shared = WebSocket()
+public final class WebSocket: NSObject {
+    public static let shared = WebSocket()
     
     var url: URL?
     var onReceiveClosure: ((ChatMessage?) -> Void)?
@@ -21,7 +21,7 @@ final class WebSocket: NSObject {
     
     private override init() {}
     
-    func openWebSocket() throws {
+    public func openWebSocket() throws {
         url = URL(string: "ws:/\(host):\(port)/ws/chat" )
         guard let url = url else { throw WebSocketError.invalidURL }
         
@@ -36,10 +36,9 @@ final class WebSocket: NSObject {
         self.webSocketTask = webSocketTask
         
         self.startPing()
-        
     }
 
-    func send(data: ChatMessage) {
+    public func send(data: ChatMessage) {
         guard let data = try? encoder.encode(data) else { return }
         
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
@@ -50,7 +49,7 @@ final class WebSocket: NSObject {
         }
     }
     
-    func closeWebSocket() {
+    public func closeWebSocket() {
         self.webSocketTask = nil
         self.timer?.invalidate()
         self.onReceiveClosure = nil
@@ -59,7 +58,7 @@ final class WebSocket: NSObject {
         self.webSocketTask = nil
     }
     
-    func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
+    public func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
         self.onReceiveClosure = onReceive
         self.webSocketTask?.receive { [weak self] result in
             print("Receive \(result)")
@@ -108,7 +107,7 @@ final class WebSocket: NSObject {
 }
 
 extension WebSocket: URLSessionWebSocketDelegate {
-    func urlSession(
+    public func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
@@ -120,7 +119,7 @@ extension WebSocket: URLSessionWebSocketDelegate {
         )
     }
     
-    func urlSession(
+    public func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
