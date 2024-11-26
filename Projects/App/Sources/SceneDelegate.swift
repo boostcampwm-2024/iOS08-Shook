@@ -1,9 +1,12 @@
 import UIKit
 
+import ChattingDomain
+import ChattingDomainInterface
 import MainFeature
 import LiveStreamFeature
 import LiveStreamFeatureInterface
 import ThirdPartyLibModule
+
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -13,11 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        registerDependencies()
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
         let vc = UIViewController()
         vc.view.backgroundColor = .orange
-        self.window?.rootViewController = vc
+        self.window?.rootViewController = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self).make()
         self.window?.makeKeyAndVisible()
     }
 
@@ -40,7 +44,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     private func registerDependencies() {
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
+        let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
+        let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
+        let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
     }
 }

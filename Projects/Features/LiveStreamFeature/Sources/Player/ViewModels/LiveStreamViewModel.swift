@@ -2,11 +2,16 @@ import Combine
 import Foundation
 
 import BaseFeatureInterface
+import ChattingDomainInterface
 
 public final class LiveStreamViewModel: ViewModel {
     
     private var subscription = Set<AnyCancellable>()
     
+    // MARK: - 추후 제거
+    let makeChatRoomUseCase: any MakeChatRoomUseCase
+    let deleteChatRoomUseCase: any DeleteChatRoomUseCase
+        
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
         let sliderValueDidChange: AnyPublisher<Float?, Never>
@@ -26,7 +31,10 @@ public final class LiveStreamViewModel: ViewModel {
         let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
     }
     
-    public init() {}
+    public init(makeChatRoomUseCase: any MakeChatRoomUseCase, deleteChatRoomUseCase: any DeleteChatRoomUseCase) {
+        self.makeChatRoomUseCase = makeChatRoomUseCase
+        self.deleteChatRoomUseCase = deleteChatRoomUseCase
+    }
     
     deinit {
         print("Deinit \(Self.self)")
@@ -47,7 +55,7 @@ public final class LiveStreamViewModel: ViewModel {
         
         input.sliderValueDidChange
             .compactMap { $0 }
-            .map{ Double($0) }
+            .map { Double($0) }
             .sink {
                 input.autoDissmissDidRegister.send()
                 output.time.send($0)

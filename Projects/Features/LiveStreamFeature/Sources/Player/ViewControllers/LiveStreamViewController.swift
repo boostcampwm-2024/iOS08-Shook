@@ -15,7 +15,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private var expandConstraints: [NSLayoutConstraint] = []
     private var unfoldedConstraint: NSLayoutConstraint?
     private var foldedConstraint: NSLayoutConstraint?
-    
     private var subscription = Set<AnyCancellable>()
     
     private lazy var input = LiveStreamViewModel.Input(
@@ -100,7 +99,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override func setupActions() {
-        
     }
     
     public override func setupBind() {
