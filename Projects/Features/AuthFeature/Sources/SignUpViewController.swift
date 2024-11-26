@@ -9,7 +9,8 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     private let greetStackView = UIStackView()
     private let textFieldContainerView = UIView()
     private let imageView = UIImageView()
-    
+    private let signUpGradientView = SignUpGradientView()
+        
     private let welcomeLabel = UILabel()
     private let greetLabel = UILabel()
     private let guideLabel = UILabel()
@@ -52,6 +53,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         button.isEnabled = false
         validateLabel.isHidden = true
         
+        view.addSubview(signUpGradientView)
         view.addSubview(welcomeLabel)
         view.addSubview(greetStackView)
         view.addSubview(guideLabel)
@@ -61,8 +63,6 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     }
     
     public override func setupStyles() {
-        view.backgroundColor = .black
-        
         welcomeLabel.textColor = .white
         welcomeLabel.font = .systemFont(ofSize: 32, weight: .bold)
         
@@ -89,6 +89,10 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     }
     
     public override func setupLayouts() {
+        signUpGradientView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+        
         welcomeLabel.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide, offset: 80)
                 .centerX(to: view)
