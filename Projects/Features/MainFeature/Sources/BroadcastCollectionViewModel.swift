@@ -78,7 +78,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 receiveCompletion: { _ in },
                 receiveValue: { entity in
                     self.output.channels.send(entity.map {
-                        Channel(title: $0.name, image: $0.image)
+                        Channel(id: $0.id, title: $0.name)
                     })
                 }
             )
