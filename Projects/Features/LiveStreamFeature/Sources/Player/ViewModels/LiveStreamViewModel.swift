@@ -2,15 +2,16 @@ import Combine
 import Foundation
 
 import BaseFeatureInterface
+import ChatSoketModule
 import ChattingDomainInterface
 
 public final class LiveStreamViewModel: ViewModel {
     
     private var subscription = Set<AnyCancellable>()
     
-    // MARK: - 추후 제거
-    let makeChatRoomUseCase: any MakeChatRoomUseCase
-    let deleteChatRoomUseCase: any DeleteChatRoomUseCase
+    private let chattingSocket: WebSocket
+    
+    private let channelID: String
         
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
@@ -19,8 +20,9 @@ public final class LiveStreamViewModel: ViewModel {
         let playerGestureDidTap: AnyPublisher<Void?, Never>
         let playButtonDidTap: AnyPublisher<Void?, Never>
         let dismissButtonDidTap: AnyPublisher<Void?, Never>
-        let chatingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
+        let chattingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
+        let viewDidLoad: AnyPublisher<Void, Never>
     }
     
     public struct Output {
@@ -31,15 +33,20 @@ public final class LiveStreamViewModel: ViewModel {
         let isShowedPlayerControl: CurrentValueSubject<Bool, Never> = .init(false)
         let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
         let dismiss: PassthroughSubject<Void, Never> = .init()
+        let error: CurrentValueSubject<Error?, Never> = .init(nil)
     }
     
-    public init(makeChatRoomUseCase: any MakeChatRoomUseCase, deleteChatRoomUseCase: any DeleteChatRoomUseCase) {
-        self.makeChatRoomUseCase = makeChatRoomUseCase
-        self.deleteChatRoomUseCase = deleteChatRoomUseCase
+    public init(
+        channelID: String,
+        chattingSocket: WebSocket = .shared
+    ) {
+        self.channelID = channelID
+        self.chattingSocket = chattingSocket
     }
     
     deinit {
         print("Deinit \(Self.self)")
+        chattingSocket.closeWebSocket()
     }
     
     public func transform(input: Input) -> Output {
@@ -103,8 +110,46 @@ public final class LiveStreamViewModel: ViewModel {
             }
             .store(in: &subscription)
         
-        input.chatingSendButtonDidTap
-            .sink { chatInfo in
+        input.viewDidLoad
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                do {
+                    try chattingSocket.openWebSocket()
+                } catch {
+                    output.error.send(error)
+                }
+                
+                chattingSocket.send(
+                    data: ChatMessage(
+                        type: .ENTER,
+                        content: "XXX님이 입장하셨습니다.",
+                        sender: channelID,
+                        roomId: channelID
+                    )
+                )
+                
+                chattingSocket.receive { chatMessage in
+                    guard let chatMessage else { return }
+                    var chatList = output.chatList.value
+                    chatList.append(ChatInfo(name: chatMessage.sender, message: chatMessage.content ?? ""))
+                    output.chatList.send(chatList)
+                }
+            }
+            .store(in: &subscription)
+        
+        input.chattingSendButtonDidTap
+            .sink { [weak self] chatInfo in
+                guard let chatInfo,
+                      let self else { return }
+                chattingSocket.send(
+                    data: ChatMessage(
+                        type: .CHAT,
+                        content: chatInfo.message,
+                        sender: chatInfo.name,
+                        roomId: channelID
+                    )
+                )
              }
              .store(in: &subscription)
       
@@ -118,5 +163,4 @@ public final class LiveStreamViewModel: ViewModel {
         
         return output
     }
-    
 }

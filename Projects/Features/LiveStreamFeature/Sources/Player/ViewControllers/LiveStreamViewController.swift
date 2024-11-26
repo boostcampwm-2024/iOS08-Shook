@@ -6,7 +6,7 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
-    private let chatingList = ChatingListView()
+    private let chattingList = ChattingListView()
     private let chatInputField = ChatInputField()
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
@@ -17,6 +17,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private var foldedConstraint: NSLayoutConstraint?
     private var subscription = Set<AnyCancellable>()
     
+    private let viewDidLoadPublisher = PassthroughSubject<Void, Never>()
+    
     private lazy var input = LiveStreamViewModel.Input(
         expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.eraseToAnyPublisher(),
         sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher(),
@@ -24,13 +26,19 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
         playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher(),
         dismissButtonDidTap: playerView.playerControlView.dismissButtonDidTap.eraseToAnyPublisher(),
-        chatingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
+        chattingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher(),
+        viewDidLoad: viewDidLoadPublisher.eraseToAnyPublisher()
     )
     
     private lazy var output = viewModel.transform(input: input)
     
     deinit {
         print("Deinit \(Self.self)")
+    }
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        viewDidLoadPublisher.send(())
     }
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -40,7 +48,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        chatingList.isHidden = output.isExpanded.value
+        chattingList.isHidden = output.isExpanded.value
         chatInputField.isHidden = output.isExpanded.value
         infoView.isHidden = output.isExpanded.value
         if output.isExpanded.value {
@@ -55,7 +63,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     public override func setupViews() {
         view.addSubview(infoView)
         view.addSubview(playerView)
-        view.addSubview(chatingList)
+        view.addSubview(chattingList)
         view.addSubview(chatInputField)
     }
     
@@ -87,7 +95,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             $0.horizontal(to: view)
         }
         
-        chatingList.ezl.makeConstraint {
+        chattingList.ezl.makeConstraint {
             $0.top(to: infoView.ezl.bottom, offset: 24)
                 .horizontal(to: view)
                 .bottom(to: chatInputField.ezl.top)
@@ -150,8 +158,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .store(in: &subscription)
         
         output.chatList
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.chatingList.updateList($0)
+                self?.chattingList.updateList($0)
             }
             .store(in: &subscription)
         
