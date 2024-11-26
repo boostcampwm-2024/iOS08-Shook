@@ -3,6 +3,9 @@ import Foundation
 public enum KeyKind: String {
     case secretKey = "SECRET_KEY"
     case accessKey = "ACCESS_KEY"
+    case cdnDomain = "CDN_DOMAIN"
+    case profileID = "PROFILE_ID"
+    case cdnInstanceNo = "CDN_INSTANCE_NO"
     case port = "PORT"
     case host = "HOST"
 }
