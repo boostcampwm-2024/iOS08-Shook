@@ -22,6 +22,7 @@ public final class LiveStreamViewModel: ViewModel {
         let dismissButtonDidTap: AnyPublisher<Void?, Never>
         let chattingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
+        let viewDidLoad: AnyPublisher<Void, Never>
     }
     
     public struct Output {

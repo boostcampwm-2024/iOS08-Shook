@@ -17,6 +17,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private var foldedConstraint: NSLayoutConstraint?
     private var subscription = Set<AnyCancellable>()
     
+    private let viewDidLoadPublisher = PassthroughSubject<Void, Never>()
+    
     private lazy var input = LiveStreamViewModel.Input(
         expandButtonDidTap: playerView.playerControlView.expandButtonDidTap.eraseToAnyPublisher(),
         sliderValueDidChange: playerView.playerControlView.timeControlView.valueDidChanged.eraseToAnyPublisher(),
@@ -24,7 +26,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         playerGestureDidTap: playerView.playerGestureDidTap.eraseToAnyPublisher(),
         playButtonDidTap: playerView.playerControlView.playButtonDidTap.eraseToAnyPublisher(),
         dismissButtonDidTap: playerView.playerControlView.dismissButtonDidTap.eraseToAnyPublisher(),
-        chattingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher()
+        chattingSendButtonDidTap: chatInputField.sendButtonDidTap.eraseToAnyPublisher(),
+        viewDidLoad: viewDidLoadPublisher.eraseToAnyPublisher()
     )
     
     private lazy var output = viewModel.transform(input: input)
