@@ -52,8 +52,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.lineBreakMode = .byWordWrapping
     }
     
-    func configure(image: UIImage?, title: String) {
-        self.thumbnailView.configure(with: image)
-        self.titleLabel.text = title
+    func configure(id: String, title: String, viewmodel: BroadcastCollectionViewModel) {
     }
 }

@@ -5,12 +5,11 @@ import BaseFeatureInterface
 import LiveStationDomainInterface
 
 public struct Channel: Hashable {
-    let id = UUID().uuidString
+    let id: String
     var name: String
-    var image: UIImage?
     
-    public init(title: String, image: UIImage? = nil) {
-        self.image = image
+    public init(id: String, title: String) {
+        self.id = id
         self.name = title
     }
 }
@@ -79,7 +78,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 receiveCompletion: { _ in },
                 receiveValue: { entity in
                     self.output.channels.send(entity.map {
-                        Channel(title: $0.name, image: $0.image)
+                        Channel(id: $0.id, title: $0.name)
                     })
                 }
             )
