@@ -30,6 +30,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum Module: String, ModularPathConvertable {
+        case ChatSoketModule
         case NetworkModule
         case EasyLayoutModule
         case ThirdPartyLibModule
