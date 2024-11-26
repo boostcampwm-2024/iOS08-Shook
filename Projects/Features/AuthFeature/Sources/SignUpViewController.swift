@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 
 import BaseFeature
@@ -18,12 +19,27 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     private let button = UIButton()
     
+    private let input = SignUpViewModel.Input()
+    private var cancellables = Set<AnyCancellable>()
+    
+    public override func setupBind() {
+        let output = viewModel.transform(input: input)
+        
+        output.isValidate
+            .sink { [weak self] isValidate in
+                self?.button.isEnabled = isValidate
+                self?.button.backgroundColor = isValidate ? DesignSystemAsset.Color.mainGreen.color : .gray
+                self?.validateLabel.isHidden = isValidate
+            }
+            .store(in: &cancellables)
+    }
+    
     public override func setupViews() {
         welcomeLabel.text = "환영합니다"
         greetLabel.text = "에 처음이시군요!"
         guideLabel.text = "닉네임을 입력해주세요"
         textField.placeholder = "닉네임"
-        validateLabel.text = "닉네임은 문자만 입력해주세요"
+        validateLabel.text = "닉네임은 2자리 이상 10자리 이하 문자, 숫자만 입력해주세요"
         
         imageView.image = DesignSystemAsset.Image.appIconSmall.image
         
@@ -32,6 +48,9 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         
         textFieldContainerView.addSubview(textField)
         textField.delegate = self
+        
+        button.isEnabled = false
+        validateLabel.isHidden = true
         
         view.addSubview(welcomeLabel)
         view.addSubview(greetStackView)
@@ -107,8 +126,15 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
                 .horizontal(to: view, padding: 20)
         }
     }
+    
+    public override func setupActions() {
+        button.addAction(UIAction { [weak self] _ in
+            self?.input.saveUserName.send(self?.textField.text)
+        }, for: .touchUpInside)
+    }
 }
 
+// MARK: - TextFieldDelegate
 extension SignUpViewController: UITextFieldDelegate {
     public func textFieldDidChangeSelection(_ textField: UITextField) {
         updateTextFieldBorderColor()
@@ -117,8 +143,10 @@ extension SignUpViewController: UITextFieldDelegate {
     private func updateTextFieldBorderColor() {
         if let text = textField.text, !text.isEmpty {
             textFieldContainerView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
+            input.didWriteUserName.send(text)
         } else {
             textFieldContainerView.layer.borderColor = DesignSystemColors.Color.white.cgColor
+            validateLabel.isHidden = true
         }
     }
 }
