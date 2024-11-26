@@ -64,16 +64,16 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationItem.rightBarButtonItem = rightBarButton
         
         collectionView.refreshControl = refreshControl
-        
         collectionView.delegate = self
-        
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+        collectionView.isHidden = true
         
         emptyView.isHidden = true
-        
+                
         view.addSubview(emptyView)
+        view.addSubview(dataLoadView)
         view.addSubview(collectionView)
     }
     
@@ -99,6 +99,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         }
         
         emptyView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+        
+        dataLoadView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
     }
