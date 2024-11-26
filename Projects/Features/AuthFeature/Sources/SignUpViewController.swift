@@ -126,6 +126,12 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
                 .horizontal(to: view, padding: 20)
         }
     }
+    
+    public override func setupActions() {
+        button.addAction(UIAction { [weak self] _ in
+            self?.input.saveUserName.send(self?.textField.text)
+        }, for: .touchUpInside)
+    }
 }
 
 // MARK: - TextFieldDelegate

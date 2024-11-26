@@ -1,10 +1,12 @@
 import Combine
+import Foundation
 
 import BaseFeatureInterface
 
 public class SignUpViewModel: ViewModel {
     public struct Input {
         let didWriteUserName: PassthroughSubject<String, Never> = .init()
+        let saveUserName: PassthroughSubject<String?, Never> = .init()
     }
     public struct Output {
         let isValidate: PassthroughSubject<Bool, Never> = .init()
@@ -22,6 +24,13 @@ public class SignUpViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
+        input.saveUserName
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .sink { [weak self] name in
+                self?.save(for: name)
+            }
+            .store(in: &cancellables)
+        
         return output
     }
     
@@ -29,5 +38,10 @@ public class SignUpViewModel: ViewModel {
     
     private func validate(with name: String) -> Bool {
         name.count >= 2 && name.count <= 10 && name.allSatisfy { $0.isLetter || $0.isNumber }
+    }
+    
+    private func save(for name: String?) {
+        guard let name else { return }
+        UserDefaults.standard.set(name, forKey: "USER_NAME")
     }
 }
