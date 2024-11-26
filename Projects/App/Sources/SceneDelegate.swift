@@ -1,5 +1,7 @@
 import UIKit
 
+import ChattingDomain
+import ChattingDomainInterface
 import LiveStationDomain
 import LiveStationDomainInterface
 import LiveStreamFeature
