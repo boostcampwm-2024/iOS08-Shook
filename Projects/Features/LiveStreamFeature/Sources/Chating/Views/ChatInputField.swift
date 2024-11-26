@@ -59,7 +59,7 @@ final class ChatInputField: BaseView {
         inputField.textColor = .white
         
         placeholder.font = .setFont(.body2())
-        placeholder.textColor = .systemGray6
+        placeholder.textColor = DesignSystemAsset.Color.gray.color
         
         sendButton.tintColor = .white
     }
