@@ -38,9 +38,9 @@ extension InfoPlist {
                 "SECRET_KEY": "$(SECRET_KEY)",
                 "PORT": "${PORT}",
                 "HOST": "${HOST}",
-                "CDN_DOMAIN": "${CDN_DOMAIN}",
-                "PROFILE_ID": "${PROFILE_ID}",
-                "CDN_INSTANCE_NO": "${CDN_INSTANCE_NO}"
+                "CDN_DOMAIN": "$(CDN_DOMAIN)",
+                "PROFILE_ID": "$(PROFILE_ID)",
+                "CDN_INSTANCE_NO": "$(CDN_INSTANCE_NO)"
             ]
         ]
     )
