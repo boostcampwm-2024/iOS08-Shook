@@ -33,6 +33,7 @@ public final class LiveStreamViewModel: ViewModel {
         let isShowedPlayerControl: CurrentValueSubject<Bool, Never> = .init(false)
         let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
         let dismiss: PassthroughSubject<Void, Never> = .init()
+        let error: CurrentValueSubject<Error?, Never> = .init(nil)
     }
     
     public init(
@@ -45,6 +46,7 @@ public final class LiveStreamViewModel: ViewModel {
     
     deinit {
         print("Deinit \(Self.self)")
+        chattingSocket.closeWebSocket()
     }
     
     public func transform(input: Input) -> Output {
@@ -108,8 +110,46 @@ public final class LiveStreamViewModel: ViewModel {
             }
             .store(in: &subscription)
         
+        input.viewDidLoad
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                do {
+                    try chattingSocket.openWebSocket()
+                } catch {
+                    output.error.send(error)
+                }
+                
+                chattingSocket.send(
+                    data: ChatMessage(
+                        type: .ENTER,
+                        content: "XXX님이 입장하셨습니다.",
+                        sender: channelID,
+                        roomId: channelID
+                    )
+                )
+                
+                chattingSocket.receive { chatMessage in
+                    guard let chatMessage else { return }
+                    var chatList = output.chatList.value
+                    chatList.append(ChatInfo(name: chatMessage.sender, message: chatMessage.content ?? ""))
+                    output.chatList.send(chatList)
+                }
+            }
+            .store(in: &subscription)
+        
         input.chattingSendButtonDidTap
-            .sink { chatInfo in
+            .sink { [weak self] chatInfo in
+                guard let chatInfo,
+                      let self else { return }
+                chattingSocket.send(
+                    data: ChatMessage(
+                        type: .CHAT,
+                        content: chatInfo.message,
+                        sender: chatInfo.name,
+                        roomId: channelID
+                    )
+                )
              }
              .store(in: &subscription)
       
@@ -123,5 +163,4 @@ public final class LiveStreamViewModel: ViewModel {
         
         return output
     }
-    
 }

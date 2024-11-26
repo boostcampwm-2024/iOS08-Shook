@@ -36,6 +36,11 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         print("Deinit \(Self.self)")
     }
     
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        viewDidLoadPublisher.send(())
+    }
+    
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return output.isExpanded.value ? .landscapeLeft: .portrait
     }
@@ -153,6 +158,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .store(in: &subscription)
         
         output.chatList
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] in
                 self?.chattingList.updateList($0)
             }
