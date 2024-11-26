@@ -12,59 +12,55 @@ final class SampleHandler: RPBroadcastSampleHandler {
     private let connection = RTMPConnection()
     private lazy var stream = RTMPStream(connection: connection)
     
-    // MARK: - RTMP and Key
-    private let rtmp = "RTMP_SERVER_URL"
+    // MARK: - RTMP Service URL and Streaming key
+    private let rtmp = "RTMP_SEVICE_URL"
     private let key = "STREAMING_KEY"
     
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
         Task {
-            try await setStream()
-            try await setMixer()
-            try await startStreaming()
-            
-            self.sharedDefaults.set(true, forKey: self.isStreamingKey)
+            await mixer.addOutput(stream)
+            try await connection.connect(rtmp)
+            try await stream.publish(key)
         }
+        
+        sharedDefaults.set(true, forKey: self.isStreamingKey)
     }
     
     override func broadcastFinished() {
         Task {
-            try await endStreaming()
-            
-            sharedDefaults.set(false, forKey: isStreamingKey)
+            try await stream.close()
+            try await connection.close()
         }
+        
+        sharedDefaults.set(false, forKey: isStreamingKey)
     }
     
     override func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType) {
-        Task {
-            await appendToMixer(by: sampleBuffer)
-        }
-    }
-}
-
-// MARK: - Methods
-extension SampleHandler {
-    private func setStream() async throws {
-        await stream.setVideoInputBufferCounts(5)
-    }
-    
-    private func setMixer() async throws {
-        try await mixer.attachAudio(AVCaptureDevice.default(for: .audio))
-        await mixer.addOutput(stream)
-    }
-    
-    private func startStreaming() async throws {
-        try await connection.connect(rtmp)
-        try await stream.publish(key)
-    }
-    
-    private func endStreaming() async throws {
-        try await stream.close()
-        try await connection.close()
-    }
-    
-    private func appendToMixer(by sampleBuffer: CMSampleBuffer) async {
-        if CMSampleBufferIsValid(sampleBuffer) {
-            await mixer.append(sampleBuffer)
+        switch sampleBufferType {
+        case .video:
+            Task {
+                guard let rotator = VideoRotator() else { return }
+                let result = rotator.rotate(buffer: sampleBuffer)
+                switch result {
+                case .success(let rotatedBuffer):
+                    await mixer.append(rotatedBuffer)
+                
+                case .failure(let failure):
+                    print("Rotation failed: \(failure)")
+                }
+            }
+            
+        case .audioApp:
+            Task {
+                await mixer.append(sampleBuffer, track: 0)
+            }
+            
+        case .audioMic:
+            Task {
+                await mixer.append(sampleBuffer, track: 1)
+            }
+            
+        default: break
         }
     }
 }
