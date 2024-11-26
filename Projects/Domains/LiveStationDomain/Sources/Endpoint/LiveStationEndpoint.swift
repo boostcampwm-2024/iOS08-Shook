@@ -1,6 +1,7 @@
 import CommonCrypto
 import Foundation
 
+import BaseDomain
 import NetworkModule
 
 public enum LiveStationEndpoint {
