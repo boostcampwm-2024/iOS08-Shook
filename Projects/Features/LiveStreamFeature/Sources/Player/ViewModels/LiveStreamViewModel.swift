@@ -9,10 +9,6 @@ public final class LiveStreamViewModel: ViewModel {
     
     private var subscription = Set<AnyCancellable>()
     
-    // MARK: - 추후 제거
-    let makeChatRoomUseCase: any MakeChatRoomUseCase
-    let deleteChatRoomUseCase: any DeleteChatRoomUseCase
-    
     private let chattingSocket: WebSocket
     
     private let channelID: String
@@ -40,14 +36,10 @@ public final class LiveStreamViewModel: ViewModel {
     
     public init(
         channelID: String,
-        chattingSocket: WebSocket = .shared,
-        makeChatRoomUseCase: any MakeChatRoomUseCase,
-        deleteChatRoomUseCase: any DeleteChatRoomUseCase
+        chattingSocket: WebSocket = .shared
     ) {
         self.channelID = channelID
         self.chattingSocket = chattingSocket
-        self.makeChatRoomUseCase = makeChatRoomUseCase
-        self.deleteChatRoomUseCase = deleteChatRoomUseCase
     }
     
     deinit {
