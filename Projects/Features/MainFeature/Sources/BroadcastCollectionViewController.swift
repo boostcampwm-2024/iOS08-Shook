@@ -28,6 +28,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private let transitioning = CollectionViewCellTransitioning()
     
+    private let emptyView = BroadcastCollectionEmptyView()
+    
     var selectedThumbnailView: ThumbnailView? {
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
         let cell = collectionView.cellForItem(at: indexPath)
@@ -69,6 +71,9 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
         
+        emptyView.isHidden = true
+        
+        view.addSubview(emptyView)
         view.addSubview(collectionView)
     }
     
@@ -90,6 +95,10 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupLayouts() {
         collectionView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+        
+        emptyView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
     }
@@ -239,6 +248,14 @@ extension BroadcastCollectionViewController {
     }
     
     private func applySnapshot(with channels: [Channel]) {
+        if channels.isEmpty {
+            collectionView.isHidden = true
+            emptyView.isHidden = false
+        } else {
+            collectionView.isHidden = false
+            emptyView.isHidden = true
+        }
+        
         var snapshot = Snapshot()
         
         let bigSectionItems = Array(channels.prefix(3))
