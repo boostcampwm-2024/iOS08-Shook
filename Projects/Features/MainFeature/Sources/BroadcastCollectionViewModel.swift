@@ -5,12 +5,11 @@ import BaseFeatureInterface
 import LiveStationDomainInterface
 
 public struct Channel: Hashable {
-    let id = UUID().uuidString
+    let id: String
     var name: String
-    var image: UIImage?
     
-    public init(title: String, image: UIImage? = nil) {
-        self.image = image
+    public init(id: String, title: String) {
+        self.id = id
         self.name = title
     }
 }

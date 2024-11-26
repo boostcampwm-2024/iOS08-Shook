@@ -58,8 +58,6 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.numberOfLines = 2
     }
     
-    func configure(image: UIImage?, title: String) {
-        self.thumbnailView.configure(with: image)
-        self.titleLabel.text = title
+    func configure(id: String, title: String, viewmodel: BroadcastCollectionViewModel) {
     }
 }

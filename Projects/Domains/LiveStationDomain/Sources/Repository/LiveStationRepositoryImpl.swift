@@ -10,9 +10,9 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
             .eraseToAnyPublisher()
     }
     
-    public func fetchThumbnail(channelId: String) -> AnyPublisher<[String], any Error> {
+    public func fetchThumbnail(channelId: String) -> AnyPublisher<String, any Error> {
         return request(.fetchThumbnail(channelId: channelId), type: ThumbnailResponseDTO.self)
-            .map { $0.content.map { $0.toDomain() }}
+            .compactMap { $0.content.first?.toDomain() }
             .eraseToAnyPublisher()
     }
     
