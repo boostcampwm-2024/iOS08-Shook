@@ -12,7 +12,7 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
     
     public func fetchThumbnail(channelId: String) -> AnyPublisher<[String], any Error> {
         return request(.fetchThumbnail(channelId: channelId), type: ThumbnailResponseDTO.self)
-            .map { $0.content.map { $0.toDomain() }}
+            .map { $0.content.map { $0.toDomain() } }
             .eraseToAnyPublisher()
     }
     
@@ -24,6 +24,12 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
   
     public func createChannel(name: String) -> AnyPublisher<ChannelEntity, any Error> {
         return request(.makeChannel(channelName: name), type: ChannelResponseDTO.self)
+            .map { $0.toDomain() }
+            .eraseToAnyPublisher()
+    }
+    
+    public func deleteChannel(id: String) -> AnyPublisher<ChannelEntity, any Error> {
+        return request(.deleteChannel(channelId: id), type: ChannelResponseDTO.self)
             .map { $0.toDomain() }
             .eraseToAnyPublisher()
     }
