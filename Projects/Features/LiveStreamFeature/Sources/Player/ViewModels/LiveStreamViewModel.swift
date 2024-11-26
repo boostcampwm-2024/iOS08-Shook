@@ -19,7 +19,7 @@ public final class LiveStreamViewModel: ViewModel {
         let playerGestureDidTap: AnyPublisher<Void?, Never>
         let playButtonDidTap: AnyPublisher<Void?, Never>
         let dismissButtonDidTap: AnyPublisher<Void?, Never>
-        let chatingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
+        let chattingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
     }
     
@@ -103,7 +103,7 @@ public final class LiveStreamViewModel: ViewModel {
             }
             .store(in: &subscription)
         
-        input.chatingSendButtonDidTap
+        input.chattingSendButtonDidTap
             .sink { chatInfo in
              }
              .store(in: &subscription)

@@ -3,7 +3,7 @@ import UIKit
 import BaseFeature
 import EasyLayoutModule
 
-final class ChatingListView: BaseView {
+final class ChattingListView: BaseView {
     private let titleLabel = UILabel()
     private let chatListView = UITableView(frame: .zero, style: .plain)
     private let chatEmptyView = ChatEmptyView()
@@ -12,9 +12,9 @@ final class ChatingListView: BaseView {
         tableView: chatListView
     ) { tableView, indexPath, chatInfo in
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: ChatingCell.identifier,
+            withIdentifier: ChattingCell.identifier,
             for: indexPath
-        ) as? ChatingCell ?? ChatingCell()
+        ) as? ChattingCell ?? ChattingCell()
         cell.configure(chat: chatInfo)
         return cell
     }
@@ -25,7 +25,7 @@ final class ChatingListView: BaseView {
         
         titleLabel.text = "실시간 채팅"
         
-        chatListView.register(ChatingCell.self, forCellReuseIdentifier: ChatingCell.identifier)
+        chatListView.register(ChattingCell.self, forCellReuseIdentifier: ChattingCell.identifier)
         chatListView.backgroundView = chatEmptyView
     }
     
@@ -60,7 +60,7 @@ final class ChatingListView: BaseView {
     }
 }
 
-extension ChatingListView {
+extension ChattingListView {
     func updateList(_ chatList: [ChatInfo]) {
         chatEmptyView.isHidden = !chatList.isEmpty
         

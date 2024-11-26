@@ -103,7 +103,7 @@ final class ChatInputField: BaseView {
         sendButton.addAction(
             UIAction { [weak self] _ in
                 guard let self else { return }
-                #warning("Chating User Name 추후 수정")
+                #warning("chatting User Name 추후 수정")
                 sendButtonDidTapPublisher = ChatInfo(
                     name: "홍길동",
                     message: inputField.text
