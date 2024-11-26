@@ -6,6 +6,8 @@ import LiveStreamFeatureInterface
 
 public struct LiveStreamViewControllerFractoryImpl: LiveStreamViewControllerFactory {
     
+    public init() {}
+    
     public func make(channelID: String) -> UIViewController {
         let viewModel = LiveStreamViewModel(channelID: channelID)
         return LiveStreamViewController(viewModel: viewModel)

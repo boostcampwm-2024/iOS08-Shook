@@ -55,7 +55,7 @@ extension SceneDelegate {
         let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
         let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
         let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl()
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
         
         let liveStationRepository = LiveStationRepositoryImpl()

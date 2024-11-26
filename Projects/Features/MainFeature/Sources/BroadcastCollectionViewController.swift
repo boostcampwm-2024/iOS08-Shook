@@ -129,7 +129,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 // MARK: - CollectionView Delegate
 extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let viewController = factory?.make() else { return }
+        #warning("화면 전환 시 선택한 Cell의 channelID 주입")
+        guard let viewController = factory?.make(channelID: "1234") else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true)
