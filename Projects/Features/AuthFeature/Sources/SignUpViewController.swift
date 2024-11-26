@@ -180,6 +180,22 @@ extension SignUpViewController {
     }
     
     private func animateButton(by isValid: Bool) {
+        if !button.isEnabled && isValid {
+            UIView.animate(withDuration: 0.1) {
+                self.button.transform = CGAffineTransform(scaleX: 0.98, y: 0.98)
+            } completion: { _ in
+                UIView.animate(
+                    withDuration: 0.6,
+                    delay: 0,
+                    usingSpringWithDamping: 0.5,
+                    initialSpringVelocity: 1.0,
+                    options: .curveEaseInOut
+                ) {
+                    self.button.transform = .identity
+                }
+            }
+        }
+        
         button.isEnabled = isValid
         
         UIView.animate(withDuration: 0.5) { [weak self] in
