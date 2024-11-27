@@ -79,7 +79,7 @@ extension SplashViewController {
                 self.logoImageView.transform = .identity // 원래 상태로 복귀 (기울기 해제)
             }) { [weak self] _ in
                 print("move")
-                self?.move()
+                self?.moveToMainView()
             }
         }
     }
@@ -93,14 +93,19 @@ extension SplashViewController {
         return window.bounds.width
     }
     
-    private func move() {
+    private func moveToMainView() {
         let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let mockUsecase = MockFetchChannelListUsecaseImpl()
         let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)
-        navigationController.viewControllers.append(SignUpViewController(viewModel: SignUpViewModel()))
+        
+        /// 유저의 이름이 저장되어 있지 않으면 유저 등록 뷰를 Navigation에 올림
+        if UserDefaults.standard.string(forKey: "USER_NAME") == nil {
+            let singUpViewModel = SignUpViewModel()
+            navigationController.viewControllers.append(SignUpViewController(viewModel: singUpViewModel))
+        }
         
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else { return }
