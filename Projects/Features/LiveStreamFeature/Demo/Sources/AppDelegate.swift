@@ -1,7 +1,5 @@
 import UIKit
 
-import LiveStreamFeature
-
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -17,4 +15,3 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
-

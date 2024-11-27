@@ -21,6 +21,7 @@ extension ModulePaths: ModularPathConvertable {
 
 public extension ModulePaths {
     enum Feature: String, ModularPathConvertable {
+        case AuthFeature
         case LiveStreamFeature
         case MainFeature
         case BaseFeature

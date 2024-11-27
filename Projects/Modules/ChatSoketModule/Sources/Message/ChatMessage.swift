@@ -1,8 +1,15 @@
 import Foundation
 
-struct ChatMessage: Codable {
-    var type: MessageType
-    var content: String?
-    var sender: String
-    var roomId: String
+public struct ChatMessage: Codable {
+    public let type: MessageType
+    public let content: String?
+    public let sender: String
+    public let roomId: String
+    
+    public init(type: MessageType, content: String?, sender: String, roomId: String) {
+        self.type = type
+        self.content = content
+        self.sender = sender
+        self.roomId = roomId
+    }
 }

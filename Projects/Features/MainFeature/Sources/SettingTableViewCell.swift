@@ -66,7 +66,7 @@ final class SettingTableViewCell: BaseTableViewCell {
     
     override func setupLayouts() {
         infoInputStackView.ezl.makeConstraint {
-            $0.horizontal(to: contentView, padding: 10)
+            $0.horizontal(to: contentView, padding: 30)
                 .top(to: contentView, offset: 27)
         }
         
