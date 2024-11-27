@@ -24,6 +24,7 @@ extension Target {
         dependencies: [
             .domain(target: .LiveStationDomain),
             .domain(target: .ChattingDomain),
+            .domain(target: .BroadcastDomain),
             .feature(target: .MainFeature),
             .feature(target: .LiveStreamFeature),
             .target(name: "BroadcastExtension")
