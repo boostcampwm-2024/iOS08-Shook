@@ -4,11 +4,11 @@ import UIKit
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
+import Lottie
 
 public class SignUpViewController: BaseViewController<SignUpViewModel> {
     private let greetStackView = UIStackView()
     private let textFieldContainerView = UIView()
-    private let imageView = UIImageView()
     private let signUpGradientView = SignUpGradientView()
         
     private let welcomeLabel = UILabel()
@@ -23,9 +23,15 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     private let input = SignUpViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
+    private let confettiAnimationView = LottieAnimationView(name: "confetti", bundle: Bundle(for: DesignSystemResources.self))
+    private let shookAnimationView = LottieAnimationView(name: "shook", bundle: Bundle(for: DesignSystemResources.self))
+    
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        confettiAnimationView.play()
+        animateViews()
         textField.becomeFirstResponder()
+        shookAnimationView.play()
     }
     
     public override func setupBind() {
@@ -46,10 +52,8 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         guideLabel.text = "닉네임을 입력해주세요"
         textField.placeholder = "닉네임"
         validateLabel.text = "닉네임은 2자리 이상 10자리 이하 문자, 숫자만 입력해주세요"
-        
-        imageView.image = DesignSystemAsset.Image.appIconSmall.image
-        
-        greetStackView.addArrangedSubview(imageView)
+                
+        greetStackView.addArrangedSubview(shookAnimationView)
         greetStackView.addArrangedSubview(greetLabel)
         
         textFieldContainerView.addSubview(textField)
@@ -58,6 +62,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         button.isEnabled = false
         
         view.addSubview(signUpGradientView)
+        view.addSubview(confettiAnimationView)
         view.addSubview(welcomeLabel)
         view.addSubview(greetStackView)
         view.addSubview(guideLabel)
@@ -69,18 +74,22 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     public override func setupStyles() {
         welcomeLabel.textColor = .white
         welcomeLabel.font = .systemFont(ofSize: 32, weight: .bold)
-        
-        imageView.contentMode = .scaleAspectFit
-        
+        welcomeLabel.alpha = 0
+                
         greetLabel.textColor = .white
         guideLabel.textColor = .white
+        guideLabel.alpha = 0
         
         greetStackView.spacing = 4
+        greetStackView.alpha = 0
         
         textFieldContainerView.backgroundColor = .clear
         textFieldContainerView.layer.borderColor = DesignSystemColors.Color.white.cgColor
         textFieldContainerView.layer.borderWidth = 1
         textFieldContainerView.layer.cornerRadius = 24
+        textFieldContainerView.alpha = 0
+        
+        textField.textColor = .white
         
         validateLabel.font = .setFont(.caption1())
         validateLabel.textColor = .red
@@ -91,6 +100,14 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         button.layer.cornerRadius = 16
         button.titleLabel?.font = .setFont(.body1())
         button.backgroundColor = .gray
+        
+        confettiAnimationView.contentMode = .scaleAspectFit
+        confettiAnimationView.loopMode = .loop
+        confettiAnimationView.animationSpeed = 0.5
+        
+        shookAnimationView.contentMode = .scaleAspectFit
+        shookAnimationView.loopMode = .loop
+        shookAnimationView.animationSpeed = 0.5
     }
     
     public override func setupLayouts() {
@@ -101,6 +118,11 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         welcomeLabel.ezl.makeConstraint {
             $0.top(to: view.safeAreaLayoutGuide, offset: 80)
                 .centerX(to: view)
+        }
+        
+        confettiAnimationView.ezl.makeConstraint {
+            $0.top(to: view, offset: -(view.frame.size.height / 3.3))
+                .horizontal(to: view)
         }
         
         greetStackView.ezl.makeConstraint {
@@ -156,6 +178,35 @@ extension SignUpViewController: UITextFieldDelegate {
 
 // MARK: - Animation
 extension SignUpViewController {
+    private func animateViews() {
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.2,
+            options: [.curveEaseInOut]) { [weak self] in
+                self?.welcomeLabel.transform = CGAffineTransform(translationX: 0, y: -5)
+                self?.welcomeLabel.alpha = 1
+            }
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.4,
+            options: [.curveEaseInOut]) { [weak self] in
+                self?.greetStackView.transform = CGAffineTransform(translationX: 0, y: -5)
+                self?.greetStackView.alpha = 1
+                
+                self?.guideLabel.transform = CGAffineTransform(translationX: 0, y: -5)
+                self?.guideLabel.alpha = 1
+            }
+        
+        UIView.animate(
+            withDuration: 1,
+            delay: 0.6,
+            options: [.curveEaseInOut]) { [weak self] in
+                self?.textFieldContainerView.transform = CGAffineTransform(translationX: 0, y: -5)
+                self?.textFieldContainerView.alpha = 1
+            }
+    }
+    
     private func animateTextFieldContainerView(by isValid: Bool) {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.textFieldContainerView.layer.borderColor = isValid ? DesignSystemAsset.Color.mainGreen.color.cgColor : DesignSystemColors.Color.white.cgColor
