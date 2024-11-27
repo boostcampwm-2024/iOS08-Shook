@@ -58,6 +58,19 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.numberOfLines = 2
     }
     
-    func configure(id: String, title: String, viewmodel: BroadcastCollectionViewModel) {
+    func configure(channel: Channel) {
+        loadAsyncImage(with: channel.thumbnailImageURLString)
+        self.titleLabel.text = channel.name
+    }
+    
+    private func loadAsyncImage(with imageURLString: String) {
+        guard let url = URL(string: imageURLString) else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+            guard error == nil,
+                  let data else { return }
+            DispatchQueue.main.async {
+                self?.thumbnailView.configure(with: UIImage(data: data))
+            }
+        }.resume()
     }
 }

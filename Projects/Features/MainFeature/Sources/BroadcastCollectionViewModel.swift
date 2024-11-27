@@ -6,11 +6,13 @@ import LiveStationDomainInterface
 
 public struct Channel: Hashable {
     let id: String
-    var name: String
+    let name: String
+    let thumbnailImageURLString: String
     
-    public init(id: String, title: String) {
+    public init(id: String, title: String, imageURLString: String) {
         self.id = id
         self.name = title
+        self.thumbnailImageURLString = imageURLString
     }
 }
 
@@ -33,6 +35,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let output = Output()
     private let usecase: any FetchChannelListUsecase
     private var cancellables = Set<AnyCancellable>()
+    
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
     let isStreamingKey = "isStreaming"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
@@ -47,7 +50,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self?.fetchData()
             }
             .store(in: &cancellables)
-        
+       
         input.didWriteStreamingName
             .sink { [weak self] name in
                 guard let self else { return }
@@ -78,7 +81,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 receiveCompletion: { _ in },
                 receiveValue: { entity in
                     self.output.channels.send(entity.map {
-                        Channel(id: $0.id, title: $0.name)
+                        Channel(id: $0.id, title: $0.name, imageURLString: $0.imageURLString)
                     })
                 }
             )

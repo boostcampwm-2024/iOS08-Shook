@@ -29,11 +29,11 @@ final class BroadcastCollectionEmptyView: BaseView {
         subtitleLabel.font = .setFont(.body2())
         
         textStackView.axis = .vertical
-        textStackView.spacing = 7
+        textStackView.spacing = 12
         textStackView.alignment = .center
         
         stackView.axis = .vertical
-        stackView.spacing = 13
+        stackView.spacing = 7
         stackView.alignment = .center
     }
     
