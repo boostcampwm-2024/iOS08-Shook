@@ -5,6 +5,9 @@ import BaseFeature
 import BaseFeatureInterface
 import DesignSystem
 import EasyLayoutModule
+import LiveStationDomainInterface
+import LiveStreamFeatureInterface
+import MainFeature
 
 public final class SplashViewController: BaseViewController<SplashViewModel> {
     private let splashGradientView = SplashGradientView()
@@ -74,6 +77,7 @@ extension SplashViewController {
                            animations: {
                 self.logoImageView.transform = .identity // 원래 상태로 복귀 (기울기 해제)
             }) { [weak self] _ in
+                print("move")
                 self?.move()
             }
         }
@@ -89,7 +93,18 @@ extension SplashViewController {
     }
     
     private func move() {
-    #warning("추후 이동 구현")
+        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
+        let mockUsecase = MockFetchChannelListUsecaseImpl()
+        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else { return }
+        
+        UIView.transition(with: window, duration: 0.4, options: .transitionCrossDissolve, animations: {
+            window.rootViewController = navigationController
+        }, completion: nil)
     }
-    
 }

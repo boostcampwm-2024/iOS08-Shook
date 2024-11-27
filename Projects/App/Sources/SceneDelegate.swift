@@ -9,7 +9,6 @@ import LiveStreamFeatureInterface
 import MainFeature
 import ThirdPartyLibModule
 
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -22,13 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
-        
-        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
-        let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
-
-//        let mockUsecase = MockFetchChannelListUsecaseImpl()
-//        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
-//        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let viewModel = SplashViewModel()
         self.window?.rootViewController = SplashViewController(viewModel: viewModel)
         self.window?.makeKeyAndVisible()
