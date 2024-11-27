@@ -30,8 +30,21 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         super.viewDidAppear(animated)
         confettiAnimationView.play()
         animateViews()
-        textField.becomeFirstResponder()
         shookAnimationView.play()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.textField.becomeFirstResponder()
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     public override func setupBind() {
@@ -160,7 +173,10 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     public override func setupActions() {
         button.addAction(UIAction { [weak self] _ in
+            self?.textField.resignFirstResponder()
             self?.input.saveUserName.send(self?.textField.text)
+            
+            self?.dismissWithAnimation()
         }, for: .touchUpInside)
     }
 }
@@ -257,5 +273,22 @@ extension SignUpViewController {
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
         }
+    }
+}
+
+// MARK: - ViewTransition
+extension SignUpViewController {
+    private func dismissWithAnimation() {
+        UIView.animate(
+            withDuration: 0.6,
+            delay: 0,
+            options: [.curveEaseInOut],
+            animations: { [weak self] in
+                self?.view.alpha = 0
+            },
+            completion: { [weak self] _ in
+                self?.navigationController?.viewControllers.removeAll { $0 === self }
+            }
+        )
     }
 }

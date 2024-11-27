@@ -1,6 +1,7 @@
 import Combine
 import UIKit
 
+import AuthFeature
 import BaseFeature
 import BaseFeatureInterface
 import DesignSystem
@@ -99,6 +100,7 @@ extension SplashViewController {
         let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.viewControllers.append(SignUpViewController(viewModel: SignUpViewModel()))
         
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else { return }
