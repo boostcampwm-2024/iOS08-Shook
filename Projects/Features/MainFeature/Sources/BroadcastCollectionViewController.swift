@@ -143,7 +143,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 // MARK: - CollectionView Delegate
 extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let viewController = factory?.make() else { return }
+        guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
+        guard let viewController = factory?.make(channelID: channel.id) else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true)
