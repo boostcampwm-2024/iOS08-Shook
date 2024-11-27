@@ -26,10 +26,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
 
-        let mockUsecase = MockFetchChannelListUsecaseImpl()
-        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
-        self.window?.rootViewController = UINavigationController(rootViewController: viewController)
+//        let mockUsecase = MockFetchChannelListUsecaseImpl()
+//        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+//        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
+        let viewModel = SplashViewModel()
+        self.window?.rootViewController = SplashViewController(viewModel: viewModel)
         self.window?.makeKeyAndVisible()
     }
 
