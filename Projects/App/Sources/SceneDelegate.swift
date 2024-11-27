@@ -9,7 +9,6 @@ import LiveStreamFeatureInterface
 import MainFeature
 import ThirdPartyLibModule
 
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -23,11 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
         
-        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let channelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
 
-        let mockUsecase = MockFetchChannelListUsecaseImpl()
-        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let viewModel = BroadcastCollectionViewModel(usecase: channelListUsecase)
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         self.window?.rootViewController = UINavigationController(rootViewController: viewController)
         self.window?.makeKeyAndVisible()
@@ -52,14 +51,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     private func registerDependencies() {
+        let liveStationRepository = LiveStationRepositoryImpl()
+        let fetchChannelListUsecaseImpl = FetchChannelListUsecaseImpl(repository: liveStationRepository)
+        DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecaseImpl)
+        
         let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
         let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
         let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
+        let fetchBroadcastUseCase: any FetchVideoListUsecase = FetchVideoListUsecaseImpl(repository: liveStationRepository)
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase, fetchBroadcastUseCase: fetchBroadcastUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
-        
-        let liveStationRepository = LiveStationRepositoryImpl()
-        let fetchChannelListUsecase = FetchChannelListUsecaseImpl(repository: liveStationRepository)
-        DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecase)
     }
 }
