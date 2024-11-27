@@ -14,6 +14,8 @@ final class ChatInputField: BaseView {
     private let clipView = UIView()
     
     private var inputFieldHeightContraint: NSLayoutConstraint!
+    private let heartLayer = CAEmitterLayer()
+    private var heartEmitterCell = CAEmitterCell()
     
     @Published var sendButtonDidTapPublisher: ChatInfo?
 
@@ -24,8 +26,21 @@ final class ChatInputField: BaseView {
         clipView.addSubview(inputField)
         clipView.addSubview(sendButton)
         
+        heartLayer.emitterCells = [heartEmitterCell]
+        
         heartButton.setImage(DesignSystemAsset.Image.heart24.image, for: .normal)
         heartButton.setContentHuggingPriority(.required, for: .horizontal)
+        
+        heartEmitterCell.contents = DesignSystemAsset.Image.heart24.image.cgImage
+        heartEmitterCell.lifetime = 4
+        heartEmitterCell.birthRate = 1
+        heartEmitterCell.scale = 0.5
+        heartEmitterCell.scaleRange = 0.2
+        heartEmitterCell.emissionLongitude = -CGFloat.pi / 5 /// 위쪽보다 살짝 오른쪽으로 가도록 설정
+        heartEmitterCell.emissionRange = 0.9 /// 퍼지는 각도 조절
+        heartEmitterCell.velocity = 50 /// 1초 기준 속도
+        heartEmitterCell.velocityRange = 30
+        heartEmitterCell.yAcceleration = -50
         
         inputField.addSubview(placeholder)
         inputField.textContainerInset = .zero
@@ -113,6 +128,22 @@ final class ChatInputField: BaseView {
             },
             for: .touchUpInside
         )
+        heartButton.addTarget(self, action: #selector(didTapHeartButton), for: .touchUpInside)
+    }
+    
+    @objc
+    private func didTapHeartButton() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
+        heartLayer.emitterPosition = CGPoint(x: heartButton.frame.midX, y: heartButton.frame.midY)
+        heartLayer.birthRate = 1
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak self] in
+            self?.heartLayer.birthRate = 0
+        }
+        layer.addSublayer(heartLayer)
+        
     }
 }
 
