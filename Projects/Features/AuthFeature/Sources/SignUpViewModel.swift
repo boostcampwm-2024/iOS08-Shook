@@ -10,6 +10,7 @@ public class SignUpViewModel: ViewModel {
     }
     public struct Output {
         let isValid: PassthroughSubject<Bool, Never> = .init()
+        let isSaved: PassthroughSubject<Bool, Never> = .init()
     }
     
     private let output = Output()
@@ -44,5 +45,8 @@ public class SignUpViewModel: ViewModel {
     private func save(for name: String?) {
         guard let name else { return }
         UserDefaults.standard.set(name, forKey: "USER_NAME")
+        
+        let savedName = UserDefaults.standard.string(forKey: "USER_NAME")
+        output.isSaved.send(savedName == name)
     }
 }

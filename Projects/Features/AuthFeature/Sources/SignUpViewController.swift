@@ -57,6 +57,16 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
                 self?.animateValidateLabel(by: isValid)
             }
             .store(in: &cancellables)
+        
+        output.isSaved
+            .sink { [weak self] isSaved in
+                if isSaved {
+                    self?.textField.resignFirstResponder()
+                    self?.dismissWithAnimation()
+                }
+                // 저장되지 않았을 때 에러 Alert 로 유저에게 알려주기
+            }
+            .store(in: &cancellables)
     }
     
     public override func setupViews() {
@@ -173,10 +183,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     public override func setupActions() {
         button.addAction(UIAction { [weak self] _ in
-            self?.textField.resignFirstResponder()
             self?.input.saveUserName.send(self?.textField.text)
-            
-            self?.dismissWithAnimation()
         }, for: .touchUpInside)
     }
 }
