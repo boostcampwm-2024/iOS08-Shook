@@ -175,11 +175,12 @@ private extension LiveStreamViewModel {
     }
     
     func sendEntryMessage() {
+        guard let userName = UserDefaults.standard.string(forKey: "USER_NAME") else { return }
         chattingSocket.send(
             data: ChatMessage(
                 type: .ENTER,
                 content: nil,
-                sender: "홍길동",
+                sender: userName,
                 roomId: channelID
             )
         )
