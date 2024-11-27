@@ -33,6 +33,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let output = Output()
     private let usecase: any FetchChannelListUsecase
     private var cancellables = Set<AnyCancellable>()
+    
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
     let isStreamingKey = "isStreaming"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
@@ -47,7 +48,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self?.fetchData()
             }
             .store(in: &cancellables)
-        
+       
         input.didWriteStreamingName
             .sink { [weak self] name in
                 guard let self else { return }
