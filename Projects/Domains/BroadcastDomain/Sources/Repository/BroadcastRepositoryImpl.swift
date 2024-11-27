@@ -3,7 +3,7 @@ import Combine
 import BaseDomain
 import BroadcastDomainInterface
 
-public final class BroadcastRepositoryImpl: BaseRepository<BroadcastEndpoint> {
+public final class BroadcastRepositoryImpl: BaseRepository<BroadcastEndpoint>, BroadcastRepository {
     public func makeBroadcast(id: String, title: String, owner: String, description: String) -> AnyPublisher<Void, any Error> {
         request(.broadcast(id: id, title: title, owner: owner, description: description), type: BroadcastDTO.self)
             .map { _ in () }
