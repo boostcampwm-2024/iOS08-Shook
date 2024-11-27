@@ -75,6 +75,7 @@ final class ChatInputField: BaseView {
         
         placeholder.font = .setFont(.body2())
         placeholder.textColor = DesignSystemAsset.Color.gray.color
+        placeholder.alpha = 0.5
         
         sendButton.isEnabled = false
     }
