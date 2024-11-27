@@ -214,7 +214,7 @@ extension BroadcastCollectionViewController {
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                bigCell.configure(id: item.id, title: item.name, viewmodel: self.viewModel)
+                bigCell.configure(channel: item)
                 return bigCell
                 
             case .small:
@@ -224,7 +224,7 @@ extension BroadcastCollectionViewController {
                 ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                smallCell.configure(id: item.id, title: item.name, viewmodel: self.viewModel)
+                smallCell.configure(channel: item)
                 return smallCell
             }
         }
