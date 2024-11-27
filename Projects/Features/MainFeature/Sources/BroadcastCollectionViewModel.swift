@@ -37,6 +37,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let createChannelUsecase: any CreateChannelUsecase
+    private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -46,9 +47,14 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private var channelName: String = ""
 
-    public init(fetchChannelListUsecase: FetchChannelListUsecase, createChannelUsecase: CreateChannelUsecase) {
+    public init(
+        fetchChannelListUsecase: FetchChannelListUsecase,
+        createChannelUsecase: CreateChannelUsecase,
+        fetchChannelInfoUsecase: FetchChannelInfoUsecase
+    ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
+        self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
     }
     
     public func transform(input: Input) -> Output {
