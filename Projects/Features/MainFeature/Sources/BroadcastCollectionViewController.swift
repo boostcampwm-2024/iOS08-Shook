@@ -252,6 +252,8 @@ extension BroadcastCollectionViewController {
     }
     
     private func applySnapshot(with channels: [Channel]) {
+        dataLoadView.isHidden = true
+        
         if channels.isEmpty {
             collectionView.isHidden = true
             emptyView.isHidden = false
