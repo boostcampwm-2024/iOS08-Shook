@@ -21,14 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
-        
-        let channelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
-        
-        let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
-
-        let viewModel = BroadcastCollectionViewModel(usecase: channelListUsecase)
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
-        self.window?.rootViewController = UINavigationController(rootViewController: viewController)
+        let viewModel = SplashViewModel()
+        self.window?.rootViewController = SplashViewController(viewModel: viewModel)
         self.window?.makeKeyAndVisible()
     }
 

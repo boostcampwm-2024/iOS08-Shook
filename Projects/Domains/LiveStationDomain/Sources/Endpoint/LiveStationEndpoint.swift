@@ -52,7 +52,7 @@ extension LiveStationEndpoint: Endpoint {
             
         case .receiveBroadcast:
             return .withParameters(
-                query: ["serviceUrlType": ServiceUrlType.general.rawValue]
+                query: ["serviceUrlType": ServiceUrlType.timemachine.rawValue]
             )
             
         case .fetchThumbnail:

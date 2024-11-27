@@ -30,8 +30,23 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         super.viewDidAppear(animated)
         confettiAnimationView.play()
         animateViews()
-        textField.becomeFirstResponder()
         shookAnimationView.play()
+        
+        generateContinuousHapticFeedback()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.textField.becomeFirstResponder()
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     public override func setupBind() {
@@ -42,6 +57,16 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
                 self?.animateTextFieldContainerView(by: isValid)
                 self?.animateButton(by: isValid)
                 self?.animateValidateLabel(by: isValid)
+            }
+            .store(in: &cancellables)
+        
+        output.isSaved
+            .sink { [weak self] isSaved in
+                if isSaved {
+                    self?.textField.resignFirstResponder()
+                    self?.dismissWithAnimation()
+                }
+                // 저장되지 않았을 때 에러 Alert 로 유저에게 알려주기
             }
             .store(in: &cancellables)
     }
@@ -160,6 +185,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     public override func setupActions() {
         button.addAction(UIAction { [weak self] _ in
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
             self?.input.saveUserName.send(self?.textField.text)
         }, for: .touchUpInside)
     }
@@ -256,6 +282,43 @@ extension SignUpViewController {
         
         UIView.animate(withDuration: 0.5) { [weak self] in
             self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
+        }
+    }
+}
+
+// MARK: - ViewTransition
+extension SignUpViewController {
+    private func dismissWithAnimation() {
+        UIView.animate(
+            withDuration: 0.6,
+            delay: 0,
+            options: [.curveEaseInOut],
+            animations: { [weak self] in
+                self?.view.alpha = 0
+            },
+            completion: { [weak self] _ in
+                self?.navigationController?.viewControllers.removeAll { $0 === self }
+            }
+        )
+    }
+}
+
+// MARK: - Haptic
+extension SignUpViewController {
+    private func generateContinuousHapticFeedback() {
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator.prepare()
+        
+        var iteration = 0
+        let maxIterations = 6
+        let interval = 0.2
+        
+        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+            feedbackGenerator.impactOccurred()
+            iteration += 1
+            if iteration >= maxIterations {
+                timer.invalidate()
+            }
         }
     }
 }
