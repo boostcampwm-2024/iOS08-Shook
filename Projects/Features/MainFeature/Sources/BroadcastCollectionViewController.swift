@@ -29,6 +29,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private let transitioning = CollectionViewCellTransitioning()
     
     private let emptyView = BroadcastCollectionEmptyView()
+    private let dataLoadView = BroadcastCollectionLoadView()
     
     var selectedThumbnailView: ThumbnailView? {
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
