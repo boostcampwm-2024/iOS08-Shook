@@ -83,9 +83,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .gray
-        
-        view.backgroundColor = .black
-        
+                
         closeBarButton.style = .plain
         
         settingTableView.backgroundColor = .black
@@ -99,14 +97,12 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         
     public override func setupLayouts() {
         settingTableView.ezl.makeConstraint {
-            $0.top(to: view.safeAreaLayoutGuide, offset: 21)
-                .bottom(to: startBroadcastButton.ezl.top)
-                .horizontal(to: view, padding: 20)
+            $0.diagonal(to: view)
         }
         
         startBroadcastButton.ezl.makeConstraint {
             $0.height(56)
-                .bottom(to: view.safeAreaLayoutGuide, offset: -23)
+                .bottom(to: view.keyboardLayoutGuide.ezl.top, offset: -16)
                 .horizontal(to: view, padding: 20)
         }
         
