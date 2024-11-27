@@ -32,6 +32,8 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         animateViews()
         shookAnimationView.play()
         
+        generateContinuousHapticFeedback()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.textField.becomeFirstResponder()
         }
@@ -183,6 +185,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     public override func setupActions() {
         button.addAction(UIAction { [weak self] _ in
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
             self?.input.saveUserName.send(self?.textField.text)
         }, for: .touchUpInside)
     }
@@ -297,5 +300,25 @@ extension SignUpViewController {
                 self?.navigationController?.viewControllers.removeAll { $0 === self }
             }
         )
+    }
+}
+
+// MARK: - Haptic
+extension SignUpViewController {
+    private func generateContinuousHapticFeedback() {
+        let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+        feedbackGenerator.prepare()
+        
+        var iteration = 0
+        let maxIterations = 6
+        let interval: TimeInterval = 0.2
+        
+        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+            feedbackGenerator.impactOccurred()
+            iteration += 1
+            if iteration >= maxIterations {
+                timer.invalidate()
+            }
+        }
     }
 }

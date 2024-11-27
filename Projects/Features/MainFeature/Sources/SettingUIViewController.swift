@@ -102,7 +102,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         
         startBroadcastButton.ezl.makeConstraint {
             $0.height(56)
-                .bottom(to: view.keyboardLayoutGuide.ezl.top, offset: -16)
+                .bottom(to: view.keyboardLayoutGuide.ezl.top, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
         
@@ -133,6 +133,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     @objc
     private func didTapStartBroadcastButton() {
         guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         broadcastPickerButton.sendActions(for: .touchUpInside)
     }
     
