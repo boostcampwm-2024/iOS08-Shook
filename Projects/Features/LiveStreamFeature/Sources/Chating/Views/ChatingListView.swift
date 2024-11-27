@@ -1,13 +1,21 @@
+import Combine
 import UIKit
 
+import DesignSystem
 import BaseFeature
 import EasyLayoutModule
+
+protocol ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> { get }
+}
 
 final class ChattingListView: BaseView {
     private let titleLabel = UILabel()
     private let chatListView = UITableView(frame: .zero, style: .plain)
     private let chatEmptyView = ChatEmptyView()
-    
+    private let chatInputField = ChatInputField()
+    private let recentChatButton = UIButton()
+
     private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
         tableView: chatListView
     ) { tableView, indexPath, chatInfo in
@@ -35,6 +43,8 @@ final class ChattingListView: BaseView {
     override func setupViews() {
         addSubview(titleLabel)
         addSubview(chatListView)
+        addSubview(recentChatButton)
+        addSubview(chatInputField)
         
         titleLabel.text = "실시간 채팅"
         
@@ -51,6 +61,12 @@ final class ChattingListView: BaseView {
         chatListView.keyboardDismissMode = .interactive
         chatListView.allowsSelection = false
         chatListView.separatorStyle = .none
+        
+        var configure = UIButton.Configuration.filled()
+        configure.title = "최근 채팅으로 이동"
+        configure.baseBackgroundColor = DesignSystemAsset.Color.mainGreen.color
+        configure.baseForegroundColor = .white
+        recentChatButton.configuration = configure
     }
     
     override func setupLayouts() {
@@ -62,7 +78,17 @@ final class ChattingListView: BaseView {
         chatListView.ezl.makeConstraint {
             $0.horizontal(to: self)
                 .top(to: titleLabel.ezl.bottom, offset: 21)
+                .bottom(to: chatInputField.ezl.top)
+        }
+        
+        chatInputField.ezl.makeConstraint {
+            $0.horizontal(to: self)
                 .bottom(to: self)
+        }
+        
+        recentChatButton.ezl.makeConstraint {
+            $0.centerX(to: self)
+                .bottom(to: chatInputField.ezl.top, offset: -8)
         }
     }
     
@@ -83,5 +109,11 @@ extension ChattingListView {
         snapshot.appendItems(chatList)
         self.dataSource.apply(snapshot, animatingDifferences: false)
         scrollToBottom()
+    }
+}
+
+extension ChattingListView: ChatInputFieldAction {
+    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> {
+        chatInputField.$sendButtonDidTapPublisher.dropFirst().eraseToAnyPublisher()
     }
 }
