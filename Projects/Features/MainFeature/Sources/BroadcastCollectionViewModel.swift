@@ -22,6 +22,7 @@ public class BroadcastCollectionViewModel: ViewModel {
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
         let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
         let didTapEndStreamingButton: PassthroughSubject<Void, Never> = .init()
+        let didTapStartBroadcastButton: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
@@ -33,15 +34,21 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private let output = Output()
-    private let usecase: any FetchChannelListUsecase
+    
+    private let fetchChannelListUsecase: any FetchChannelListUsecase
+    private let createChannelUsecase: any CreateChannelUsecase
+    
     private var cancellables = Set<AnyCancellable>()
     
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
     let isStreamingKey = "isStreaming"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+    
+    private var channelName: String = ""
 
-    public init(usecase: FetchChannelListUsecase) {
-        self.usecase = usecase
+    public init(fetchChannelListUsecase: FetchChannelListUsecase, createChannelUsecase: CreateChannelUsecase) {
+        self.fetchChannelListUsecase = fetchChannelListUsecase
+        self.createChannelUsecase = createChannelUsecase
     }
     
     public func transform(input: Input) -> Output {
@@ -57,6 +64,9 @@ public class BroadcastCollectionViewModel: ViewModel {
                 let validness = valid(name)
                 self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
+                if validness.isValid {
+                    channelName = name
+                }
             }
             .store(in: &cancellables)
         
@@ -76,7 +86,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     }
     
     private func fetchData() {
-        usecase.execute()
+        fetchChannelListUsecase.execute()
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { entity in

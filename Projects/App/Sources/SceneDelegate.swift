@@ -49,6 +49,9 @@ extension SceneDelegate {
         let fetchChannelListUsecaseImpl = FetchChannelListUsecaseImpl(repository: liveStationRepository)
         DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecaseImpl)
         
+        let createChannelUsecaseImpl = CreateChannelUsecaseImpl(repository: liveStationRepository)
+        DIContainer.shared.register(CreateChannelUsecase.self, dependency: createChannelUsecaseImpl)
+        
         let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
         let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
         let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
