@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 import BaseFeatureInterface
+import ChatSoketModule
 import ChattingDomainInterface
 import LiveStationDomainInterface
 
@@ -9,13 +10,12 @@ public final class LiveStreamViewModel: ViewModel {
     
     private var subscription = Set<AnyCancellable>()
     
-    // MARK: - 추후 제거
-    let makeChatRoomUseCase: any MakeChatRoomUseCase
-    let deleteChatRoomUseCase: any DeleteChatRoomUseCase
-    let fetchBroadcastUseCase: any FetchVideoListUsecase
+    private let chattingSocket: WebSocket
+    private let channelID: String
+    let fetchVideoListUsecase: any FetchVideoListUsecase
     
     private let output = Output()
-
+    
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
         let sliderValueDidChange: AnyPublisher<Float?, Never>
@@ -23,8 +23,9 @@ public final class LiveStreamViewModel: ViewModel {
         let playerGestureDidTap: AnyPublisher<Void?, Never>
         let playButtonDidTap: AnyPublisher<Void?, Never>
         let dismissButtonDidTap: AnyPublisher<Void?, Never>
-        let chatingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
+        let chattingSendButtonDidTap: AnyPublisher<ChatInfo?, Never>
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
+        let viewDidLoad: AnyPublisher<Void, Never>
     }
     
     public struct Output {
@@ -39,19 +40,18 @@ public final class LiveStreamViewModel: ViewModel {
     }
     
     public init(
-        makeChatRoomUseCase: any MakeChatRoomUseCase,
-        deleteChatRoomUseCase: any DeleteChatRoomUseCase,
-        fetchBroadcastUseCase: any FetchVideoListUsecase,
-        channelID: String
+        channelID: String,
+        chattingSocket: WebSocket = .shared,
+        fetchVideoListUsecase: any FetchVideoListUsecase
     ) {
-        self.makeChatRoomUseCase = makeChatRoomUseCase
-        self.deleteChatRoomUseCase = deleteChatRoomUseCase
-        self.fetchBroadcastUseCase = fetchBroadcastUseCase
-        fetchVideoData(channelID: channelID)
+        self.channelID = channelID
+        self.fetchVideoListUsecase = fetchVideoListUsecase
+        self.chattingSocket = chattingSocket
     }
     
     deinit {
         print("Deinit \(Self.self)")
+        chattingSocket.closeWebSocket()
     }
     
     public func transform(input: Input) -> Output {
@@ -113,11 +113,31 @@ public final class LiveStreamViewModel: ViewModel {
             }
             .store(in: &subscription)
         
-        input.chatingSendButtonDidTap
-            .sink { chatInfo in
-             }
-             .store(in: &subscription)
-      
+        input.viewDidLoad
+            .sink { [weak self] _ in
+                guard let self else { return }
+                fetchVideoData(channelID: channelID)
+                openChattingSocket(output: output)
+                sendEntryMessage()
+                receciveChatMessage(output: output)
+            }
+            .store(in: &subscription)
+        
+        input.chattingSendButtonDidTap
+            .sink { [weak self] chatInfo in
+                guard let chatInfo,
+                      let self else { return }
+                chattingSocket.send(
+                    data: ChatMessage(
+                        type: .CHAT,
+                        content: chatInfo.message,
+                        sender: chatInfo.owner.name,
+                        roomId: channelID
+                    )
+                )
+            }
+            .store(in: &subscription)
+        
         input.autoDissmissDidRegister
             .debounce(for: .seconds(3), scheduler: DispatchQueue.main)
             .sink { _ in
@@ -130,7 +150,7 @@ public final class LiveStreamViewModel: ViewModel {
     }
     
     private func fetchVideoData(channelID: String) {
-        fetchBroadcastUseCase.execute(channelID: channelID)
+        fetchVideoListUsecase.execute(channelID: channelID)
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { entityList in
@@ -140,7 +160,41 @@ public final class LiveStreamViewModel: ViewModel {
                     } else if let lowResolution = entityList.first?.videoURLString {
                         return self.output.videoURLString.send(lowResolution)
                     }
-                    })
+                })
             .store(in: &subscription)
+    }
+}
+
+private extension LiveStreamViewModel {
+    func openChattingSocket(output: Output) {
+        do {
+            try chattingSocket.openWebSocket()
+        } catch {
+            #warning("에러처리")
+        }
+    }
+    
+    func sendEntryMessage() {
+        chattingSocket.send(
+            data: ChatMessage(
+                type: .ENTER,
+                content: nil,
+                sender: "홍길동",
+                roomId: channelID
+            )
+        )
+    }
+    
+    func receciveChatMessage(output: Output) {
+        chattingSocket.receive { chatMessage in
+            guard let chatMessage else { return }
+            var chatList = output.chatList.value
+            if chatMessage.type == .CHAT {
+                chatList.append(ChatInfo(owner: .user(name: chatMessage.sender), message: chatMessage.content ?? ""))
+            } else {
+                chatList.append(ChatInfo(owner: .system, message: chatMessage.content ?? ""))
+            }
+            output.chatList.send(chatList)
+        }
     }
 }

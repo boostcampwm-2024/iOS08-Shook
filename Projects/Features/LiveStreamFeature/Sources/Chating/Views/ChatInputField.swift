@@ -5,10 +5,6 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-protocol ChatInputFieldAction {
-    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> { get }
-}
-
 final class ChatInputField: BaseView {
     private let heartButton = UIButton()
     private let inputField = UITextView()
@@ -19,7 +15,7 @@ final class ChatInputField: BaseView {
     
     private var inputFieldHeightContraint: NSLayoutConstraint!
     
-    @Published private var sendButtonDidTapPublisher: ChatInfo?
+    @Published var sendButtonDidTapPublisher: ChatInfo?
 
     override func setupViews() {
         addSubview(heartButton)
@@ -39,8 +35,12 @@ final class ChatInputField: BaseView {
 
         sendButton.setContentHuggingPriority(.required, for: .horizontal)
         sendButton.setImage(
-            DesignSystemAsset.Image.send24.image.withRenderingMode(.alwaysTemplate),
+            DesignSystemAsset.Image.send24.image.withTintColor(DesignSystemAsset.Color.mainGreen.color),
             for: .normal
+        )
+        sendButton.setImage(
+            DesignSystemAsset.Image.send24.image.withTintColor(.white),
+            for: .disabled
         )
         sendButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
@@ -59,9 +59,9 @@ final class ChatInputField: BaseView {
         inputField.textColor = .white
         
         placeholder.font = .setFont(.body2())
-        placeholder.textColor = .systemGray6
+        placeholder.textColor = DesignSystemAsset.Color.gray.color
         
-        sendButton.tintColor = .white
+        sendButton.isEnabled = false
     }
     
     override func setupLayouts() {
@@ -103,9 +103,9 @@ final class ChatInputField: BaseView {
         sendButton.addAction(
             UIAction { [weak self] _ in
                 guard let self else { return }
-                #warning("Chating User Name 추후 수정")
+                #warning("chatting User Name 추후 수정")
                 sendButtonDidTapPublisher = ChatInfo(
-                    name: "홍길동",
+                    owner: .user(name: "홍길동"),
                     message: inputField.text
                 )
                 inputField.text = ""
@@ -120,22 +120,16 @@ extension ChatInputField: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.isEmpty {
             clipView.layer.borderColor = UIColor.white.cgColor
-            sendButton.tintColor = .white
+            sendButton.isEnabled = false
             placeholder.isHidden = false
         } else {
             clipView.layer.borderColor = DesignSystemAsset.Color.mainGreen.color.cgColor
-            sendButton.tintColor = DesignSystemAsset.Color.mainGreen.color
+            sendButton.isEnabled = true
             placeholder.isHidden = true
         }
         
         inputFieldHeightContraint.constant = textView.contentSize.height
         
         layoutIfNeeded()
-    }
-}
-
-extension ChatInputField: ChatInputFieldAction {
-    var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> {
-        $sendButtonDidTapPublisher.dropFirst().eraseToAnyPublisher()
     }
 }
