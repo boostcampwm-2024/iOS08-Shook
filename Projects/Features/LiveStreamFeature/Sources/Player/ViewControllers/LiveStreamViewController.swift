@@ -29,10 +29,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     
     private lazy var output = viewModel.transform(input: input)
     
-    deinit {
-        print("Deinit \(Self.self)")
-    }
-    
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return output.isExpanded.value ? .landscapeLeft: .portrait
     }
