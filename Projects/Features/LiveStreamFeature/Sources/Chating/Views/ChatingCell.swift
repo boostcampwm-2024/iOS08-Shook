@@ -39,7 +39,7 @@ final class ChattingCell: BaseTableViewCell {
     }
     
     func configure(chat: ChatInfo) {
-        nameLabel.text = chat.name
+        nameLabel.text = chat.owner.name
         detailLabel.text = chat.message
     }
 }

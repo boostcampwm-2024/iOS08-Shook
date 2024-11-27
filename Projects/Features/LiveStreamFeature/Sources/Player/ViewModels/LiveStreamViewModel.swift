@@ -113,28 +113,9 @@ public final class LiveStreamViewModel: ViewModel {
         input.viewDidLoad
             .sink { [weak self] _ in
                 guard let self else { return }
-                
-                do {
-                    try chattingSocket.openWebSocket()
-                } catch {
-                    output.error.send(error)
-                }
-                
-                chattingSocket.send(
-                    data: ChatMessage(
-                        type: .ENTER,
-                        content: "XXX님이 입장하셨습니다.",
-                        sender: channelID,
-                        roomId: channelID
-                    )
-                )
-                
-                chattingSocket.receive { chatMessage in
-                    guard let chatMessage else { return }
-                    var chatList = output.chatList.value
-                    chatList.append(ChatInfo(name: chatMessage.sender, message: chatMessage.content ?? ""))
-                    output.chatList.send(chatList)
-                }
+                openChattingSocket(output: output)
+                sendEntryMessage()
+                receciveChatMessage(output: output)
             }
             .store(in: &subscription)
         
@@ -146,7 +127,7 @@ public final class LiveStreamViewModel: ViewModel {
                     data: ChatMessage(
                         type: .CHAT,
                         content: chatInfo.message,
-                        sender: chatInfo.name,
+                        sender: chatInfo.owner.name,
                         roomId: channelID
                     )
                 )
@@ -162,5 +143,39 @@ public final class LiveStreamViewModel: ViewModel {
             .store(in: &subscription)
         
         return output
+    }
+}
+
+private extension LiveStreamViewModel {
+    func openChattingSocket(output: Output) {
+        do {
+            try chattingSocket.openWebSocket()
+        } catch {
+            output.error.send(error)
+        }
+    }
+    
+    func sendEntryMessage() {
+        chattingSocket.send(
+            data: ChatMessage(
+                type: .ENTER,
+                content: nil,
+                sender: "홍길동",
+                roomId: channelID
+            )
+        )
+    }
+    
+    func receciveChatMessage(output: Output) {
+        chattingSocket.receive { chatMessage in
+            guard let chatMessage else { return }
+            var chatList = output.chatList.value
+            if chatMessage.type == .CHAT {
+                chatList.append(ChatInfo(owner: .user(name: chatMessage.sender), message: chatMessage.content ?? ""))
+            } else {
+                chatList.append(ChatInfo(owner: .system, message: chatMessage.content ?? ""))
+            }
+            output.chatList.send(chatList)
+        }
     }
 }
