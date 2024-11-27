@@ -199,12 +199,9 @@ extension ShookPlayerView {
         switch bufferString {
         case "playbackBufferEmpty":
             indicatorView.startAnimating()
-            
-        case "playbackLikelyToKeepUp", "playbackBufferFull":
-            indicatorView.stopAnimating()
-            
+    
         default:
-            return
+            indicatorView.stopAnimating()
         }
     }
     
@@ -212,6 +209,7 @@ extension ShookPlayerView {
         switch status {
         case .playing:
             playingStateChangedPublisher = true
+            indicatorView.stopAnimating()
             
         case.paused:
             playingStateChangedPublisher = false
