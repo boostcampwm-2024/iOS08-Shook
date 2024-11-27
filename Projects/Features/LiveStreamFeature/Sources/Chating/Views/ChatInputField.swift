@@ -59,7 +59,7 @@ final class ChatInputField: BaseView {
         inputField.textColor = .white
         
         placeholder.font = .setFont(.body2())
-        placeholder.textColor = .systemGray6
+        placeholder.textColor = DesignSystemAsset.Color.gray.color
         
         sendButton.tintColor = .white
     }
@@ -105,7 +105,7 @@ final class ChatInputField: BaseView {
                 guard let self else { return }
                 #warning("chatting User Name 추후 수정")
                 sendButtonDidTapPublisher = ChatInfo(
-                    name: "홍길동",
+                    owner: .user(name: "홍길동"),
                     message: inputField.text
                 )
                 inputField.text = ""

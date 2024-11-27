@@ -11,12 +11,25 @@ final class ChattingListView: BaseView {
     private lazy var dataSource = UITableViewDiffableDataSource<Int, ChatInfo>(
         tableView: chatListView
     ) { tableView, indexPath, chatInfo in
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: ChattingCell.identifier,
-            for: indexPath
-        ) as? ChattingCell ?? ChattingCell()
-        cell.configure(chat: chatInfo)
-        return cell
+        switch chatInfo.owner {
+        case .user:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: ChattingCell.identifier,
+                for: indexPath
+            ) as? ChattingCell ?? ChattingCell()
+            
+            cell.configure(chat: chatInfo)
+            return cell
+            
+        case .system:
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: SystemAlarmCell.identifier,
+                for: indexPath
+            ) as? SystemAlarmCell ?? SystemAlarmCell()
+            
+            cell.configure(content: chatInfo.message)
+            return cell
+        }
     }
     
     override func setupViews() {
@@ -26,6 +39,7 @@ final class ChattingListView: BaseView {
         titleLabel.text = "실시간 채팅"
         
         chatListView.register(ChattingCell.self, forCellReuseIdentifier: ChattingCell.identifier)
+        chatListView.register(SystemAlarmCell.self, forCellReuseIdentifier: SystemAlarmCell.identifier)
         chatListView.backgroundView = chatEmptyView
     }
     
