@@ -77,7 +77,7 @@ extension LiveStationEndpoint: Endpoint {
                     "useDvr": true,
                     "immediateOnAir": true,
                     "record": [
-                        "record.type": "MANUAL_UPLOAD"
+                        "type": "MANUAL_UPLOAD"
                     ],
                     "drmEnabledYn": false,
                     "timemachineMin": 360
