@@ -22,10 +22,11 @@ extension LiveStationEndpoint: Endpoint {
     }
     
     public var header: [String: String]? {
-        [
-            "x-ncp-apigw-timestamp": String(Int(Date().timeIntervalSince1970 * 1000)),
+        let timestamp = String(Int(Date().timeIntervalSince1970 * 1000))
+        return [
+            "x-ncp-apigw-timestamp": timestamp,
             "x-ncp-iam-access-key": config(key: .accessKey),
-            "x-ncp-apigw-signature-v2": makeSignature(),
+            "x-ncp-apigw-signature-v2": makeSignature(with: timestamp),
             "x-ncp-region_code": "KR"
         ]
     }
@@ -37,18 +38,21 @@ extension LiveStationEndpoint: Endpoint {
     public var path: String {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
-        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
+        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/channels/\(channelId)/serviceUrls"
         case let .deleteChannel(channelId): "/api/v2/channels/\(channelId)"
         }
     }
     
     public var requestTask: NetworkModule.RequestTask {
         switch self {
-        case .fetchChannelList: return .empty
+        case .fetchChannelList:
+            return .withParameters(
+                query: ["channelStatus": "PUBLISHING"]
+            )
             
         case .receiveBroadcast:
             return .withParameters(
-                query: ["serviceUrlType": ServiceUrlType.general.rawValue]
+                query: ["serviceUrlType": ServiceUrlType.timemachine.rawValue]
             )
             
         case .fetchThumbnail:
@@ -63,12 +67,12 @@ extension LiveStationEndpoint: Endpoint {
                     "cdn": [
                         "createCdn": false,
                         "cdnType": "GLOBAL_EDGE",
-                        "cdnDomain": config(key: .cdnDomain), /// 확인 후 변경해야함
-                        "profileId": config(key: .profileID), /// 확인 후 변경해야함
-                        "cdnInstanceNo": config(key: .cdnInstanceNo), /// 확인 후 변경해야함
+                        "cdnDomain": config(key: .cdnDomain),
+                        "profileId": config(key: .profileID),
+                        "cdnInstanceNo": config(key: .cdnInstanceNo),
                         "regionType": "KOREA"
                     ],
-                    "qualitySetId": 123, /// 확인 후 변경해야함
+                    "qualitySetId": 4430,
                     "useDvr": true,
                     "immediateOnAir": true,
                     "record": [
@@ -89,13 +93,13 @@ private extension LiveStationEndpoint {
         return "?" + query.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
     }
     
-    func makeSignature() -> String {
+    func makeSignature(with timestamp: String) -> String {
         let space = " "
         let newLine = "\n"
         let method = method
         let accessKey = config(key: .accessKey)
         let secretKey = config(key: .secretKey)
-        let timestamp = String(Int(Date().timeIntervalSince1970 * 1000))  // 밀리초 단위 타임스탬프
+        let timestamp = timestamp
         
         var url = path
         switch requestTask {

@@ -7,7 +7,7 @@ import EasyLayoutModule
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
     private let chattingList = ChattingListView()
-    private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
+    private let playerView: ShookPlayerView = ShookPlayerView()
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     private let bottomGuideView = UIView()
     
@@ -57,6 +57,11 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             NSLayoutConstraint.activate(shrinkConstraints)
             NSLayoutConstraint.deactivate(expandConstraints)
         }
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        playerView.stopPlayback()
     }
     
     public override func setupViews() {
@@ -170,6 +175,15 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .sink { [weak self] _ in
                 guard let self else { return }
                 self.dismiss(animated: true)
+            }
+            .store(in: &subscription)
+        
+        output.videoURLString
+            .sink { urlString in
+                guard let url = URL(string: urlString) else { return }
+                DispatchQueue.main.async {
+                    self.playerView.fetchVideo(m3u8URL: url)
+                }
             }
             .store(in: &subscription)
     }

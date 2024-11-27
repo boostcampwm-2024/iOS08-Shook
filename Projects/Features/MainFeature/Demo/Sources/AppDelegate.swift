@@ -15,7 +15,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let mockUsecase = MockFetchChannelListUsecaseImpl()
         let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
-        
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
         let navigationController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navigationController

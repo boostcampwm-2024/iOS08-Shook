@@ -28,6 +28,9 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private let transitioning = CollectionViewCellTransitioning()
     
+    private let emptyView = BroadcastCollectionEmptyView()
+    private let dataLoadView = BroadcastCollectionLoadView()
+    
     var selectedThumbnailView: ThumbnailView? {
         guard let indexPath = collectionView.indexPathsForSelectedItems?.first else { return nil }
         let cell = collectionView.cellForItem(at: indexPath)
@@ -62,13 +65,16 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationItem.rightBarButtonItem = rightBarButton
         
         collectionView.refreshControl = refreshControl
-        
         collectionView.delegate = self
-        
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
+        collectionView.isHidden = true
         
+        emptyView.isHidden = true
+                
+        view.addSubview(emptyView)
+        view.addSubview(dataLoadView)
         view.addSubview(collectionView)
     }
     
@@ -90,6 +96,14 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     public override func setupLayouts() {
         collectionView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+        
+        emptyView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+        
+        dataLoadView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
     }
@@ -129,8 +143,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 // MARK: - CollectionView Delegate
 extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        #warning("화면 전환 시 선택한 Cell의 channelID 주입")
-        guard let viewController = factory?.make(channelID: "1234") else { return }
+        guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
+        guard let viewController = factory?.make(channelID: channel.id) else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true)
@@ -201,7 +215,7 @@ extension BroadcastCollectionViewController {
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                bigCell.configure(image: item.image, title: item.name)
+                bigCell.configure(channel: item)
                 return bigCell
                 
             case .small:
@@ -211,7 +225,7 @@ extension BroadcastCollectionViewController {
                 ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                smallCell.configure(image: item.image, title: item.name)
+                smallCell.configure(channel: item)
                 return smallCell
             }
         }
@@ -240,6 +254,16 @@ extension BroadcastCollectionViewController {
     }
     
     private func applySnapshot(with channels: [Channel]) {
+        dataLoadView.isHidden = true
+        
+        if channels.isEmpty {
+            collectionView.isHidden = true
+            emptyView.isHidden = false
+        } else {
+            collectionView.isHidden = false
+            emptyView.isHidden = true
+        }
+        
         var snapshot = Snapshot()
         
         let bigSectionItems = Array(channels.prefix(3))
