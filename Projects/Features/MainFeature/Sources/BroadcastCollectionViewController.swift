@@ -69,26 +69,23 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-        collectionView.isHidden = true
         
         emptyView.isHidden = true
                 
+        view.addSubview(collectionView)
         view.addSubview(emptyView)
         view.addSubview(dataLoadView)
-        view.addSubview(collectionView)
     }
     
     public override func setupStyles() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         navigationController?.navigationBar.barTintColor = .black
-        navigationController?.navigationBar.titleTextAttributes = [
-            .foregroundColor: UIColor.white
-        ]
-        
-        navigationController?.navigationBar.largeTitleTextAttributes = [
-            .foregroundColor: UIColor.white
-        ]
+        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
 
-        collectionView.backgroundColor = .black
+        collectionView.isHidden = true
+        collectionView.backgroundColor = .clear
         
         rightBarButton.style = .plain
         rightBarButton.tintColor = DesignSystemAsset.Color.mainGreen.color

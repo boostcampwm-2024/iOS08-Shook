@@ -83,6 +83,12 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .gray
+
+        let appearance = UINavigationBarAppearance()
+        appearance.shadowColor = nil
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
                 
         closeBarButton.style = .plain
         
