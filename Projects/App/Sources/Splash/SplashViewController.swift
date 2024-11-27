@@ -65,20 +65,18 @@ public final class SplashViewController: BaseViewController<SplashViewModel> {
 extension SplashViewController {
     private func startAnimation() {
         // Step 1: 이동 애니메이션 (오른쪽으로 기울어진 상태로 중앙까지 이동)
-        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut]) {
             self.logoImageView.center = self.view.center
             self.logoImageView.transform = CGAffineTransform(rotationAngle: .pi / 12) // 약간 오른쪽으로 기울임
-        }) { _ in
+        } completion: { _ in
             // Step 2: 스프링 애니메이션 (중앙에서 반동 효과)
             UIView.animate(withDuration: 0.6,
                            delay: 0,
                            usingSpringWithDamping: 0.5, // 반동 강도
                            initialSpringVelocity: 0.8, // 초기 속도
-                           options: [],
-                           animations: {
+                           options: []) {
                 self.logoImageView.transform = .identity // 원래 상태로 복귀 (기울기 해제)
-            }) { [weak self] _ in
-                print("move")
+            } completion: { [weak self] _ in
                 self?.moveToMainView()
             }
         }
@@ -92,7 +90,10 @@ extension SplashViewController {
         }
         return window.bounds.width
     }
-    
+}
+
+// MARK: - View Transition
+extension SplashViewController {
     private func moveToMainView() {
         let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
@@ -110,8 +111,8 @@ extension SplashViewController {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else { return }
         
-        UIView.transition(with: window, duration: 0.4, options: .transitionCrossDissolve, animations: {
+        UIView.transition(with: window, duration: 0.4, options: .transitionCrossDissolve) {
             window.rootViewController = navigationController
-        }, completion: nil)
+        }
     }
 }

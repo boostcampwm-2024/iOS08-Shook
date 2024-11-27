@@ -311,7 +311,7 @@ extension SignUpViewController {
         
         var iteration = 0
         let maxIterations = 6
-        let interval: TimeInterval = 0.2
+        let interval = 0.2
         
         Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
             feedbackGenerator.impactOccurred()

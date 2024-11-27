@@ -13,13 +13,13 @@ public final class SplashViewModel: ViewModel {
     
     private var subscriptions = Set<AnyCancellable>()
     
-    public init() {}
+    public init() { }
     
     public func transform(input: Input) -> Output {
         let output = Output()
         
         input.viewDidLoad
-            .compactMap{ $0 }
+            .compactMap { $0 }
             .sink { _ in
                 output.isRunnigAnimation.send(true)
             }
