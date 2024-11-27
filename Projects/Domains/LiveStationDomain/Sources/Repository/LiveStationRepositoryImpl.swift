@@ -16,8 +16,8 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
             .eraseToAnyPublisher()
     }
     
-    public func receiveBroadcast(channelId: String) -> AnyPublisher<[BroadcastEntity], any Error> {
-        return request(.receiveBroadcast(channelId: channelId), type: BroadcastResponseDTO.self)
+    public func fetchBroadcast(channelId: String) -> AnyPublisher<[VideoEntity], any Error> {
+        return request(.receiveBroadcast(channelId: channelId), type: VideoListResponseDTO.self)
             .map { $0.content.map { $0.toDomain() }}
             .eraseToAnyPublisher()
     }
