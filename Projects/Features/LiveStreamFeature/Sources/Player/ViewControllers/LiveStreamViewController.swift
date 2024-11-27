@@ -9,6 +9,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private let chattingList = ChattingListView()
     private let playerView: ShookPlayerView = ShookPlayerView(with: URL(string: "https://bitmovin-a.akamaihd.net/content/art-of-motion_drm/m3u8s/11331.m3u8")!)
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
+    private let bottomGuideView = UIView()
     
     private var shrinkConstraints: [NSLayoutConstraint] = []
     private var expandConstraints: [NSLayoutConstraint] = []
@@ -62,12 +63,15 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         view.addSubview(infoView)
         view.addSubview(playerView)
         view.addSubview(chattingList)
+        view.addSubview(bottomGuideView)
     }
     
     public override func setupStyles() {
         view.backgroundColor = .black
         
         infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
+        
+        bottomGuideView.backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
     
     public override func setupLayouts() {
@@ -96,6 +100,12 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             $0.top(to: infoView.ezl.bottom, offset: 24)
                 .horizontal(to: view)
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
+        }
+        
+        bottomGuideView.ezl.makeConstraint {
+            $0.horizontal(to: view)
+                .bottom(to: view)
+                .top(to: chattingList.ezl.bottom)
         }
     }
     
