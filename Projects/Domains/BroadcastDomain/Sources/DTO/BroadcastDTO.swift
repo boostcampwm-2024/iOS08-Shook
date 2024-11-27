@@ -1,4 +1,4 @@
-struct BroadcastDTO: Encodable {
+struct BroadcastDTO: Codable {
     let id: String
     let title: String
     let owner: String
