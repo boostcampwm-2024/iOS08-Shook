@@ -4,16 +4,16 @@ import BaseDomain
 import NetworkModule
 
 public enum BroadcastEndpoint {
-    case broadcast(id: String, title: String, owner: String, description: String)
-    case all
+    case make(id: String, title: String, owner: String, description: String)
+    case fetchAll
     case delete(id: String)
 }
 
 extension BroadcastEndpoint: Endpoint {
     public var method: NetworkModule.HTTPMethod {
         switch self {
-        case .broadcast: .post
-        case .all: .get
+        case .make: .post
+        case .fetchAll: .get
         case .delete: .delete
         }
     }
@@ -38,15 +38,15 @@ extension BroadcastEndpoint: Endpoint {
     
     public var path: String {
         switch self {
-        case .broadcast: "/broadcast"
-        case .all: "/broadcast/all"
+        case .make: "/broadcast"
+        case .fetchAll: "/broadcast/all"
         case let .delete(id): "/broadcast/delete/\(id)"
         }
     }
     
     public var requestTask: NetworkModule.RequestTask {
         switch self {
-        case let .broadcast(id, title, owner, description): .withObject(
+        case let .make(id, title, owner, description): .withObject(
                 body: BroadcastDTO(
                     id: id,
                     title: title,
@@ -54,7 +54,7 @@ extension BroadcastEndpoint: Endpoint {
                     description: description
                 )
             )
-        case .all: .empty
+        case .fetchAll: .empty
         case .delete: .empty
         }
     }
