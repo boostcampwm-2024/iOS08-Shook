@@ -7,9 +7,7 @@ import DesignSystem
 import EasyLayoutModule
 
 public final class SplashViewController: BaseViewController<SplashViewModel> {
-    
-    private let gradientsColor: [CGColor] = [#colorLiteral(red: 0.08536987752, green: 0.09035866708, blue: 0.1243042126, alpha: 1), #colorLiteral(red: 0.09964027256, green: 0.2065343261, blue: 0.2179464698, alpha: 1)]
-    private let gradientLayer = CAGradientLayer()
+    private let splashGradientView = SplashGradientView()
     private let logoImageView = UIImageView()
     private var subscriptions = Set<AnyCancellable>()
     
@@ -28,25 +26,23 @@ public final class SplashViewController: BaseViewController<SplashViewModel> {
     }
     
     public override func setupViews() {
-        view.layer.addSublayer(gradientLayer)
+        view.addSubview(splashGradientView)
         view.addSubview(logoImageView)
-        gradientLayer.frame = view.bounds
     }
     
     public override func setupStyles() {
         logoImageView.image = DesignSystemAsset.Image.mainLogo.image
         logoImageView.contentMode = .scaleAspectFit
-        gradientLayer.colors = gradientsColor
-        
-        gradientLayer.type = .axial
-        gradientLayer.startPoint = CGPoint(x: 0.8, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.2, y: 1)
     }
     
     public override func setupLayouts() {
         let screenWidth = getScreenWidth()
         let length = screenWidth / 1.5
         logoImageView.frame = CGRect(x: -length + 50, y: view.center.y - (length/2), width: length, height: length) // 화면 왼쪽에서 시작
+        
+        splashGradientView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
     }
     
     public override func setupBind() {
