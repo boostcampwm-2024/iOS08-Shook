@@ -1,12 +1,21 @@
 import LiveStationDomainInterface
 
 struct ChannelInfoResponseDTO: Decodable {
-    let channelId: String
-    let channelName: String
-    let streamKey: String
-    let publishUrl: String
+    struct ContentResponseDTO: Decodable {
+        let channelId: String
+        let channelName: String
+        let streamKey: String
+        let publishUrl: String
+    }
+    
+    let content: ContentResponseDTO
     
     var toDomain: ChannelInfoEntity {
-        ChannelInfoEntity(id: channelId, name: channelName, streamKey: streamKey, rtmpUrl: publishUrl)
+        ChannelInfoEntity(
+            id: content.channelId,
+            name: content.channelName,
+            streamKey: content.streamKey,
+            rtmpUrl: content.publishUrl
+        )
     }
 }
