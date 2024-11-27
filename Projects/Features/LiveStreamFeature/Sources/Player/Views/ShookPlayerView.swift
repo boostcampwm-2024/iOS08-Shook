@@ -27,12 +27,13 @@ private enum BufferStateConstants: String {
 
 final class ShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()
-    private var playerItem: AVPlayerItem
+    private var playerItem: AVPlayerItem?
     
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
     private var isInitialized = false
+    private var isURLSet = false
     
     // MARK: - @Published
     @Published private var playingStateChangedPublisher: Bool?
@@ -52,11 +53,19 @@ final class ShookPlayerView: BaseView {
     
     public let playerControlView: PlayerControlView = PlayerControlView()
     
-    init(with url: URL) {
-        playerItem = AVPlayerItem(url: url)
-        player.replaceCurrentItem(with: playerItem)
+    override init() {
         super.init(frame: .zero)
         addObserver()
+    }
+    
+    func stopPlayback() {
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+    }
+    
+    func fetchVideo(m3u8URL: URL) {
+        playerItem = AVPlayerItem(url: m3u8URL)
+        player.replaceCurrentItem(with: playerItem)
         player.play()
     }
     
@@ -67,7 +76,7 @@ final class ShookPlayerView: BaseView {
     deinit {
         removeObserver()
     }
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -117,7 +126,7 @@ final class ShookPlayerView: BaseView {
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleControlPannel))
         videoContainerView.addGestureRecognizer(tapGesture)
     }
-    
+        
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayer.frame = videoContainerView.bounds
@@ -132,14 +141,14 @@ extension ShookPlayerView {
     }
     
     private func addObserverPlayerItem() {
-        playerItem.addObserver(self,
+        playerItem?.addObserver(self,
                                forKeyPath: #keyPath(AVPlayerItem.status),
                                options: [.old, .new],
                                context: nil) // 동일한 객체를 여러 키 경로에서 관찰할 때 구분하기 위한 식별자
         
-        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
-        playerItem.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue, options: .new, context: nil)
+        playerItem?.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue, options: .new, context: nil)
+        playerItem?.addObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue, options: .new, context: nil)
+        playerItem?.addObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue, options: .new, context: nil)
     }
     
     private func addObserverPlayer() {
@@ -162,16 +171,17 @@ extension ShookPlayerView {
         
         player.removeObserver(self, forKeyPath: "timeControlStatus")
         
-        playerItem.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
-        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
-        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
-        playerItem.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
+        playerItem?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
+        playerItem?.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferEmpty.rawValue)
+        playerItem?.removeObserver(self, forKeyPath: BufferStateConstants.playbackLikelyToKeepUp.rawValue)
+        playerItem?.removeObserver(self, forKeyPath: BufferStateConstants.playbackBufferFull.rawValue)
     }
     
     // MARK: - observeValue Handler
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
+            guard let playerItem else { return }
             playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
             
         case.failed, .unknown:
