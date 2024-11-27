@@ -13,7 +13,7 @@ final class ChatInputField: BaseView {
     
     private let clipView = UIView()
     
-    private var inputFieldHeightContraint: NSLayoutConstraint!
+    private var inputFieldHeightConstraint: NSLayoutConstraint!
     private let heartLayer = CAEmitterLayer()
     private var heartEmitterCell = CAEmitterCell()
     
@@ -99,9 +99,9 @@ final class ChatInputField: BaseView {
                 .height(max: 100)
         }
         
-        inputFieldHeightContraint = inputField.heightAnchor.constraint(equalToConstant: 20)
-        inputFieldHeightContraint.priority = .defaultLow
-        inputFieldHeightContraint.isActive = true
+        inputFieldHeightConstraint = inputField.heightAnchor.constraint(equalToConstant: 20)
+        inputFieldHeightConstraint.priority = .defaultLow
+        inputFieldHeightConstraint.isActive = true
         
         placeholder.ezl.makeConstraint {
             $0.top(to: inputField)
@@ -118,7 +118,6 @@ final class ChatInputField: BaseView {
         sendButton.addAction(
             UIAction { [weak self] _ in
                 guard let self else { return }
-                #warning("chatting User Name 추후 수정")
                 sendButtonDidTapPublisher = ChatInfo(
                     owner: .user(name: "홍길동"),
                     message: inputField.text
@@ -159,7 +158,7 @@ extension ChatInputField: UITextViewDelegate {
             placeholder.isHidden = true
         }
         
-        inputFieldHeightContraint.constant = textView.contentSize.height
+        inputFieldHeightConstraint.constant = textView.contentSize.height
         
         layoutIfNeeded()
     }
