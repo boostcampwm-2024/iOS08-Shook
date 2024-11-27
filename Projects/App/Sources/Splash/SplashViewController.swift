@@ -97,8 +97,7 @@ extension SplashViewController {
     private func moveToMainView() {
         let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
-        let mockUsecase = MockFetchChannelListUsecaseImpl()
-        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let viewModel = BroadcastCollectionViewModel(usecase: usecase)
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)
         
