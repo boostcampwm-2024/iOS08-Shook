@@ -4,6 +4,7 @@ import UIKit
 import AuthFeature
 import BaseFeature
 import BaseFeatureInterface
+import ChattingDomainInterface
 import DesignSystem
 import EasyLayoutModule
 import LiveStationDomainInterface
@@ -98,11 +99,13 @@ extension SplashViewController {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
         let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
+        let makeChatRoomUsecase = DIContainer.shared.resolve(MakeChatRoomUseCase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: fetchChannelListUsecase,
             createChannelUsecase: createChannelUsecase,
-            fetchChannelInfoUsecase: fetchChannelInfoUsecase
+            fetchChannelInfoUsecase: fetchChannelInfoUsecase,
+            makeChatRoomUsecase: makeChatRoomUsecase
         )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)

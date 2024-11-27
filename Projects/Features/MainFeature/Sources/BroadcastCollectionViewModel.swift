@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 import BaseFeatureInterface
+import ChattingDomainInterface
 import LiveStationDomainInterface
 
 public struct Channel: Hashable {
@@ -31,6 +32,7 @@ public class BroadcastCollectionViewModel: ViewModel {
         let errorMessage: PassthroughSubject<String?, Never> = .init()
         let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
         let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
+        let isReadyToStream: PassthroughSubject<Bool, Never> = .init()
     }
     
     private let output = Output()
@@ -38,6 +40,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let createChannelUsecase: any CreateChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
+    private let makeChatRoomUsecase: any MakeChatRoomUseCase
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -50,11 +53,13 @@ public class BroadcastCollectionViewModel: ViewModel {
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
         createChannelUsecase: CreateChannelUsecase,
-        fetchChannelInfoUsecase: FetchChannelInfoUsecase
+        fetchChannelInfoUsecase: FetchChannelInfoUsecase,
+        makeChatRoomUsecase: MakeChatRoomUseCase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
+        self.makeChatRoomUsecase = makeChatRoomUsecase
     }
     
     public func transform(input: Input) -> Output {
