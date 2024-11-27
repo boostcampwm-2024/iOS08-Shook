@@ -38,14 +38,17 @@ extension LiveStationEndpoint: Endpoint {
     public var path: String {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
-        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/broadcasts/\(channelId)/serviceUrls"
+        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/channels/\(channelId)/serviceUrls"
         case let .deleteChannel(channelId): "/api/v2/channels/\(channelId)"
         }
     }
     
     public var requestTask: NetworkModule.RequestTask {
         switch self {
-        case .fetchChannelList: return .empty
+        case .fetchChannelList:
+            return .withParameters(
+                query: ["channelStatus": "PUBLISHING"]
+            )
             
         case .receiveBroadcast:
             return .withParameters(

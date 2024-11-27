@@ -45,14 +45,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate {
     private func registerDependencies() {
+        let liveStationRepository = LiveStationRepositoryImpl()
+        let fetchChannelListUsecaseImpl = FetchChannelListUsecaseImpl(repository: liveStationRepository)
+        DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecaseImpl)
+        
         let chatRepositoryImpl: any ChatRepository = ChatRepositoryImpl()
         let makeRoomUseCase: any MakeChatRoomUseCase = MakeChatRoomUseCaseImpl(repository: chatRepositoryImpl)
         let deleteRoomUseCase: any DeleteChatRoomUseCase = DeleteChatRoomUseCaseImpl(repository: chatRepositoryImpl)
-        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase)
+        let fetchBroadcastUseCase: any FetchVideoListUsecase = FetchVideoListUsecaseImpl(repository: liveStationRepository)
+        let liveStreamFactoryImpl = LiveStreamViewControllerFractoryImpl(makeChatRoomUseCase: makeRoomUseCase, deleteChatRoomUseCase: deleteRoomUseCase, fetchBroadcastUseCase: fetchBroadcastUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
-        
-        let liveStationRepository = LiveStationRepositoryImpl()
-        let fetchChannelListUsecase = FetchChannelListUsecaseImpl(repository: liveStationRepository)
-        DIContainer.shared.register(FetchChannelListUsecase.self, dependency: fetchChannelListUsecase)
     }
 }
