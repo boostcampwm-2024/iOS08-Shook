@@ -32,8 +32,6 @@ final class ShookPlayerView: BaseView {
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
-    private var isInitialized = false
-    private var isURLSet = false
     
     // MARK: - @Published
     @Published private var playingStateChangedPublisher: Bool?
@@ -55,7 +53,6 @@ final class ShookPlayerView: BaseView {
     
     override init() {
         super.init(frame: .zero)
-        addObserver()
     }
     
     func stopPlayback() {
@@ -66,6 +63,7 @@ final class ShookPlayerView: BaseView {
     func fetchVideo(m3u8URL: URL) {
         playerItem = AVPlayerItem(url: m3u8URL)
         player.replaceCurrentItem(with: playerItem)
+        addObserver()
         player.play()
     }
     
@@ -182,8 +180,12 @@ extension ShookPlayerView {
         switch status {
         case .readyToPlay: // 성공
             guard let playerItem else { return }
-            playerControlView.timeControlView.maxValue = Float(CMTimeGetSeconds(playerItem.duration))
-            
+            guard let item = player.currentItem else {
+                return
+            }
+    
+            let seekableDuration = item.seekableTimeRanges.last?.timeRangeValue.end.seconds ?? 0.0
+            playerControlView.timeControlView.maxValue = Float(seekableDuration) // HLS 사용 시 seek 가능한 영역 갱신
         case.failed, .unknown:
         #warning("에러")
             break
@@ -197,12 +199,9 @@ extension ShookPlayerView {
         switch bufferString {
         case "playbackBufferEmpty":
             indicatorView.startAnimating()
-            
-        case "playbackLikelyToKeepUp", "playbackBufferFull":
-            indicatorView.stopAnimating()
-            
+    
         default:
-            return
+            indicatorView.stopAnimating()
         }
     }
     
@@ -210,6 +209,7 @@ extension ShookPlayerView {
         switch status {
         case .playing:
             playingStateChangedPublisher = true
+            indicatorView.stopAnimating()
             
         case.paused:
             playingStateChangedPublisher = false
