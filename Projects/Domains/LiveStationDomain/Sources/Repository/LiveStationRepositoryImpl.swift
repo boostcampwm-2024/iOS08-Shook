@@ -33,4 +33,10 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
             .map { $0.toDomain() }
             .eraseToAnyPublisher()
     }
+    
+    public func fetchChannelInfo(id: String) -> AnyPublisher<ChannelInfoEntity, any Error> {
+        return request(.fetchChannelInfo(channelId: id), type: ChannelInfoResponseDTO.self)
+            .map { $0.toDomain }
+            .eraseToAnyPublisher()
+    }
 }
