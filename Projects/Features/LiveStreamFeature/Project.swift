@@ -13,6 +13,7 @@ let project = Project.module(
             .feature(target: .BaseFeature),
             .domain(target: .LiveStationDomain, type: .interface),
             .domain(target: .ChattingDomain, type: .interface),
+            .domain(target: .BroadcastDomain, type: .interface),
             .module(target: .ChatSoketModule)
         ]),
         .tests(module: .feature(.LiveStreamFeature), dependencies: [
