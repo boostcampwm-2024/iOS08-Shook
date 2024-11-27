@@ -9,5 +9,5 @@ public extension TargetDependency.SPM {
     // ex) static let Moya = TargetDependency.external(name: "Moya")
     
     static let HaishinKit = TargetDependency.external(name: "HaishinKit")
- 
+    static let Lottie = TargetDependency.external(name: "Lottie")
 }
