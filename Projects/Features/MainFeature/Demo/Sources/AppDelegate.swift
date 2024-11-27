@@ -16,9 +16,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
         
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        window?.rootViewController = navigationController
+//        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
+//        let navigationController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = SplashViewController(viewModel: SplashViewModel())
         window?.makeKeyAndVisible()
         
         return true
