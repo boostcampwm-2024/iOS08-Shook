@@ -307,15 +307,18 @@ extension BroadcastCollectionViewController {
     }
     
     private func dismissBroadcastUIView() {
-        guard let broadcastViewController = children.first(where: { $0 is BroadcastUIViewController }) else { return }
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
-            broadcastViewController.view.alpha = 0 }, completion: { _ in
-                broadcastViewController.willMove(toParent: nil)
-                broadcastViewController.view.removeFromSuperview()
-                broadcastViewController.removeFromParent()
-            }
-        )
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        input.fetch.send()
+#warning("메인스레드 오류 해결")
+        DispatchQueue.main.async { [weak self] in
+            guard let broadcastViewController = self?.children.first(where: { $0 is BroadcastUIViewController }) else { return }
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+                broadcastViewController.view.alpha = 0 }, completion: { _ in
+                    broadcastViewController.willMove(toParent: nil)
+                    broadcastViewController.view.removeFromSuperview()
+                    broadcastViewController.removeFromParent()
+                }
+            )
+            self?.navigationController?.setNavigationBarHidden(false, animated: false)
+            self?.input.fetch.send()
+        }
     }
 }

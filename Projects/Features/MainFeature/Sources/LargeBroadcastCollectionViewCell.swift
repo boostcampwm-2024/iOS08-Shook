@@ -8,8 +8,9 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     let thumbnailView = ThumbnailView(with: .large)
     
     private let titleLabel = UILabel()
+    private let descriptionLabel = UILabel()
     private let liveBadgeLabel = PaddingLabel()
-    
+        
     override func setupViews() {
         liveBadgeLabel.text = "L I V E"
         
@@ -17,6 +18,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         
         contentView.addSubview(thumbnailView)
         contentView.addSubview(titleLabel)
+        contentView.addSubview(descriptionLabel)
         contentView.addSubview(liveBadgeLabel)
     }
     
@@ -29,6 +31,11 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         
         titleLabel.ezl.makeConstraint {
             $0.top(to: thumbnailView.imageView.ezl.bottom, offset: 6)
+                .horizontal(to: contentView, padding: 20)
+        }
+        
+        descriptionLabel.ezl.makeConstraint {
+            $0.top(to: titleLabel.ezl.bottom, offset: 6)
                 .horizontal(to: contentView, padding: 20)
                 .bottom(to: contentView)
         }
@@ -52,11 +59,17 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
+        
+        descriptionLabel.font = .setFont(.body2())
+        descriptionLabel.textColor = .white
+        descriptionLabel.numberOfLines = 2
+        descriptionLabel.lineBreakMode = .byWordWrapping
     }
     
     func configure(channel: Channel) {
         loadAsyncImage(with: channel.thumbnailImageURLString)
         self.titleLabel.text = channel.name
+        self.descriptionLabel.text = "\(channel.owner) • \(channel.description)"
     }
     
     private func loadAsyncImage(with imageURLString: String) {

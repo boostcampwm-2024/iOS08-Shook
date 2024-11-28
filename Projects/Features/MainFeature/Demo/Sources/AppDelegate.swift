@@ -12,8 +12,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let mockUsecase = MockFetchChannelListUsecaseImpl()
-        let viewModel = BroadcastCollectionViewModel(usecase: mockUsecase)
+        let mockFetchChannelListUsecase = MockFetchChannelListUsecaseImpl()
+        let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
+        let mockDeleteChannelUsecase = MockDeleteChannelUsecaseImpl()
+        let mockFetchChannelInfoUsecase = MockFetchChannelInfoUsecaseImpl()
+        let mockmakeBroadcastUsecase = MockMakeBroadcastUsecaseImpl()
+        let mockFetchAllBroadcastUsecase = MockFetchAllBroadcastUsecaseImpl()
+        let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecaseImpl()
+        let viewModel = BroadcastCollectionViewModel(
+            fetchChannelListUsecase: mockFetchChannelListUsecase,
+            createChannelUsecase: mockCreateChannelUsecase,
+            deleteChannelUsecase: mockDeleteChannelUsecase,
+            fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
+            makeBroadcastUsecase: mockmakeBroadcastUsecase,
+            fetchAllBroadcastUsecase: mockFetchAllBroadcastUsecase,
+            deleteBroadCastUsecase: mockDeleteBroadcastUsecase
+        )
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -23,3 +37,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
+
+

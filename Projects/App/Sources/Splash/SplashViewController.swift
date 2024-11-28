@@ -4,6 +4,7 @@ import UIKit
 import AuthFeature
 import BaseFeature
 import BaseFeatureInterface
+import BroadcastDomainInterface
 import DesignSystem
 import EasyLayoutModule
 import LiveStationDomainInterface
@@ -95,9 +96,23 @@ extension SplashViewController {
 // MARK: - View Transition
 extension SplashViewController {
     private func moveToMainView() {
-        let usecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
+        let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
+        let deleteChannelUsecase = DIContainer.shared.resolve(DeleteChannelUsecase.self)
+        let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
+        let makeBroadcastUsecase = DIContainer.shared.resolve(MakeBroadcastUsecase.self)
+        let fetchAllBroadcastUsecase = DIContainer.shared.resolve(FetchAllBroadcastUsecase.self)
+        let deleteBroadCastUsecase = DIContainer.shared.resolve(DeleteBroadcastUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
-        let viewModel = BroadcastCollectionViewModel(usecase: usecase)
+        let viewModel = BroadcastCollectionViewModel(
+            fetchChannelListUsecase: fetchChannelListUsecase,
+            createChannelUsecase: createChannelUsecase,
+            deleteChannelUsecase: deleteChannelUsecase,
+            fetchChannelInfoUsecase: fetchChannelInfoUsecase,
+            makeBroadcastUsecase: makeBroadcastUsecase,
+            fetchAllBroadcastUsecase: fetchAllBroadcastUsecase,
+            deleteBroadCastUsecase: deleteBroadCastUsecase
+        )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)
         

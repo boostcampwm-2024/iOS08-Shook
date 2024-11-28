@@ -15,7 +15,7 @@ final class SampleHandler: RPBroadcastSampleHandler {
     
     // MARK: - RTMP Service URL and Streaming key
     private let rtmp = "RTMP_SEVICE_URL"
-    private let key = "STREAMING_KEY"
+    private let streamKey = "STREAMING_KEY"
     
     override func broadcastStarted(withSetupInfo setupInfo: [String: NSObject]?) {
         Task {
@@ -25,8 +25,12 @@ final class SampleHandler: RPBroadcastSampleHandler {
             
             await stream.setVideoSettings(videoSettings)
             await mixer.addOutput(stream)
-            _ = try await connection.connect(rtmp)
-            _ = try await stream.publish(key)
+            
+            guard let rtmpURL = sharedDefaults.string(forKey: rtmp),
+                  let streamKey = sharedDefaults.string(forKey: streamKey) else { return }
+            
+            _ = try await connection.connect(rtmpURL)
+            _ = try await stream.publish(streamKey)
         }
         
         sharedDefaults.set(true, forKey: self.isStreamingKey)

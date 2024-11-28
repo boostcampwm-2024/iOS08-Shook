@@ -9,6 +9,8 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     
     private let descriptionStack = UIStackView()
     private let titleLabel = UILabel()
+    private let ownerLabel = UILabel()
+    private let descriptionLabel = UILabel()
     private let liveBadgeLabel = PaddingLabel()
 
     override func setupViews() {
@@ -19,6 +21,8 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         contentView.addSubview(descriptionStack)
         
         descriptionStack.addArrangedSubview(titleLabel)
+        descriptionStack.addArrangedSubview(ownerLabel)
+        descriptionStack.addArrangedSubview(descriptionLabel)
     }
     
     override func setupLayouts() {
@@ -56,11 +60,20 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.font = .setFont(.body2())
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
+        
+        ownerLabel.font = .setFont(.caption2())
+        ownerLabel.textColor = .white
+        
+        descriptionLabel.font = .setFont(.caption2())
+        descriptionLabel.textColor = .white
+        descriptionLabel.numberOfLines = 2
     }
     
     func configure(channel: Channel) {
         loadAsyncImage(with: channel.thumbnailImageURLString)
         self.titleLabel.text = channel.name
+        self.ownerLabel.text = channel.owner
+        self.descriptionLabel.text = channel.description
     }
     
     private func loadAsyncImage(with imageURLString: String) {

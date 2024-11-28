@@ -10,12 +10,13 @@ public enum LiveStationEndpoint {
     case fetchThumbnail(channelId: String)
     case makeChannel(channelName: String)
     case deleteChannel(channelId: String)
+    case fetchChannelInfo(channelId: String)
 }
 
 extension LiveStationEndpoint: Endpoint {
     public var method: NetworkModule.HTTPMethod {
         switch self {
-        case .fetchChannelList, .receiveBroadcast, .fetchThumbnail: .get
+        case .fetchChannelList, .receiveBroadcast, .fetchThumbnail, .fetchChannelInfo: .get
         case .makeChannel: .post
         case .deleteChannel: .delete
         }
@@ -39,7 +40,7 @@ extension LiveStationEndpoint: Endpoint {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
         case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/channels/\(channelId)/serviceUrls"
-        case let .deleteChannel(channelId): "/api/v2/channels/\(channelId)"
+        case let .deleteChannel(channelId), let .fetchChannelInfo(channelId): "/api/v2/channels/\(channelId)"
         }
     }
     
@@ -76,14 +77,14 @@ extension LiveStationEndpoint: Endpoint {
                     "useDvr": true,
                     "immediateOnAir": true,
                     "record": [
-                        "record.type": "MANUAL_UPLOAD"
+                        "type": "MANUAL_UPLOAD"
                     ],
                     "drmEnabledYn": false,
                     "timemachineMin": 360
                 ]
             )
             
-        case .deleteChannel: return .empty
+        case .deleteChannel, .fetchChannelInfo: return .empty
         }
     }
 }

@@ -75,6 +75,7 @@ final class ChatInputField: BaseView {
         
         placeholder.font = .setFont(.body2())
         placeholder.textColor = DesignSystemAsset.Color.gray.color
+        placeholder.alpha = 0.5
         
         sendButton.isEnabled = false
     }
@@ -117,9 +118,10 @@ final class ChatInputField: BaseView {
     override func setupActions() {
         sendButton.addAction(
             UIAction { [weak self] _ in
-                guard let self else { return }
+                guard let self,
+                      let userName = UserDefaults.standard.string(forKey: "USER_NAME")  else { return }
                 sendButtonDidTapPublisher = ChatInfo(
-                    owner: .user(name: "홍길동"),
+                    owner: .user(name: userName),
                     message: inputField.text
                 )
                 inputField.text = ""

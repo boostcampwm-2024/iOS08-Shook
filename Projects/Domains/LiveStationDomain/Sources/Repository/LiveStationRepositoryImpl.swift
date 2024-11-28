@@ -24,13 +24,19 @@ public final class LiveStationRepositoryImpl: BaseRepository<LiveStationEndpoint
   
     public func createChannel(name: String) -> AnyPublisher<ChannelEntity, any Error> {
         return request(.makeChannel(channelName: name), type: ChannelResponseDTO.self)
-            .map { $0.toDomain() }
+            .map { $0.content.toDomain() }
             .eraseToAnyPublisher()
     }
     
     public func deleteChannel(id: String) -> AnyPublisher<ChannelEntity, any Error> {
         return request(.deleteChannel(channelId: id), type: ChannelResponseDTO.self)
-            .map { $0.toDomain() }
+            .map { $0.content.toDomain() }
+            .eraseToAnyPublisher()
+    }
+    
+    public func fetchChannelInfo(id: String) -> AnyPublisher<ChannelInfoEntity, any Error> {
+        return request(.fetchChannelInfo(channelId: id), type: ChannelInfoResponseDTO.self)
+            .map { $0.toDomain }
             .eraseToAnyPublisher()
     }
 }

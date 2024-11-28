@@ -23,7 +23,6 @@ extension Target {
         scripts: generationEnvironment.scripts,
         dependencies: [
             .domain(target: .LiveStationDomain),
-            .domain(target: .ChattingDomain),
             .domain(target: .BroadcastDomain),
             .feature(target: .AuthFeature),
             .feature(target: .MainFeature),
