@@ -39,6 +39,7 @@ public extension ModulePaths {
 
 public extension ModulePaths {
     enum Domain: String, ModularPathConvertable {
+        case BroadcastDomain
         case ChattingDomain
         case LiveStationDomain
         case BaseDomain
