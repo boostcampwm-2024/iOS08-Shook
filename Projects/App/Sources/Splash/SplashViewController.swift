@@ -98,12 +98,14 @@ extension SplashViewController {
     private func moveToMainView() {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
+        let deleteChannelUsecase = DIContainer.shared.resolve(DeleteChannelUsecase.self)
         let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
         let makeChatRoomUsecase = DIContainer.shared.resolve(MakeChatRoomUseCase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: fetchChannelListUsecase,
             createChannelUsecase: createChannelUsecase,
+            deleteChannelUsecase: deleteChannelUsecase,
             fetchChannelInfoUsecase: fetchChannelInfoUsecase,
             makeChatRoomUsecase: makeChatRoomUsecase
         )

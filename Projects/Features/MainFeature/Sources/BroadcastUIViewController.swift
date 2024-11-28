@@ -103,6 +103,6 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     
     private func didFinishBroadCast() {
         dismiss(animated: false)
-        viewModelInput.didTapEndStreamingButton.send()
+        viewModelInput.didTapFinishStreamingButton.send()
     }
 }
