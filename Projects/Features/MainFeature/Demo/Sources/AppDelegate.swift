@@ -14,11 +14,13 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let mockFetchChannelListUsecase = MockFetchChannelListUsecaseImpl()
         let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
+        let mockDeleteChannelUsecase = MockDeleteChannelUsecaseImpl()
         let mockFetchChannelInfoUsecase = MockFetchChannelInfoUsecaseImpl()
         let mockMakeChatRoomUseCase = MockMakeChatRoomUseCaseImpl()
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: mockFetchChannelListUsecase,
             createChannelUsecase: mockCreateChannelUsecase,
+            deleteChannelUsecase: mockDeleteChannelUsecase,
             fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
             makeChatRoomUsecase: mockMakeChatRoomUseCase
         )
