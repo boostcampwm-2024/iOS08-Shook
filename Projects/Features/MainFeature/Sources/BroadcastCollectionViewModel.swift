@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 import BaseFeatureInterface
+import BroadcastDomainInterface
 import ChattingDomainInterface
 import LiveStationDomainInterface
 
@@ -42,6 +43,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let deleteChannelUsecase: any DeleteChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     private let makeChatRoomUsecase: any MakeChatRoomUseCase
+    private let deleteBroadCastUsecase: any DeleteBroadcastUsecase
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -57,13 +59,15 @@ public class BroadcastCollectionViewModel: ViewModel {
         createChannelUsecase: CreateChannelUsecase,
         deleteChannelUsecase: DeleteChannelUsecase,
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
-        makeChatRoomUsecase: MakeChatRoomUseCase
+        makeChatRoomUsecase: MakeChatRoomUseCase,
+        deleteBroadCastUsecase: DeleteBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
         self.deleteChannelUsecase = deleteChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeChatRoomUsecase = makeChatRoomUsecase
+        self.deleteBroadCastUsecase = deleteBroadCastUsecase
     }
     
     public func transform(input: Input) -> Output {
@@ -93,8 +97,9 @@ public class BroadcastCollectionViewModel: ViewModel {
         
         input.didTapFinishStreamingButton
             .flatMap { [weak self] _ in
-                guard let self, let channel else { return Empty<Void, Error>().eraseToAnyPublisher() }
+                guard let self, let channel else { return Empty<(Void, Void), Error>().eraseToAnyPublisher() }
                 return deleteChannelUsecase.execute(channelID: channel.id)
+                    .zip(deleteBroadCastUsecase.execute(id: channel.id))
                     .eraseToAnyPublisher()
             }
             .sink { _ in
@@ -112,6 +117,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .flatMap { [weak self] in
                 guard let self else { return Empty<(ChannelInfoEntity, Void), Error>().eraseToAnyPublisher() }
+                channel = $0
                 return fetchChannelInfoUsecase.execute(channelID: $0.id)
                     .zip(makeChatRoomUsecase.execute(id: $0.id))
                     .eraseToAnyPublisher()
