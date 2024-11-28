@@ -22,9 +22,7 @@ final class ChatEmptyView: BaseView {
         subtitleLabel.text = "첫 댓글로 스트리머와 소통을 시작해보세요!"
     }
     
-    override func setupStyles() {
-        backgroundColor = .clear
-        
+    override func setupStyles() {        
         titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         

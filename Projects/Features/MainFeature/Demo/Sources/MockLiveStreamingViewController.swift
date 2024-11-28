@@ -41,10 +41,6 @@ public final class MockLiveStreamViewController: BaseViewController<MockLiveStre
         }
     }
     
-    public override func setupStyles() {
-        view.backgroundColor = .black
-    }
-    
     @objc private func didTapDismissButton() {
         dismiss(animated: true, completion: nil)
     }

@@ -113,9 +113,7 @@ final class ShookPlayerView: BaseView {
     
     override func setupStyles() {
         playerControlView.alpha = .zero
-        
-        videoContainerView.backgroundColor = .black
-        
+                
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color
         indicatorView.hidesWhenStopped = true
     }

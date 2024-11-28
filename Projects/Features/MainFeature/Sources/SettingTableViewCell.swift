@@ -36,11 +36,9 @@ final class SettingTableViewCell: BaseTableViewCell {
     
     override func setupStyles() {
         selectionStyle = .none
-        contentView.backgroundColor = .black
         
         infoInputStackView.axis = .horizontal
         infoInputStackView.spacing = 10
-        infoInputStackView.backgroundColor = .black
         
         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
@@ -51,7 +49,6 @@ final class SettingTableViewCell: BaseTableViewCell {
         inputTextView.textContainerInset = .zero
         inputTextView.isScrollEnabled = false
         inputTextView.font = .setFont(.body1(weight: .regular))
-        inputTextView.backgroundColor = .black
         
         placeholderLabel.font = .setFont(.body1(weight: .regular))
         placeholderLabel.textColor = DesignSystemAsset.Color.gray.color

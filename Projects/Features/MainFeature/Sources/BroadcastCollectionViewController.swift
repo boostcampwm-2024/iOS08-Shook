@@ -80,7 +80,6 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     public override func setupStyles() {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
 
