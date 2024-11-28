@@ -59,6 +59,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
             .store(in: &cancellables)
         
         output.isReadyToStream
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isReady in
                 if isReady {
                     guard let self,
