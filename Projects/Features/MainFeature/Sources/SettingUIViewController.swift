@@ -23,7 +23,12 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     private let viewModelInput = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
         if keyPath == viewModel.isStreamingKey {
             if let newValue = change?[.newKey] as? Bool, newValue == true {
                 didStartBroadCast()
@@ -50,6 +55,19 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
             .sink { [weak self] errorMessage in
                 guard let self else { return }
                 self.streamingNameCell.setErrorMessage(message: errorMessage)
+            }
+            .store(in: &cancellables)
+        
+        output.isReadyToStream
+            .sink { [weak self] isReady in
+                if isReady {
+                    guard let self,
+                          let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    broadcastPickerButton.sendActions(for: .touchUpInside)
+                } else {
+                    #warning("채널 준비중일 경우 처리하는 곳")
+                }
             }
             .store(in: &cancellables)
     }
@@ -138,9 +156,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     /// 방송 시작 버튼이 눌렸을 때 호출되는 메서드
     @objc
     private func didTapStartBroadcastButton() {
-        guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        broadcastPickerButton.sendActions(for: .touchUpInside)
+        viewModelInput.didTapStartBroadcastButton.send()
     }
     
     private func didStartBroadCast() {

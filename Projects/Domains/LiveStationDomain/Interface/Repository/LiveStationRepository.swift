@@ -6,4 +6,5 @@ public protocol LiveStationRepository {
     func fetchBroadcast(channelId: String) -> AnyPublisher<[VideoEntity], any Error>
     func createChannel(name: String) -> AnyPublisher<ChannelEntity, any Error>
     func deleteChannel(id: String) -> AnyPublisher<ChannelEntity, any Error>
+    func fetchChannelInfo(id: String) -> AnyPublisher<ChannelInfoEntity, any Error>
 }

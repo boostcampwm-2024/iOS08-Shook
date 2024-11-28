@@ -2,6 +2,7 @@ import Combine
 import UIKit
 
 import BaseFeatureInterface
+import ChattingDomainInterface
 import LiveStationDomainInterface
 
 public struct Channel: Hashable {
@@ -22,6 +23,7 @@ public class BroadcastCollectionViewModel: ViewModel {
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
         let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
         let didTapEndStreamingButton: PassthroughSubject<Void, Never> = .init()
+        let didTapStartBroadcastButton: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
@@ -30,18 +32,34 @@ public class BroadcastCollectionViewModel: ViewModel {
         let errorMessage: PassthroughSubject<String?, Never> = .init()
         let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
         let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
+        let isReadyToStream: PassthroughSubject<Bool, Never> = .init()
     }
     
     private let output = Output()
-    private let usecase: any FetchChannelListUsecase
+    
+    private let fetchChannelListUsecase: any FetchChannelListUsecase
+    private let createChannelUsecase: any CreateChannelUsecase
+    private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
+    private let makeChatRoomUsecase: any MakeChatRoomUseCase
+    
     private var cancellables = Set<AnyCancellable>()
     
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
     let isStreamingKey = "isStreaming"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+    
+    private var channelName: String = ""
 
-    public init(usecase: FetchChannelListUsecase) {
-        self.usecase = usecase
+    public init(
+        fetchChannelListUsecase: FetchChannelListUsecase,
+        createChannelUsecase: CreateChannelUsecase,
+        fetchChannelInfoUsecase: FetchChannelInfoUsecase,
+        makeChatRoomUsecase: MakeChatRoomUseCase
+    ) {
+        self.fetchChannelListUsecase = fetchChannelListUsecase
+        self.createChannelUsecase = createChannelUsecase
+        self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
+        self.makeChatRoomUsecase = makeChatRoomUsecase
     }
     
     public func transform(input: Input) -> Output {
@@ -57,6 +75,9 @@ public class BroadcastCollectionViewModel: ViewModel {
                 let validness = valid(name)
                 self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
+                if validness.isValid {
+                    channelName = name
+                }
             }
             .store(in: &cancellables)
         
@@ -72,11 +93,30 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
+        input.didTapStartBroadcastButton
+            .flatMap { [weak self] _ in
+                guard let self else { return Empty<ChannelEntity, Error>().eraseToAnyPublisher() }
+                output.isReadyToStream.send(false)
+                return createChannelUsecase.execute(name: channelName)
+                    
+            }
+            .flatMap { [weak self] in
+                guard let self else { return Empty<(ChannelInfoEntity, Void), Error>().eraseToAnyPublisher() }
+                return fetchChannelInfoUsecase.execute(channelID: $0.id)
+                    .zip(makeChatRoomUsecase.execute(id: $0.id))
+                    .eraseToAnyPublisher()
+            }
+            .sink { _ in
+            } receiveValue: { [weak self] (channelInfo) in
+                self?.output.isReadyToStream.send(true)
+            }
+            .store(in: &cancellables)
+
         return output
     }
     
     private func fetchData() {
-        usecase.execute()
+        fetchChannelListUsecase.execute()
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { entity in
