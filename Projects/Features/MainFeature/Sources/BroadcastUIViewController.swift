@@ -19,7 +19,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let viewModelInput = BroadcastCollectionViewModel.Input()
     
     public override func setupBind() {
-        let _ = viewModel.transform(input: viewModelInput)
+        _ = viewModel.transform(input: viewModelInput)
     }
     
     private var broadcastPicker = RPSystemBroadcastPickerView()

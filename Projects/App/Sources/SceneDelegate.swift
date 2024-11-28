@@ -2,8 +2,6 @@ import UIKit
 
 import BroadcastDomain
 import BroadcastDomainInterface
-import ChattingDomain
-import ChattingDomainInterface
 import LiveStationDomain
 import LiveStationDomainInterface
 import LiveStreamFeature
@@ -64,10 +62,6 @@ extension SceneDelegate {
         let deleteBroadCastUsecaseImpl = DeleteBroadcastUsecaseImpl(repository: broadcastRepository)
         DIContainer.shared.register(DeleteBroadcastUsecase.self, dependency: deleteBroadCastUsecaseImpl)
 
-        let chatRepository = ChatRepositoryImpl()
-        let makeChatRoomUsecaseImpl = MakeChatRoomUseCaseImpl(repository: chatRepository)
-        DIContainer.shared.register(MakeChatRoomUseCase.self, dependency: makeChatRoomUsecaseImpl)
-        
         let fetchBroadcastUseCase: any FetchVideoListUsecase = FetchVideoListUsecaseImpl(repository: liveStationRepository)
         let liveStreamFactoryImpl = LiveStreamViewControllerFactoryImpl(fetchBroadcastUseCase: fetchBroadcastUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)

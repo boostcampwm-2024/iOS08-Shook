@@ -1,7 +1,6 @@
 import UIKit
 
 import BaseFeatureInterface
-import ChattingDomainInterface
 import LiveStationDomainInterface
 import LiveStreamFeatureInterface
 
