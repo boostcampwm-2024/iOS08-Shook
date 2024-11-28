@@ -12,10 +12,8 @@ public final class LiveStreamViewModel: ViewModel {
     
     private let chattingSocket: WebSocket
     private let channelID: String
-    let fetchVideoListUsecase: any FetchVideoListUsecase
-    
-    private let output = Output()
-    
+    private let fetchVideoListUsecase: any FetchVideoListUsecase
+
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
         let sliderValueDidChange: AnyPublisher<Float?, Never>
@@ -55,13 +53,15 @@ public final class LiveStreamViewModel: ViewModel {
     }
     
     public func transform(input: Input) -> Output {
+        let output = Output()
+        
         input.expandButtonDidTap
             .compactMap { $0 }
             .sink {
-                let nextValue = !self.output.isExpanded.value
-                self.output.isExpanded.send(nextValue)
-                self.output.isShowedPlayerControl.send(false)
-                self.output.isShowedInfoView.send(false)
+                let nextValue = !output.isExpanded.value
+                output.isExpanded.send(nextValue)
+                output.isShowedPlayerControl.send(false)
+                output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
         
@@ -70,31 +70,31 @@ public final class LiveStreamViewModel: ViewModel {
             .map { Double($0) }
             .sink {
                 input.autoDissmissDidRegister.send()
-                self.output.time.send($0)
+                output.time.send($0)
             }
             .store(in: &subscription)
         
         input.playerStateDidChange
             .compactMap { $0 }
             .sink { flag in
-                self.output.isPlaying.send(flag)
+                output.isPlaying.send(flag)
             }
             .store(in: &subscription)
         
         input.playerGestureDidTap
             .compactMap { $0 }
             .sink { _ in
-                let nextValue1 = !self.output.isShowedPlayerControl.value
-                self.output.isShowedPlayerControl.send(nextValue1)
+                let nextValue1 = !output.isShowedPlayerControl.value
+                output.isShowedPlayerControl.send(nextValue1)
                 
                 if nextValue1 {
                     input.autoDissmissDidRegister.send()
                 }
                 
-                if self.output.isExpanded.value {
-                    self.output.isShowedInfoView.send(false)
+                if output.isExpanded.value {
+                    output.isShowedInfoView.send(false)
                 } else {
-                    self.output.isShowedInfoView.send(!self.output.isShowedInfoView.value)
+                    output.isShowedInfoView.send(!output.isShowedInfoView.value)
                 }
             }
             .store(in: &subscription)
@@ -103,20 +103,20 @@ public final class LiveStreamViewModel: ViewModel {
             .compactMap { $0 }
             .sink { _ in
                 input.autoDissmissDidRegister.send()
-                self.output.isPlaying.send(!self.output.isPlaying.value)
+                output.isPlaying.send(!output.isPlaying.value)
             }
             .store(in: &subscription)
         
         input.dismissButtonDidTap
             .sink { _ in
-                self.output.dismiss.send()
+                output.dismiss.send()
             }
             .store(in: &subscription)
         
         input.viewDidLoad
             .sink { [weak self] _ in
                 guard let self else { return }
-                fetchVideoData(channelID: channelID)
+                fetchVideoData(output: output, channelID: channelID)
                 openChattingSocket(output: output)
                 sendEntryMessage()
                 receciveChatMessage(output: output)
@@ -141,24 +141,24 @@ public final class LiveStreamViewModel: ViewModel {
         input.autoDissmissDidRegister
             .debounce(for: .seconds(3), scheduler: DispatchQueue.main)
             .sink { _ in
-                self.output.isShowedPlayerControl.send(false)
-                self.output.isShowedInfoView.send(false)
+                output.isShowedPlayerControl.send(false)
+                output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
         
         return output
     }
     
-    private func fetchVideoData(channelID: String) {
+    private func fetchVideoData(output: Output, channelID: String) {
         fetchVideoListUsecase.execute(channelID: channelID)
             .sink(
                 receiveCompletion: { _ in },
                 receiveValue: { entityList in
                     let entity = entityList.filter { $0.name == "ABR" }.first
                     if let entity {
-                        return self.output.videoURLString.send(entity.videoURLString)
+                        return output.videoURLString.send(entity.videoURLString)
                     } else if let lowResolution = entityList.first?.videoURLString {
-                        return self.output.videoURLString.send(lowResolution)
+                        return output.videoURLString.send(lowResolution)
                     }
                 })
             .store(in: &subscription)
