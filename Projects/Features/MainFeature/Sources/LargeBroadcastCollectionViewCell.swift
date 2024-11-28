@@ -13,6 +13,8 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupViews() {
         liveBadgeLabel.text = "L I V E"
         
+        print(LargeBroadcastCollectionViewCell.identifier)
+        
         contentView.addSubview(thumbnailView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(liveBadgeLabel)
