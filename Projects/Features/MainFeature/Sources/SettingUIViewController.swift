@@ -99,7 +99,6 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupStyles() {
-        // 여기 navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = .gray
 

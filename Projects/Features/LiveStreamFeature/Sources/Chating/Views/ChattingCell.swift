@@ -15,9 +15,7 @@ final class ChattingCell: BaseTableViewCell {
         nameLabel.setContentHuggingPriority(.required, for: .horizontal)        
     }
     
-    override func setupStyles() {
-        backgroundColor = .clear
-        
+    override func setupStyles() {        
         nameLabel.textColor = .white
         nameLabel.font = .setFont(.caption1(weight: .bold))
         

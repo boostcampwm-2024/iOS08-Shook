@@ -84,7 +84,6 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
 
         collectionView.isHidden = true
-        collectionView.backgroundColor = .clear
         
         rightBarButton.style = .plain
         rightBarButton.tintColor = DesignSystemAsset.Color.mainGreen.color

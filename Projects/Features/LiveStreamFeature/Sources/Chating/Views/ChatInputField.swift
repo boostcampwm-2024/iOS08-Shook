@@ -63,14 +63,12 @@ final class ChatInputField: BaseView {
     override func setupStyles() {
         backgroundColor = DesignSystemAsset.Color.darkGray.color
         
-        clipView.backgroundColor = .clear
         clipView.layer.cornerRadius = 20
         clipView.clipsToBounds = true
         clipView.layer.borderWidth = 1
         clipView.layer.borderColor = UIColor.white.cgColor
         
         inputField.font = .setFont(.body2())
-        inputField.backgroundColor = .clear
         inputField.textColor = .white
         
         placeholder.font = .setFont(.body2())
