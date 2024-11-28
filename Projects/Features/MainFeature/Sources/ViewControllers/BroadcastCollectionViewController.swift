@@ -18,7 +18,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
-    private let refreshControl = UIRefreshControl()
+    private let refreshControl = SHRefreshControl()
     private let rightBarButton: UIBarButtonItem = UIBarButtonItem()
     
     private let layout = setupCollectionViewCompositionalLayout()
@@ -320,5 +320,11 @@ extension BroadcastCollectionViewController {
             self?.navigationController?.setNavigationBarHidden(false, animated: false)
             self?.input.fetch.send()
         }
+    }
+}
+
+extension BroadcastUIViewController: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        (scrollView.refreshControl as? SHRefreshControl)?.updateProgress(with: scrollView.contentOffset.y)
     }
 }
