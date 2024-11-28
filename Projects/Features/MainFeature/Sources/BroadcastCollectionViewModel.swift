@@ -46,6 +46,8 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
     let isStreamingKey = "isStreaming"
+    private let rtmp = "RTMP_SEVICE_URL"
+    private let streamKey = "STREAMING_KEY"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
     private var channelName: String = ""
@@ -107,8 +109,11 @@ public class BroadcastCollectionViewModel: ViewModel {
                     .eraseToAnyPublisher()
             }
             .sink { _ in
-            } receiveValue: { [weak self] (channelInfo) in
-                self?.output.isReadyToStream.send(true)
+            } receiveValue: { [weak self] (channelInfo, _) in
+                guard let self else { return }
+                sharedDefaults.set(channelInfo.rtmpUrl, forKey: rtmp)
+                sharedDefaults.set(channelInfo.streamKey, forKey: streamKey)
+                output.isReadyToStream.send(true)
             }
             .store(in: &cancellables)
 
