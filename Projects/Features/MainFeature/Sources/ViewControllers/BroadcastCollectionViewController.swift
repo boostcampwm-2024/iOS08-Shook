@@ -322,9 +322,3 @@ extension BroadcastCollectionViewController {
         }
     }
 }
-
-extension BroadcastUIViewController: UIScrollViewDelegate {
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        (scrollView.refreshControl as? SHRefreshControl)?.updateProgress(with: scrollView.contentOffset.y)
-    }
-}

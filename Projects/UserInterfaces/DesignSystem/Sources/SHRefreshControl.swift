@@ -4,7 +4,6 @@ import Lottie
 
 public final class SHRefreshControl: UIRefreshControl {
     private let animationView = LottieAnimationView(name: "shook", bundle: Bundle(for: DesignSystemResources.self))
-    private let maxPullDistance: CGFloat = 150
     
     public override init() {
         super.init(frame: .zero)
@@ -16,16 +15,12 @@ public final class SHRefreshControl: UIRefreshControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func updateProgress(with offsetY: CGFloat) {
-        guard !animationView.isAnimationPlaying else { return }
-        let progress = min(abs(offsetY / maxPullDistance), 1)
-        animationView.currentProgress = progress
-    }
-    
     public override func beginRefreshing() {
         super.beginRefreshing()
         animationView.loopMode = .loop
         animationView.play()
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
     }
     
     public override func endRefreshing() {
