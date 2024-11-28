@@ -30,6 +30,7 @@ extension InfoPlist {
                     ]
                 ]
             ],
+            "UIUserInterfaceStyle": "Dark",
             "NSAppTransportSecurity": [
                 "NSAllowsArbitraryLoads": .boolean(true)
             ],
