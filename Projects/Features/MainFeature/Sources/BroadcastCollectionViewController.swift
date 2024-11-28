@@ -150,7 +150,7 @@ extension BroadcastCollectionViewController {
             case .empty:
                 let size = NSCollectionLayoutSize(
                     widthDimension: .fractionalWidth(1.0),
-                    heightDimension: .fractionalHeight(0.7)
+                    heightDimension: .fractionalHeight(0.8)
                 )
                 let item = NSCollectionLayoutItem(layoutSize: size)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])

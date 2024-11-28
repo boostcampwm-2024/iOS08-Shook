@@ -46,7 +46,7 @@ final class EmptyBroadcastCollectionViewCell: BaseCollectionViewCell {
         }
         
         imageView.ezl.makeConstraint {
-            $0.size(with: 100)
+            $0.size(with: 117)
         }
     }
 }
