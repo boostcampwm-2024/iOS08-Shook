@@ -61,11 +61,11 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
         
-        ownerLabel.font = .setFont(.caption2())
-        ownerLabel.textColor = .white
+        ownerLabel.font = .setFont(.caption1())
+        ownerLabel.textColor = .gray
         
-        descriptionLabel.font = .setFont(.caption2())
-        descriptionLabel.textColor = .white
+        descriptionLabel.font = .setFont(.caption1())
+        descriptionLabel.textColor = .gray
         descriptionLabel.numberOfLines = 2
     }
     
