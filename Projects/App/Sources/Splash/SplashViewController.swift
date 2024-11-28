@@ -4,6 +4,7 @@ import UIKit
 import AuthFeature
 import BaseFeature
 import BaseFeatureInterface
+import BroadcastDomainInterface
 import DesignSystem
 import EasyLayoutModule
 import LiveStationDomainInterface
@@ -97,12 +98,16 @@ extension SplashViewController {
     private func moveToMainView() {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
+        let deleteChannelUsecase = DIContainer.shared.resolve(DeleteChannelUsecase.self)
         let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
+        let deleteBroadCastUsecase = DIContainer.shared.resolve(DeleteBroadcastUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: fetchChannelListUsecase,
             createChannelUsecase: createChannelUsecase,
-            fetchChannelInfoUsecase: fetchChannelInfoUsecase
+            deleteChannelUsecase: deleteChannelUsecase,
+            fetchChannelInfoUsecase: fetchChannelInfoUsecase,
+            deleteBroadCastUsecase: deleteBroadCastUsecase
         )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)

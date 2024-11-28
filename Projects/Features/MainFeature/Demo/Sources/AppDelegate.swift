@@ -14,11 +14,15 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let mockFetchChannelListUsecase = MockFetchChannelListUsecaseImpl()
         let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
+        let mockDeleteChannelUsecase = MockDeleteChannelUsecaseImpl()
         let mockFetchChannelInfoUsecase = MockFetchChannelInfoUsecaseImpl()
+        let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecase()
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: mockFetchChannelListUsecase,
             createChannelUsecase: mockCreateChannelUsecase,
-            fetchChannelInfoUsecase: mockFetchChannelInfoUsecase
+            deleteChannelUsecase: mockDeleteChannelUsecase,
+            fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
+            deleteBroadCastUsecase: mockDeleteBroadcastUsecase
         )
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)
