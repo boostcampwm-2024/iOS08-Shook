@@ -16,12 +16,16 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
         let mockDeleteChannelUsecase = MockDeleteChannelUsecaseImpl()
         let mockFetchChannelInfoUsecase = MockFetchChannelInfoUsecaseImpl()
-        let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecase()
+        let mockmakeBroadcastUsecase = MockMakeBroadcastUsecaseImpl()
+        let mockFetchAllBroadcastUsecase = MockFetchAllBroadcastUsecaseImpl()
+        let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecaseImpl()
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: mockFetchChannelListUsecase,
             createChannelUsecase: mockCreateChannelUsecase,
             deleteChannelUsecase: mockDeleteChannelUsecase,
             fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
+            makeBroadcastUsecase: mockmakeBroadcastUsecase,
+            fetchAllBroadcastUsecase: mockFetchAllBroadcastUsecase,
             deleteBroadCastUsecase: mockDeleteBroadcastUsecase
         )
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
@@ -33,3 +37,5 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
+
+
