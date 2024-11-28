@@ -22,7 +22,7 @@ public class BroadcastCollectionViewModel: ViewModel {
         let fetch: PassthroughSubject<Void, Never> = .init()
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
         let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
-        let didTapEndStreamingButton: PassthroughSubject<Void, Never> = .init()
+        let didTapFinishStreamingButton: PassthroughSubject<Void, Never> = .init()
         let didTapStartBroadcastButton: PassthroughSubject<Void, Never> = .init()
     }
     
@@ -39,6 +39,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let createChannelUsecase: any CreateChannelUsecase
+    private let deleteChannelUsecase: any DeleteChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     private let makeChatRoomUsecase: any MakeChatRoomUseCase
     
@@ -51,15 +52,18 @@ public class BroadcastCollectionViewModel: ViewModel {
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
     private var channelName: String = ""
+    private var channel: ChannelEntity?
 
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
         createChannelUsecase: CreateChannelUsecase,
+        deleteChannelUsecase: DeleteChannelUsecase,
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
         makeChatRoomUsecase: MakeChatRoomUseCase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
+        self.deleteChannelUsecase = deleteChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeChatRoomUsecase = makeChatRoomUsecase
     }
@@ -89,8 +93,14 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
-        input.didTapEndStreamingButton
-            .sink { [weak self] _ in
+        input.didTapFinishStreamingButton
+            .flatMap { [weak self] _ in
+                guard let self, let channel else { return Empty<Void, Error>().eraseToAnyPublisher() }
+                return deleteChannelUsecase.execute(channelID: channel.id)
+                    .eraseToAnyPublisher()
+            }
+            .sink { _ in
+            } receiveValue: { [weak self] _ in
                 self?.output.dismissBroadcastUIView.send()
             }
             .store(in: &cancellables)
