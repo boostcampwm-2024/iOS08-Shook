@@ -179,8 +179,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .store(in: &subscription)
         
         output.videoURLString
-            .sink { urlString in
-                guard let url = URL(string: urlString) else { return }
+            .sink { [weak self] urlString in
+                guard let self, let url = URL(string: urlString) else { return }
                 DispatchQueue.main.async {
                     self.playerView.fetchVideo(m3u8URL: url)
                 }
