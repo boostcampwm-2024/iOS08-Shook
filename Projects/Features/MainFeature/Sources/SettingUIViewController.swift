@@ -56,6 +56,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     public override func setupViews() {
         closeBarButton.image = DesignSystemAsset.Image.xmark24.image
+        closeBarButton.tintColor = .gray
         
         viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
         viewModel.sharedDefaults.set(false, forKey: viewModel.isStreamingKey)
@@ -80,11 +81,11 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     public override func setupStyles() {
-        navigationController?.navigationBar.barTintColor = .black
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .gray
-
         let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         appearance.shadowColor = nil
         
         navigationController?.navigationBar.standardAppearance = appearance
