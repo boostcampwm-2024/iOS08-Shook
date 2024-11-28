@@ -10,7 +10,7 @@ public struct FetchAllBroadcastUsecaseImpl: FetchAllBroadcastUsecase {
         self.repository = repository
     }
     
-    public func execute() -> AnyPublisher<[BroadcastEntity], any Error> {
+    public func execute() -> AnyPublisher<[BroadcastInfoEntity], any Error> {
         repository.fetchAllBroadcast()
     }
 }
