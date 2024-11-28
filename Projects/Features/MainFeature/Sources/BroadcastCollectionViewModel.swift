@@ -2,7 +2,6 @@ import Combine
 import UIKit
 
 import BaseFeatureInterface
-import ChattingDomainInterface
 import LiveStationDomainInterface
 
 public struct Channel: Hashable {
@@ -40,7 +39,6 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let createChannelUsecase: any CreateChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
-    private let makeChatRoomUsecase: any MakeChatRoomUseCase
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -55,13 +53,11 @@ public class BroadcastCollectionViewModel: ViewModel {
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
         createChannelUsecase: CreateChannelUsecase,
-        fetchChannelInfoUsecase: FetchChannelInfoUsecase,
-        makeChatRoomUsecase: MakeChatRoomUseCase
+        fetchChannelInfoUsecase: FetchChannelInfoUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
-        self.makeChatRoomUsecase = makeChatRoomUsecase
     }
     
     public func transform(input: Input) -> Output {
@@ -103,13 +99,11 @@ public class BroadcastCollectionViewModel: ViewModel {
                     
             }
             .flatMap { [weak self] in
-                guard let self else { return Empty<(ChannelInfoEntity, Void), Error>().eraseToAnyPublisher() }
+                guard let self else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
                 return fetchChannelInfoUsecase.execute(channelID: $0.id)
-                    .zip(makeChatRoomUsecase.execute(id: $0.id))
-                    .eraseToAnyPublisher()
             }
             .sink { _ in
-            } receiveValue: { [weak self] (channelInfo, _) in
+            } receiveValue: { [weak self] channelInfo in
                 guard let self else { return }
                 sharedDefaults.set(channelInfo.rtmpUrl, forKey: rtmp)
                 sharedDefaults.set(channelInfo.streamKey, forKey: streamKey)

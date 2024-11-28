@@ -3,7 +3,6 @@ import Foundation
 
 import BaseFeatureInterface
 import ChatSoketModule
-import ChattingDomainInterface
 import LiveStationDomainInterface
 
 public final class LiveStreamViewModel: ViewModel {

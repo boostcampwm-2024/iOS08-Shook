@@ -9,7 +9,6 @@ let project = Project.module(
         .implements(module: .feature(.MainFeature), dependencies: [
             .feature(target: .BaseFeature),
             .feature(target: .LiveStreamFeature, type: .interface),
-            .domain(target: .ChattingDomain, type: .interface),
             .domain(target: .LiveStationDomain, type: .interface),
             .domain(target: .BroadcastDomain, type: .interface)
         ]),
