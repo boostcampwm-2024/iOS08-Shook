@@ -50,6 +50,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         
         chattingList.isHidden = output.isExpanded.value
         infoView.isHidden = output.isExpanded.value
+        bottomGuideView.isHidden = output.isExpanded.value
         if output.isExpanded.value {
             NSLayoutConstraint.deactivate(shrinkConstraints)
             NSLayoutConstraint.activate(expandConstraints)
