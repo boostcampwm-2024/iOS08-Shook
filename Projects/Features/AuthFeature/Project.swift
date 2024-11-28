@@ -8,8 +8,7 @@ let project = Project.module(
         .interface(module: .feature(.AuthFeature)),
         .implements(module: .feature(.AuthFeature), dependencies: [
             .feature(target: .AuthFeature, type: .interface),
-            .feature(target: .BaseFeature),
-            .SPM.Lottie
+            .feature(target: .BaseFeature)
         ]),
         .tests(module: .feature(.AuthFeature), dependencies: [
             .feature(target: .AuthFeature)

@@ -12,8 +12,7 @@ let project = Project.module(
             spec: .init(
                 resources: .resources,
                 dependencies: [
-                    .userInterface(target: .DesignSystem, type: .interface),
-                    .SPM.Lottie
+                    .userInterface(target: .DesignSystem, type: .interface)
                 ]
             )
         ),
