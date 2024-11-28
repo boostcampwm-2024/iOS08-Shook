@@ -2,5 +2,5 @@ import Combine
 import Foundation
 
 public protocol FetchAllBroadcastUsecase {
-    func execute() -> AnyPublisher<[BroadcastEntity], Error>
+    func execute() -> AnyPublisher<[BroadcastInfoEntity], Error>
 }

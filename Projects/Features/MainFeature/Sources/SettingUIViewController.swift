@@ -59,6 +59,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
             .store(in: &cancellables)
         
         output.isReadyToStream
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isReady in
                 if isReady {
                     guard let self,
@@ -185,11 +186,13 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
             }
             return streamingNameCell
         } else {
+#warning("TextDidChange 변경하기")
             streamingDescriptionCell.configure(
                 label: "방송정보",
-                placeholder: placeholderStringOfCells[indexPath.row],
-                textDidChange: nil
-            )
+                placeholder: placeholderStringOfCells[indexPath.row]
+            ) { [weak self] inputValue in
+                self?.viewModelInput.didWriteStreamingDescription.send(inputValue)
+            }
             return streamingDescriptionCell
         }
     }

@@ -59,7 +59,11 @@ extension SceneDelegate {
         DIContainer.shared.register(FetchChannelInfoUsecase.self, dependency: fetchChannelInfoUsecaseImpl)
         
         let broadcastRepository = BroadcastRepositoryImpl()
+        let makeBroadcastUsecaseImpl = MakeBroadcastUsecaseImpl(repository: broadcastRepository)
+        let fetchAllBroadcastUsecaseImpl = FetchAllBroadcastUsecaseImpl(repository: broadcastRepository)
         let deleteBroadCastUsecaseImpl = DeleteBroadcastUsecaseImpl(repository: broadcastRepository)
+        DIContainer.shared.register(MakeBroadcastUsecase.self, dependency: makeBroadcastUsecaseImpl)
+        DIContainer.shared.register(FetchAllBroadcastUsecase.self, dependency: fetchAllBroadcastUsecaseImpl)
         DIContainer.shared.register(DeleteBroadcastUsecase.self, dependency: deleteBroadCastUsecaseImpl)
 
         let fetchBroadcastUseCase: any FetchVideoListUsecase = FetchVideoListUsecaseImpl(repository: liveStationRepository)

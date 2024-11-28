@@ -100,6 +100,8 @@ extension SplashViewController {
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
         let deleteChannelUsecase = DIContainer.shared.resolve(DeleteChannelUsecase.self)
         let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
+        let makeBroadcastUsecase = DIContainer.shared.resolve(MakeBroadcastUsecase.self)
+        let fetchAllBroadcastUsecase = DIContainer.shared.resolve(FetchAllBroadcastUsecase.self)
         let deleteBroadCastUsecase = DIContainer.shared.resolve(DeleteBroadcastUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
@@ -107,6 +109,8 @@ extension SplashViewController {
             createChannelUsecase: createChannelUsecase,
             deleteChannelUsecase: deleteChannelUsecase,
             fetchChannelInfoUsecase: fetchChannelInfoUsecase,
+            makeBroadcastUsecase: makeBroadcastUsecase,
+            fetchAllBroadcastUsecase: fetchAllBroadcastUsecase,
             deleteBroadCastUsecase: deleteBroadCastUsecase
         )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)

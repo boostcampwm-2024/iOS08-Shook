@@ -9,11 +9,15 @@ public struct Channel: Hashable {
     let id: String
     let name: String
     let thumbnailImageURLString: String
+    let owner: String
+    let description: String
     
-    public init(id: String, title: String, imageURLString: String) {
+    public init(id: String, title: String, imageURLString: String, owner: String = "", description: String = "") {
         self.id = id
         self.name = title
         self.thumbnailImageURLString = imageURLString
+        self.owner = owner
+        self.description = description
     }
 }
 
@@ -21,6 +25,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
         let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
+        let didWriteStreamingDescription: PassthroughSubject<String, Never> = .init()
         let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
         let didTapFinishStreamingButton: PassthroughSubject<Void, Never> = .init()
         let didTapStartBroadcastButton: PassthroughSubject<Void, Never> = .init()
@@ -41,6 +46,8 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let createChannelUsecase: any CreateChannelUsecase
     private let deleteChannelUsecase: any DeleteChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
+    private let makeBroadcastUsecase: any MakeBroadcastUsecase
+    private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
     private let deleteBroadCastUsecase: any DeleteBroadcastUsecase
     
     private var cancellables = Set<AnyCancellable>()
@@ -51,7 +58,9 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let streamKey = "STREAMING_KEY"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
+    private let userName = UserDefaults.standard.string(forKey: "USER_NAME") ?? ""
     private var channelName: String = ""
+    private var channelDescription: String = ""
     private var channel: ChannelEntity?
 
     public init(
@@ -59,12 +68,16 @@ public class BroadcastCollectionViewModel: ViewModel {
         createChannelUsecase: CreateChannelUsecase,
         deleteChannelUsecase: DeleteChannelUsecase,
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
+        makeBroadcastUsecase: MakeBroadcastUsecase,
+        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
         deleteBroadCastUsecase: DeleteBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.createChannelUsecase = createChannelUsecase
         self.deleteChannelUsecase = deleteChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
+        self.makeBroadcastUsecase = makeBroadcastUsecase
+        self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
         self.deleteBroadCastUsecase = deleteBroadCastUsecase
     }
     
@@ -84,6 +97,12 @@ public class BroadcastCollectionViewModel: ViewModel {
                 if validness.isValid {
                     channelName = name
                 }
+            }
+            .store(in: &cancellables)
+        
+        input.didWriteStreamingDescription
+            .sink { [weak self] description in
+                self?.channelDescription = description
             }
             .store(in: &cancellables)
         
@@ -111,12 +130,14 @@ public class BroadcastCollectionViewModel: ViewModel {
                 guard let self else { return Empty<ChannelEntity, Error>().eraseToAnyPublisher() }
                 output.isReadyToStream.send(false)
                 return createChannelUsecase.execute(name: channelName)
-                    
             }
             .flatMap { [weak self] in
                 guard let self else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
                 channel = $0
                 return fetchChannelInfoUsecase.execute(channelID: $0.id)
+                    .zip(makeBroadcastUsecase.execute(id: $0.id, title: $0.name, owner: userName, description: channelDescription))
+                    .map { channelInfo, _ in channelInfo }
+                    .eraseToAnyPublisher()
             }
             .sink { _ in
             } receiveValue: { [weak self] channelInfo in
@@ -132,17 +153,40 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private func fetchData() {
         fetchChannelListUsecase.execute()
+            .flatMap { [weak self] channelEntities -> AnyPublisher<([ChannelEntity], [BroadcastInfoEntity]), Error> in
+                guard let self else { return Empty<([ChannelEntity], [BroadcastInfoEntity]), Error>().eraseToAnyPublisher() }
+                return fetchAllBroadcastUsecase.execute()
+                    .map { broadcastEntities in
+                        (channelEntities, broadcastEntities)
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .map { channelEntities, broadcastInfoEntities -> [Channel] in
+                channelEntities.map { channelEntity in
+                    let broadcast = broadcastInfoEntities.first { $0.id == channelEntity.id }
+                    return Channel(
+                        id: channelEntity.id,
+                        title: channelEntity.name,
+                        imageURLString: channelEntity.imageURLString,
+                        owner: broadcast?.owner ?? "Unknown",
+                        description: broadcast?.description ?? "No description"
+                    )
+                }
+            }
             .sink(
-                receiveCompletion: { _ in },
-                receiveValue: { entity in
-                    self.output.channels.send(entity.map {
-                        Channel(id: $0.id, title: $0.name, imageURLString: $0.imageURLString)
-                    })
+                receiveCompletion: { completion in
+                    switch completion {
+                    case .finished: break
+                    case .failure(let error): print("Error: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] channels in
+                    self?.output.channels.send(channels)
                 }
             )
             .store(in: &cancellables)
     }
-    
+
     /// 방송 이름이 유효한지 확인하는 메서드
     /// - Parameter _:  방송 이름
     /// - Returns: (Bool, String?) - 유효 여부와 에러 메시지
