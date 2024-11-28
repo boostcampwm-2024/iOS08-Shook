@@ -187,7 +187,6 @@ public class BroadcastCollectionViewModel: ViewModel {
             .store(in: &cancellables)
     }
 
-    
     /// 방송 이름이 유효한지 확인하는 메서드
     /// - Parameter _:  방송 이름
     /// - Returns: (Bool, String?) - 유효 여부와 에러 메시지
