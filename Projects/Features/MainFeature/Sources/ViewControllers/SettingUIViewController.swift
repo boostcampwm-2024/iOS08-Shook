@@ -113,9 +113,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         navigationController?.navigationBar.compactAppearance = appearance
                 
         closeBarButton.style = .plain
-        
-        settingTableView.backgroundColor = .black
-        
+                
         startBroadcastButton.setTitle("방송시작", for: .normal)
         startBroadcastButton.layer.cornerRadius = 16
         startBroadcastButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))
