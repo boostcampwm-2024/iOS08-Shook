@@ -43,8 +43,6 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let output = Output()
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
-    private let createChannelUsecase: any CreateChannelUsecase
-    private let deleteChannelUsecase: any DeleteChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     private let makeBroadcastUsecase: any MakeBroadcastUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
@@ -59,22 +57,18 @@ public class BroadcastCollectionViewModel: ViewModel {
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
     private let userName = UserDefaults.standard.string(forKey: "USER_NAME") ?? ""
-    private var channelName: String = ""
+    private var broadcastName: String = ""
     private var channelDescription: String = ""
-    private var channel: ChannelEntity?
+    private var channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
 
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        createChannelUsecase: CreateChannelUsecase,
-        deleteChannelUsecase: DeleteChannelUsecase,
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
         makeBroadcastUsecase: MakeBroadcastUsecase,
         fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
         deleteBroadCastUsecase: DeleteBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
-        self.createChannelUsecase = createChannelUsecase
-        self.deleteChannelUsecase = deleteChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeBroadcastUsecase = makeBroadcastUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
@@ -95,7 +89,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
                 if validness.isValid {
-                    channelName = name
+                    broadcastName = name
                 }
             }
             .store(in: &cancellables)
@@ -114,9 +108,9 @@ public class BroadcastCollectionViewModel: ViewModel {
         
         input.didTapFinishStreamingButton
             .flatMap { [weak self] _ in
-                guard let self, let channel else { return Empty<(Void, Void), Error>().eraseToAnyPublisher() }
-                return deleteChannelUsecase.execute(channelID: channel.id)
-                    .zip(deleteBroadCastUsecase.execute(id: channel.id))
+                guard let self,
+                      let channelID else { return Empty<Void, Error>().eraseToAnyPublisher() }
+                return deleteBroadCastUsecase.execute(id: channelID)
                     .eraseToAnyPublisher()
             }
             .sink { _ in

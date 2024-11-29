@@ -48,8 +48,6 @@ public final class SplashViewController: BaseViewController<EmptyViewModel> {
 extension SplashViewController {
     private func moveToMainView() {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
-        let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
-        let deleteChannelUsecase = DIContainer.shared.resolve(DeleteChannelUsecase.self)
         let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
         let makeBroadcastUsecase = DIContainer.shared.resolve(MakeBroadcastUsecase.self)
         let fetchAllBroadcastUsecase = DIContainer.shared.resolve(FetchAllBroadcastUsecase.self)
@@ -57,8 +55,6 @@ extension SplashViewController {
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: fetchChannelListUsecase,
-            createChannelUsecase: createChannelUsecase,
-            deleteChannelUsecase: deleteChannelUsecase,
             fetchChannelInfoUsecase: fetchChannelInfoUsecase,
             makeBroadcastUsecase: makeBroadcastUsecase,
             fetchAllBroadcastUsecase: fetchAllBroadcastUsecase,
@@ -66,10 +62,11 @@ extension SplashViewController {
         )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
         let navigationController = UINavigationController(rootViewController: viewController)
-        
+        let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
+
         /// 유저의 이름이 저장되어 있지 않으면 유저 등록 뷰를 Navigation에 올림
         if UserDefaults.standard.string(forKey: "USER_NAME") == nil {
-            let singUpViewModel = SignUpViewModel()
+            let singUpViewModel = SignUpViewModel(createChannelUsecase: createChannelUsecase)
             navigationController.viewControllers.append(SignUpViewController(viewModel: singUpViewModel))
         }
         

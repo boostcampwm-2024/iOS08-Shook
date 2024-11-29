@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 import BaseFeatureInterface
+import LiveStationDomainInterface
 
 public class SignUpViewModel: ViewModel {
     public struct Input {
@@ -15,6 +16,8 @@ public class SignUpViewModel: ViewModel {
     
     private let output = Output()
     private var cancellables = Set<AnyCancellable>()
+    
+    private let createChannelUsecase: any CreateChannelUsecase
     
     public func transform(input: Input) -> Output {
         input.didWriteUserName
@@ -35,7 +38,9 @@ public class SignUpViewModel: ViewModel {
         return output
     }
     
-    public init() { }
+    public init(createChannelUsecase: CreateChannelUsecase) {
+        self.createChannelUsecase = createChannelUsecase
+    }
     
     private func validate(with name: String?) -> Bool {
         guard let name else { return false }
@@ -47,6 +52,15 @@ public class SignUpViewModel: ViewModel {
         UserDefaults.standard.set(name, forKey: "USER_NAME")
         
         let savedName = UserDefaults.standard.string(forKey: "USER_NAME")
-        output.isSaved.send(savedName == name)
+        
+        createChannelUsecase.execute(name: "Guest")
+            .sink { _ in
+            } receiveValue: { [weak self] channelEntity in
+                UserDefaults.standard.set(channelEntity.id, forKey: "CHANNEL_ID")
+                let savedID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
+                
+                self?.output.isSaved.send(savedName == name && savedID != nil)
+            }
+            .store(in: &cancellables)
     }
 }
