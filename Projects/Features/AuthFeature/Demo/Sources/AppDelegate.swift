@@ -11,7 +11,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let viewModel = SignUpViewModel()
+        let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
+        let viewModel = SignUpViewModel(createChannelUsecase: mockCreateChannelUsecase)
         let viewController = SignUpViewController(viewModel: viewModel)
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
