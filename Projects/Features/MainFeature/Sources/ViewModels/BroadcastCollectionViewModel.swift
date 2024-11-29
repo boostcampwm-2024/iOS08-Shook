@@ -120,16 +120,12 @@ public class BroadcastCollectionViewModel: ViewModel {
             .store(in: &cancellables)
         
         input.didTapStartBroadcastButton
-            .flatMap { [weak self] _ in
-                guard let self else { return Empty<ChannelEntity, Error>().eraseToAnyPublisher() }
-                output.isReadyToStream.send(false)
-                return createChannelUsecase.execute(name: channelName)
-            }
             .flatMap { [weak self] in
-                guard let self else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
-                channel = $0
-                return fetchChannelInfoUsecase.execute(channelID: $0.id)
-                    .zip(makeBroadcastUsecase.execute(id: $0.id, title: $0.name, owner: userName, description: channelDescription))
+                guard let self,
+                      let channelID else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
+                output.isReadyToStream.send(false)
+                return fetchChannelInfoUsecase.execute(channelID: channelID)
+                    .zip(makeBroadcastUsecase.execute(id: channelID, title: broadcastName, owner: userName, description: channelDescription))
                     .map { channelInfo, _ in channelInfo }
                     .eraseToAnyPublisher()
             }
