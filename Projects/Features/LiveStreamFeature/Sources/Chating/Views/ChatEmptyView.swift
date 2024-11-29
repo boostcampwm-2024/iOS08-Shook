@@ -23,10 +23,9 @@ final class ChatEmptyView: BaseView {
     }
     
     override func setupStyles() {        
-        titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         
-        subtitleLabel.textColor = .white
+        subtitleLabel.textColor = .gray
         subtitleLabel.font = .setFont(.caption1())
         
         stackView.axis = .vertical

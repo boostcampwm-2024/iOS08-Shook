@@ -62,10 +62,9 @@ final class ChattingListView: BaseView {
     }
     
     override func setupStyles() {
-        titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         
-        chatListView.backgroundColor = .black
+        chatListView.backgroundColor = .clear
         chatListView.keyboardDismissMode = .onDrag
         chatListView.allowsSelection = false
         chatListView.separatorStyle = .none

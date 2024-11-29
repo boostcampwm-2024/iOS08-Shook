@@ -14,8 +14,6 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupViews() {
         liveBadgeLabel.text = "L I V E"
         
-        print(LargeBroadcastCollectionViewCell.identifier)
-        
         contentView.addSubview(thumbnailView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(descriptionLabel)
@@ -49,14 +47,12 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupStyles() {
         liveBadgeLabel.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveBadgeLabel.textColor = .white
         liveBadgeLabel.textAlignment = .center
         liveBadgeLabel.font = .setFont(.caption1(weight: .bold))
         liveBadgeLabel.layer.cornerRadius = 16
         liveBadgeLabel.clipsToBounds = true
         
         titleLabel.font = .setFont(.body1())
-        titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
         

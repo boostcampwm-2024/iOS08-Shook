@@ -100,12 +100,9 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     }
     
     public override func setupStyles() {
-        welcomeLabel.textColor = .white
         welcomeLabel.font = .systemFont(ofSize: 32, weight: .bold)
         welcomeLabel.alpha = 0
-                
-        greetLabel.textColor = .white
-        guideLabel.textColor = .white
+        
         guideLabel.alpha = 0
         
         greetStackView.spacing = 4
@@ -115,9 +112,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         textFieldContainerView.layer.borderWidth = 1
         textFieldContainerView.layer.cornerRadius = 24
         textFieldContainerView.alpha = 0
-        
-        textField.textColor = .white
-        
+                
         validateLabel.font = .setFont(.caption1())
         validateLabel.textColor = .red
         validateLabel.alpha = 0

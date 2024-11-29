@@ -30,7 +30,6 @@ final class BroadcastCollectionLoadView: BaseView {
         shookAnimationView.loopMode = .loop
         shookAnimationView.animationSpeed = 0.4
         
-        titleLabel.textColor = .white
         titleLabel.font = .setFont(.title())
         
         subtitleLabel.textColor = .gray

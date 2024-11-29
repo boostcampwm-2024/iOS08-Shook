@@ -101,19 +101,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         view.addSubview(startBroadcastButton)
     }
     
-    public override func setupStyles() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .black
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        appearance.shadowColor = nil
-        
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-                
-        closeBarButton.style = .plain
-                
+    public override func setupStyles() {                
         startBroadcastButton.setTitle("방송시작", for: .normal)
         startBroadcastButton.layer.cornerRadius = 16
         startBroadcastButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))

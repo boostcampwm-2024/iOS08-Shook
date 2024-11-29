@@ -23,7 +23,6 @@ final class EmptyBroadcastCollectionViewCell: BaseCollectionViewCell {
     }
     
     override func setupStyles() {
-        titleLabel.textColor = .white
         titleLabel.font = .setFont(.title())
         
         subtitleLabel.textColor = .gray
