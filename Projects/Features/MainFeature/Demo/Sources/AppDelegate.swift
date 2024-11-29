@@ -13,16 +13,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let mockFetchChannelListUsecase = MockFetchChannelListUsecaseImpl()
-        let mockCreateChannelUsecase = MockCreateChannelUsecaseImpl()
-        let mockDeleteChannelUsecase = MockDeleteChannelUsecaseImpl()
         let mockFetchChannelInfoUsecase = MockFetchChannelInfoUsecaseImpl()
         let mockmakeBroadcastUsecase = MockMakeBroadcastUsecaseImpl()
         let mockFetchAllBroadcastUsecase = MockFetchAllBroadcastUsecaseImpl()
         let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecaseImpl()
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: mockFetchChannelListUsecase,
-            createChannelUsecase: mockCreateChannelUsecase,
-            deleteChannelUsecase: mockDeleteChannelUsecase,
             fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
             makeBroadcastUsecase: mockmakeBroadcastUsecase,
             fetchAllBroadcastUsecase: mockFetchAllBroadcastUsecase,
@@ -37,5 +33,3 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 }
-
-
