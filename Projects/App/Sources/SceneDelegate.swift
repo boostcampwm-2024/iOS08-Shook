@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
-        let viewModel = SplashViewModel()
+        let viewModel = EmptyViewModel()
         self.window?.rootViewController = SplashViewController(viewModel: viewModel)
         self.window?.makeKeyAndVisible()
     }
