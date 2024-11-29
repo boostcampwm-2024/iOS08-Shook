@@ -158,7 +158,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                     let broadcast = broadcastInfoEntities.first { $0.id == channelEntity.id }
                     return Channel(
                         id: channelEntity.id,
-                        title: channelEntity.name,
+                        title: broadcast?.title ?? "Unknown",
                         thumbnailImageURLString: channelEntity.imageURLString,
                         owner: broadcast?.owner ?? "Unknown",
                         description: broadcast?.description ?? ""
