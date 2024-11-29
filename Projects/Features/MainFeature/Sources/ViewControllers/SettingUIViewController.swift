@@ -17,7 +17,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     private let streamingDescriptionCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let placeholderStringOfCells = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
-    private lazy var loadingView = SHLoadingView(message: "채널 생성 중")
+    private lazy var loadingView = SHLoadingView(message: "방송 생성 중")
     
     private var broadcastPicker = RPSystemBroadcastPickerView()
     
