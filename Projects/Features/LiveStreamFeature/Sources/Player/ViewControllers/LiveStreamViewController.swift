@@ -10,6 +10,9 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     private let playerView: ShookPlayerView = ShookPlayerView()
     private let infoView: LiveStreamInfoView = LiveStreamInfoView()
     private let bottomGuideView = UIView()
+    private let _title: String
+    private let _owner: String
+    private let _description: String
     
     private var shrinkConstraints: [NSLayoutConstraint] = []
     private var expandConstraints: [NSLayoutConstraint] = []
@@ -31,6 +34,17 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     )
     
     private lazy var output = viewModel.transform(input: input)
+    
+    public init(title: String, owner: String, description: String, viewModel: LiveStreamViewModel) {
+        self._title = title
+        self._owner = owner
+        self._description = description
+        super.init(viewModel: viewModel)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         print("Deinit \(Self.self)")
@@ -75,8 +89,8 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     public override func setupStyles() {
         view.backgroundColor = .black
         
-        infoView.configureUI(with: ("영상 제목이 최대 2줄까지 들어갈 예정입니다. 영상 제목이 최대 2줄까지 들어갈 예정입니다.", "닉네임•기타 정보(들어갈 수 있는 거 찾아보기)"))
-        
+        infoView.configureUI(with: (_title, _owner + (description.isEmpty ? " " : " • ") + _description))
+        print("description: ", _description)
         bottomGuideView.backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
     
