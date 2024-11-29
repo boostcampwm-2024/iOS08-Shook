@@ -13,8 +13,8 @@ public struct LiveStreamViewControllerFactoryImpl: LiveStreamViewControllerFacto
         self.fetchBroadcastUseCase = fetchBroadcastUseCase
     }
     
-    public func make(channelID: String) -> UIViewController {
+    public func make(channelID: String, title: String, owner: String, description: String) -> UIViewController {
         let viewModel = LiveStreamViewModel(channelID: channelID, fetchVideoListUsecase: fetchBroadcastUseCase)
-        return LiveStreamViewController(viewModel: viewModel)
+        return LiveStreamViewController(title: title, owner: owner, description: description, viewModel: viewModel)
     }
 }

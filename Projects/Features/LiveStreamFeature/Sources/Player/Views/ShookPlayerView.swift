@@ -112,6 +112,8 @@ final class ShookPlayerView: BaseView {
     }
     
     override func setupStyles() {
+        backgroundColor = .systemBackground
+        
         playerControlView.alpha = .zero
                 
         indicatorView.color = DesignSystemAsset.Color.mainGreen.color

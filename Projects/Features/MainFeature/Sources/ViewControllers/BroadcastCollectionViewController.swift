@@ -125,7 +125,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
-        guard let viewController = factory?.make(channelID: channel.id) else { return }
+        guard let viewController = factory?.make(channelID: channel.id, title: channel.name, owner: channel.owner, description: channel.description) else { return }
         viewController.modalPresentationStyle = .overCurrentContext
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true)
@@ -195,7 +195,7 @@ extension BroadcastCollectionViewController {
 // MARK: - CollectionView Diffable DataSource
 extension BroadcastCollectionViewController {
     private func setupDataSource() {
-        dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, item in
+        dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, channel in
             guard let section = Section(rawValue: indexPath.section) else { return UICollectionViewCell() }
             
             switch section {
@@ -215,7 +215,7 @@ extension BroadcastCollectionViewController {
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                largeCell.configure(channel: item)
+                largeCell.configure(channel: channel)
                 return largeCell
                 
             case .small:
@@ -225,7 +225,7 @@ extension BroadcastCollectionViewController {
                 ) as? SmallBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                smallCell.configure(channel: item)
+                smallCell.configure(channel: channel)
                 return smallCell
             }
         }
@@ -260,7 +260,7 @@ extension BroadcastCollectionViewController {
         snapshot.appendSections([.empty, .large])
 
         if channels.isEmpty {
-            snapshot.appendItems([Channel(id: "Empty", title: "Empty", imageURLString: "Empty")], toSection: .empty)
+            snapshot.appendItems([Channel(id: "Empty", title: "Empty")], toSection: .empty)
         } else {
             let largeSectionItems = Array(channels.prefix(3))
             snapshot.appendItems(largeSectionItems, toSection: .large)
