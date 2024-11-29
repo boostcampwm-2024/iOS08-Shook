@@ -181,15 +181,10 @@ public class BroadcastCollectionViewModel: ViewModel {
     /// - Parameter _:  방송 이름
     /// - Returns: (Bool, String?) - 유효 여부와 에러 메시지
     private func valid(_ value: String) -> (isValid: Bool, errorMessage: String?) {
-        let isLengthValid = 3...20 ~= value.count
-        let isCharactersValid = value.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" }
+        let trimmedValue = value.trimmingCharacters(in: .whitespaces)
         
-        if !isLengthValid && !isCharactersValid {
-            return (false, "3글자 이상,20글자 이하로 입력해 주세요. 특수문자는 언더바(_)만 가능합니다.")
-        } else if !isLengthValid {
-            return (false, "최소 3글자 이상, 최대 20글자 이하로 입력해 주세요.")
-        } else if !isCharactersValid {
-            return (false, "특수문자는 언더바(_)만 가능합니다.")
+        if trimmedValue.isEmpty {
+            return (false, "공백을 제외하고 최소 1글자 이상 입력해주세요.")
         } else {
             return (true, nil)
         }
