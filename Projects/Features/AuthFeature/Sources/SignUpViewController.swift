@@ -62,6 +62,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
             .store(in: &cancellables)
         
         output.isSaved
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isSaved in
                 if isSaved {
                     self?.textField.resignFirstResponder()
