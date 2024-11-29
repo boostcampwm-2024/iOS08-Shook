@@ -12,7 +12,6 @@ final class EasyLayoutDemoViewController: UIViewController {
     
     private let secondView: UIView = {
         let view = UIView()
-        view.backgroundColor = .black
         view.frame.origin = CGPoint(x: 0, y: 0)
         return view
     }()

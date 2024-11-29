@@ -49,9 +49,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
         view.addSubview(endBroadcastButton)
     }
     
-    public override func setupStyles() {
-        view.backgroundColor = .black
-        
+    public override func setupStyles() {        
         broadcastStatusStackView.axis = .vertical
         broadcastStatusStackView.spacing = 7
         broadcastStatusStackView.alignment = .center

@@ -1,6 +1,5 @@
 import UIKit
 
-
 public class SoketTestViewController: UIViewController {
 
     var tableView: UITableView = UITableView()
@@ -16,7 +15,6 @@ public class SoketTestViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.backgroundColor = .black
         button.backgroundColor = .systemBlue
         
         view.addSubview(tableView)

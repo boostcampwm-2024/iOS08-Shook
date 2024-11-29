@@ -108,7 +108,6 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         greetStackView.spacing = 4
         greetStackView.alpha = 0
         
-        textFieldContainerView.backgroundColor = .clear
         textFieldContainerView.layer.borderColor = DesignSystemColors.Color.white.cgColor
         textFieldContainerView.layer.borderWidth = 1
         textFieldContainerView.layer.cornerRadius = 24

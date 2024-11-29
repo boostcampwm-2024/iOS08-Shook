@@ -11,9 +11,7 @@ final class SystemAlarmCell: BaseTableViewCell {
         contentView.addSubview(contentLabel)
     }
     
-    override func setupStyles() {
-        backgroundColor = .clear
-        
+    override func setupStyles() {        
         contentLabel.textAlignment = .center
         contentLabel.textColor = DesignSystemAsset.Color.gray.color
         contentLabel.font = .setFont(.caption1())

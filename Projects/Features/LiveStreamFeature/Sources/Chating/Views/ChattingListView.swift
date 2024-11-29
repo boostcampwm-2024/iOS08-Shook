@@ -65,7 +65,7 @@ final class ChattingListView: BaseView {
         titleLabel.textColor = .white
         titleLabel.font = .setFont(.body1())
         
-        chatListView.backgroundColor = .clear
+        chatListView.backgroundColor = .black
         chatListView.keyboardDismissMode = .onDrag
         chatListView.allowsSelection = false
         chatListView.separatorStyle = .none

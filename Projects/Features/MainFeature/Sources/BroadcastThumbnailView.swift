@@ -36,8 +36,6 @@ final class ThumbnailView: BaseView {
     }
     
     override func setupStyles() {
-        shadowView.backgroundColor = .black
-
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = size == .large ? 16 : 12
