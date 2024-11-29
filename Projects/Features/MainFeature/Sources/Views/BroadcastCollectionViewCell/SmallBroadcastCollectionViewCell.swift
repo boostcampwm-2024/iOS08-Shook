@@ -48,7 +48,6 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupStyles() {
         liveBadgeLabel.textInsets = UIEdgeInsets(top: 4, left: 6, bottom: 4, right: 6)
         liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveBadgeLabel.textColor = .white
         liveBadgeLabel.textAlignment = .center
         liveBadgeLabel.font = .setFont(.caption2(weight: .bold))
         liveBadgeLabel.layer.cornerRadius = 8
@@ -58,14 +57,13 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
         descriptionStack.spacing = 4
         
         titleLabel.font = .setFont(.body2())
-        titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
         
-        ownerLabel.font = .setFont(.caption2())
-        ownerLabel.textColor = .white
+        ownerLabel.font = .setFont(.caption1())
+        ownerLabel.textColor = .gray
         
-        descriptionLabel.font = .setFont(.caption2())
-        descriptionLabel.textColor = .white
+        descriptionLabel.font = .setFont(.caption1())
+        descriptionLabel.textColor = .gray
         descriptionLabel.numberOfLines = 2
     }
     

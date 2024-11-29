@@ -169,7 +169,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                         title: channelEntity.name,
                         imageURLString: channelEntity.imageURLString,
                         owner: broadcast?.owner ?? "Unknown",
-                        description: broadcast?.description ?? "No description"
+                        description: broadcast?.description ?? ""
                     )
                 }
             }

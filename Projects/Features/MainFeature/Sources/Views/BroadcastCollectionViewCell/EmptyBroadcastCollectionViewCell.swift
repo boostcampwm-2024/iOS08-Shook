@@ -2,8 +2,9 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
+import EasyLayoutModule
 
-final class BroadcastCollectionEmptyView: BaseView {
+final class EmptyBroadcastCollectionViewCell: BaseCollectionViewCell {
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
@@ -12,7 +13,7 @@ final class BroadcastCollectionEmptyView: BaseView {
     private lazy var stackView = UIStackView(arrangedSubviews: [imageView, textStackView])
     
     override func setupViews() {
-        addSubview(stackView)
+        contentView.addSubview(stackView)
         
         imageView.image = DesignSystemAsset.Image.tv48.image
         
@@ -22,7 +23,6 @@ final class BroadcastCollectionEmptyView: BaseView {
     }
     
     override func setupStyles() {
-        titleLabel.textColor = .white
         titleLabel.font = .setFont(.title())
         
         subtitleLabel.textColor = .gray
@@ -35,19 +35,17 @@ final class BroadcastCollectionEmptyView: BaseView {
         stackView.axis = .vertical
         stackView.spacing = 7
         stackView.alignment = .center
-    }
-    
-    override func layoutSubviews() {
-        let imageSize = min(bounds.width * 0.25, bounds.height * 0.2)
         
-        imageView.ezl.makeConstraint {
-            $0.size(with: imageSize)
-        }
+        contentView.backgroundColor = .systemBackground
     }
     
     override func setupLayouts() {
         stackView.ezl.makeConstraint {
-            $0.center(to: self)
+            $0.center(to: contentView)
+        }
+        
+        imageView.ezl.makeConstraint {
+            $0.size(with: 117)
         }
     }
 }

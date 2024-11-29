@@ -25,6 +25,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     private let confettiAnimationView = LottieAnimationView(name: "confetti", bundle: Bundle(for: DesignSystemResources.self))
     private let shookAnimationView = LottieAnimationView(name: "shook", bundle: Bundle(for: DesignSystemResources.self))
+    private lazy var loadingView = SHLoadingView(message: "아이디 등록 중")
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -65,8 +66,10 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
                 if isSaved {
                     self?.textField.resignFirstResponder()
                     self?.dismissWithAnimation()
+                    self?.removeLoadingView()
+                } else {
+                    self?.enableButton()
                 }
-                // 저장되지 않았을 때 에러 Alert 로 유저에게 알려주기
             }
             .store(in: &cancellables)
     }
@@ -97,12 +100,9 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     }
     
     public override func setupStyles() {
-        welcomeLabel.textColor = .white
         welcomeLabel.font = .systemFont(ofSize: 32, weight: .bold)
         welcomeLabel.alpha = 0
-                
-        greetLabel.textColor = .white
-        guideLabel.textColor = .white
+        
         guideLabel.alpha = 0
         
         greetStackView.spacing = 4
@@ -112,9 +112,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         textFieldContainerView.layer.borderWidth = 1
         textFieldContainerView.layer.cornerRadius = 24
         textFieldContainerView.alpha = 0
-        
-        textField.textColor = .white
-        
+                
         validateLabel.font = .setFont(.caption1())
         validateLabel.textColor = .red
         validateLabel.alpha = 0
@@ -186,6 +184,8 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
         button.addAction(UIAction { [weak self] _ in
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             self?.input.saveUserName.send(self?.textField.text)
+            self?.disableButton()
+            self?.addLoadingView()
         }, for: .touchUpInside)
     }
 }
@@ -276,11 +276,13 @@ extension SignUpViewController {
                 }
             }
         }
-        
-        button.isEnabled = isValid
-        
+                
         UIView.animate(withDuration: 0.5) { [weak self] in
-            self?.button.backgroundColor = isValid ? DesignSystemAsset.Color.mainGreen.color : .gray
+            if isValid {
+                self?.enableButton()
+            } else {
+                self?.disableButton()
+            }
         }
     }
 }
@@ -319,5 +321,30 @@ extension SignUpViewController {
                 timer.invalidate()
             }
         }
+    }
+}
+
+// MARK: - Loading
+extension SignUpViewController {
+    private func addLoadingView() {
+        loadingView.backgroundColor = .black.withAlphaComponent(0.2)
+        view.addSubview(loadingView)
+        loadingView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+    }
+    
+    private func removeLoadingView() {
+        loadingView.removeFromSuperview()
+    }
+    
+    private func disableButton() {
+        button.isEnabled = false
+        button.backgroundColor = .gray
+    }
+    
+    private func enableButton() {
+        button.isEnabled = true
+        button.backgroundColor = DesignSystemAsset.Color.mainGreen.color
     }
 }

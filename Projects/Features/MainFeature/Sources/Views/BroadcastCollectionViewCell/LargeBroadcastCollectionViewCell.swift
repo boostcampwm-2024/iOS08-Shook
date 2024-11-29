@@ -47,19 +47,17 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     override func setupStyles() {
         liveBadgeLabel.textInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         liveBadgeLabel.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        liveBadgeLabel.textColor = .white
         liveBadgeLabel.textAlignment = .center
         liveBadgeLabel.font = .setFont(.caption1(weight: .bold))
         liveBadgeLabel.layer.cornerRadius = 16
         liveBadgeLabel.clipsToBounds = true
         
         titleLabel.font = .setFont(.body1())
-        titleLabel.textColor = .white
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byWordWrapping
         
         descriptionLabel.font = .setFont(.body2())
-        descriptionLabel.textColor = .white
+        descriptionLabel.textColor = .gray
         descriptionLabel.numberOfLines = 2
         descriptionLabel.lineBreakMode = .byWordWrapping
     }
@@ -67,7 +65,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     func configure(channel: Channel) {
         loadAsyncImage(with: channel.thumbnailImageURLString)
         self.titleLabel.text = channel.name
-        self.descriptionLabel.text = "\(channel.owner) • \(channel.description)"
+        self.descriptionLabel.text = channel.owner + (channel.description.isEmpty ? "" : " • \(channel.description)")
     }
     
     private func loadAsyncImage(with imageURLString: String) {

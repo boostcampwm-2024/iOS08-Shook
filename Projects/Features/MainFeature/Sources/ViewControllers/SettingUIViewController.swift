@@ -17,6 +17,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     private let streamingDescriptionCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let streamingNameCell = SettingTableViewCell(style: .default, reuseIdentifier: nil)
     private let placeholderStringOfCells = ["어떤 방송인지 알려주세요!", "방송 내용을 알려주세요!"]
+    private lazy var loadingView = SHLoadingView(message: "채널 생성 중")
     
     private var broadcastPicker = RPSystemBroadcastPickerView()
     
@@ -62,12 +63,13 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isReady in
                 if isReady {
-                    guard let self,
-                          let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+                    guard let broadcastPickerButton = self?.broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
+                    self?.removeLoadingView()
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     broadcastPickerButton.sendActions(for: .touchUpInside)
                 } else {
-                    #warning("채널 준비중일 경우 처리하는 곳")
+                    self?.addLoadingView()
+                    self?.disableButton()
                 }
             }
             .store(in: &cancellables)
@@ -75,6 +77,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     public override func setupViews() {
         closeBarButton.image = DesignSystemAsset.Image.xmark24.image
+        closeBarButton.tintColor = .gray
         
         viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
         viewModel.sharedDefaults.set(false, forKey: viewModel.isStreamingKey)
@@ -98,18 +101,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         view.addSubview(startBroadcastButton)
     }
     
-    public override func setupStyles() {
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .gray
-
-        let appearance = UINavigationBarAppearance()
-        appearance.shadowColor = nil
-        
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-                
-        closeBarButton.style = .plain
-                
+    public override func setupStyles() {                
         startBroadcastButton.setTitle("방송시작", for: .normal)
         startBroadcastButton.layer.cornerRadius = 16
         startBroadcastButton.titleLabel?.font = .setFont(.body1(weight: .semiBold))
@@ -196,5 +188,29 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
+    }
+}
+
+extension SettingUIViewController {
+    private func addLoadingView() {
+        loadingView.backgroundColor = .black.withAlphaComponent(0.2)
+        view.addSubview(loadingView)
+        loadingView.ezl.makeConstraint {
+            $0.diagonal(to: view)
+        }
+    }
+    
+    private func removeLoadingView() {
+        loadingView.removeFromSuperview()
+    }
+    
+    private func disableButton() {
+        startBroadcastButton.isEnabled = false
+        startBroadcastButton.backgroundColor = DesignSystemAsset.Color.gray.color
+    }
+    
+    private func enableButton() {
+        startBroadcastButton.isEnabled = true
+        startBroadcastButton.backgroundColor = DesignSystemAsset.Color.mainGreen.color
     }
 }

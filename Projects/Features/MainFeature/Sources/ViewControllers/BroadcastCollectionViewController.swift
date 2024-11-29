@@ -9,7 +9,7 @@ import LiveStreamFeatureInterface
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
-        case large, small
+        case empty, large, small
     }
     
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, Channel>
@@ -18,7 +18,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private let input = BroadcastCollectionViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
-    private let refreshControl = UIRefreshControl()
+    private let refreshControl = SHRefreshControl()
     private let rightBarButton: UIBarButtonItem = UIBarButtonItem()
     
     private let layout = setupCollectionViewCompositionalLayout()
@@ -28,7 +28,6 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     
     private let transitioning = CollectionViewCellTransitioning()
     
-    private let emptyView = BroadcastCollectionEmptyView()
     private let dataLoadView = BroadcastCollectionLoadView()
     
     var selectedThumbnailView: ThumbnailView? {
@@ -64,37 +63,24 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.rightBarButtonItem = rightBarButton
         
+        collectionView.alwaysBounceVertical = true
         collectionView.refreshControl = refreshControl
         collectionView.delegate = self
+        collectionView.register(EmptyBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: EmptyBroadcastCollectionViewCell.identifier)
         collectionView.register(LargeBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: LargeBroadcastCollectionViewCell.identifier)
         collectionView.register(SmallBroadcastCollectionViewCell.self, forCellWithReuseIdentifier: SmallBroadcastCollectionViewCell.identifier)
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "Header")
-        
-        emptyView.isHidden = true
-                
+                        
         view.addSubview(collectionView)
-        view.addSubview(emptyView)
         view.addSubview(dataLoadView)
     }
     
     public override func setupStyles() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-
-        collectionView.isHidden = true
-        
-        rightBarButton.style = .plain
         rightBarButton.tintColor = DesignSystemAsset.Color.mainGreen.color
     }
     
     public override func setupLayouts() {
         collectionView.ezl.makeConstraint {
-            $0.diagonal(to: view)
-        }
-        
-        emptyView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
         
@@ -152,6 +138,16 @@ extension BroadcastCollectionViewController {
         return UICollectionViewCompositionalLayout { sectionIndex, _  in
             let section = Section(rawValue: sectionIndex) ?? .small
             switch section {
+            case .empty:
+                let size = NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .fractionalHeight(0.8)
+                )
+                let item = NSCollectionLayoutItem(layoutSize: size)
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
+                let section = NSCollectionLayoutSection(group: group)
+                return section
+                
             case .large:
                 let size = NSCollectionLayoutSize(
                     widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
@@ -203,15 +199,24 @@ extension BroadcastCollectionViewController {
             guard let section = Section(rawValue: indexPath.section) else { return UICollectionViewCell() }
             
             switch section {
+            case .empty:
+                guard let emptyCell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: EmptyBroadcastCollectionViewCell.identifier,
+                    for: indexPath
+                ) as? EmptyBroadcastCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                return emptyCell
+                
             case .large:
-                guard let bigCell = collectionView.dequeueReusableCell(
+                guard let largeCell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: LargeBroadcastCollectionViewCell.identifier,
                     for: indexPath
                 ) as? LargeBroadcastCollectionViewCell else {
                     return UICollectionViewCell()
                 }
-                bigCell.configure(channel: item)
-                return bigCell
+                largeCell.configure(channel: item)
+                return largeCell
                 
             case .small:
                 guard let smallCell = collectionView.dequeueReusableCell(
@@ -251,24 +256,20 @@ extension BroadcastCollectionViewController {
     private func applySnapshot(with channels: [Channel]) {
         dataLoadView.isHidden = true
         
-        if channels.isEmpty {
-            collectionView.isHidden = true
-            emptyView.isHidden = false
-        } else {
-            collectionView.isHidden = false
-            emptyView.isHidden = true
-        }
-        
         var snapshot = Snapshot()
-        
-        let bigSectionItems = Array(channels.prefix(3))
-        snapshot.appendSections([.large])
-        snapshot.appendItems(bigSectionItems, toSection: .large)
-        
-        if channels.count > 3 {
-            let smallSectionItems = Array(channels.suffix(from: 3))
-            snapshot.appendSections([.small])
-            snapshot.appendItems(smallSectionItems, toSection: .small)
+        snapshot.appendSections([.empty, .large])
+
+        if channels.isEmpty {
+            snapshot.appendItems([Channel(id: "Empty", title: "Empty", imageURLString: "Empty")], toSection: .empty)
+        } else {
+            let largeSectionItems = Array(channels.prefix(3))
+            snapshot.appendItems(largeSectionItems, toSection: .large)
+
+            if channels.count > 3 {
+                let smallSectionItems = Array(channels.suffix(from: 3))
+                snapshot.appendSections([.small])
+                snapshot.appendItems(smallSectionItems, toSection: .small)
+            }
         }
         
         dataSource?.apply(snapshot, animatingDifferences: true) { [weak self] in
