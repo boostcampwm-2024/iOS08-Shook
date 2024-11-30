@@ -9,14 +9,15 @@ final class NetworkClientTest: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        URLProtocol.registerClass(MockURLProtocol.self)
         interceptors = [DefaultLoggingInterceptor()]
-        client = NetworkClient(interceptors: interceptors)
+        let configuration = URLSessionConfiguration.ephemeral // 일시적인
+        configuration.protocolClasses = [MockURLProtocol.self] // URLProtocol subclasses 등록
+        let session = URLSession(configuration: configuration)
+        client = NetworkClient(session: session, interceptors: interceptors)
     }
     
     override func tearDown() {
         super.tearDown()
-        URLProtocol.unregisterClass(MockURLProtocol.self)
     }
 
     // MARK: - Success
