@@ -11,6 +11,7 @@ import LiveStationDomainInterface
 import LiveStreamFeatureInterface
 import Lottie
 import MainFeature
+import MainFeatureInterface
 
 public final class SplashViewController: BaseViewController<EmptyViewModel> {
     private let splashGradientView = SplashGradientView()
@@ -48,19 +49,15 @@ public final class SplashViewController: BaseViewController<EmptyViewModel> {
 extension SplashViewController {
     private func moveToMainView() {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
-        let fetchChannelInfoUsecase = DIContainer.shared.resolve(FetchChannelInfoUsecase.self)
-        let makeBroadcastUsecase = DIContainer.shared.resolve(MakeBroadcastUsecase.self)
         let fetchAllBroadcastUsecase = DIContainer.shared.resolve(FetchAllBroadcastUsecase.self)
-        let deleteBroadCastUsecase = DIContainer.shared.resolve(DeleteBroadcastUsecase.self)
         let factory = DIContainer.shared.resolve(LiveStreamViewControllerFactory.self)
+        let settingFactory = DIContainer.shared.resolve(SettingViewControllerFactory.self)
+        let broadcastFactory = DIContainer.shared.resolve(BroadcastViewControllerFactory.self)
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: fetchChannelListUsecase,
-            fetchChannelInfoUsecase: fetchChannelInfoUsecase,
-            makeBroadcastUsecase: makeBroadcastUsecase,
-            fetchAllBroadcastUsecase: fetchAllBroadcastUsecase,
-            deleteBroadCastUsecase: deleteBroadCastUsecase
+            fetchAllBroadcastUsecase: fetchAllBroadcastUsecase
         )
-        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory)
+        let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory, settingFactory: settingFactory, broadcastFactory: broadcastFactory)
         let navigationController = UINavigationController(rootViewController: viewController)
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
 

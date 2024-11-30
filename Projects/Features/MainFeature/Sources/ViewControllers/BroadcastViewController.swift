@@ -6,9 +6,9 @@ import BaseFeature
 import BaseFeatureInterface
 import DesignSystem
 
-public final class BroadcastUIViewController: BaseViewController<BroadcastCollectionViewModel> {
+public final class BroadcastViewController: BaseViewController<SettingViewModel> {
     deinit {
-        viewModel.sharedDefaults.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
+        viewModel.sharedDefaults?.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
     }
     
     private let broadcastStatusStackView = UIStackView()
@@ -16,7 +16,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     private let broadcastStateText = UILabel()
     private let endBroadcastButton = UIButton()
     
-    private let viewModelInput = BroadcastCollectionViewModel.Input()
+    private let viewModelInput = SettingViewModel.Input()
     
     public override func setupBind() {
         _ = viewModel.transform(input: viewModelInput)
@@ -40,7 +40,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
         
         endBroadcastButton.addSubview(broadcastPicker)
         
-        viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
+        viewModel.sharedDefaults?.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
         
         broadcastStatusStackView.addArrangedSubview(broadcastStatusImageView)
         broadcastStatusStackView.addArrangedSubview(broadcastStateText)
@@ -100,8 +100,7 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     }
     
     private func didFinishBroadCast() {
-        dismiss(animated: false) { [weak self] in
-            self?.viewModelInput.didTapFinishStreamingButton.send()
-        }
+        viewModelInput.didTapFinishStreamingButton.send()
+        dismiss(animated: false)
     }
 }

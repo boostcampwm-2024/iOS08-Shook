@@ -6,6 +6,7 @@ import BaseFeatureInterface
 import DesignSystem
 import EasyLayoutModule
 import LiveStreamFeatureInterface
+import MainFeatureInterface
 
 public class BroadcastCollectionViewController: BaseViewController<BroadcastCollectionViewModel> {
     private enum Section: Int, Hashable {
@@ -25,6 +26,8 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     private var dataSource: DataSource?
     private var factory: LiveStreamViewControllerFactory?
+    private var settingFactory: SettingViewControllerFactory?
+    private var broadcastFactory: BroadcastViewControllerFactory?
     
     private let transitioning = CollectionViewCellTransitioning()
     
@@ -39,9 +42,13 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
 
     public init(
         viewModel: BroadcastCollectionViewModel,
-        factory: (any LiveStreamViewControllerFactory)? = nil
+        factory: (any LiveStreamViewControllerFactory)? = nil,
+        settingFactory: (any SettingViewControllerFactory)? = nil,
+        broadcastFactory: (any BroadcastViewControllerFactory)? = nil
     ) {
         self.factory = factory
+        self.settingFactory = settingFactory
+        self.broadcastFactory = broadcastFactory
         super.init(viewModel: viewModel)
     }
     
@@ -283,14 +290,14 @@ extension BroadcastCollectionViewController {
 // MARK: - CollectionView Methods
 extension BroadcastCollectionViewController {
     @objc private func didTapRightBarButton() {
-        let settingUIViewController = SettingUIViewController(viewModel: viewModel)
+        guard let settingUIViewController = settingFactory?.make() else { return }
         let settingNavigationController = UINavigationController(rootViewController: settingUIViewController)
         navigationController?.present(settingNavigationController, animated: true)
     }
     
     private func showBroadcastUIView() {
+        guard let broadcastViewController = broadcastFactory?.make() else { return }
         navigationController?.setNavigationBarHidden(true, animated: false)
-        let broadcastViewController = BroadcastUIViewController(viewModel: viewModel)
         self.addChild(broadcastViewController)
         self.view.addSubview(broadcastViewController.view)
         broadcastViewController.view.frame = self.view.bounds
@@ -300,7 +307,7 @@ extension BroadcastCollectionViewController {
     private func dismissBroadcastUIView() {
 #warning("메인스레드 오류 해결")
         DispatchQueue.main.async { [weak self] in
-            guard let broadcastViewController = self?.children.first(where: { $0 is BroadcastUIViewController }) else { return }
+            guard let broadcastViewController = self?.children.first(where: { $0 is BroadcastViewController }) else { return }
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
                 broadcastViewController.view.alpha = 0 }, completion: { _ in
                     broadcastViewController.willMove(toParent: nil)

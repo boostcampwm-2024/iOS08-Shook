@@ -19,10 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         let mockDeleteBroadcastUsecase = MockDeleteBroadcastUsecaseImpl()
         let viewModel = BroadcastCollectionViewModel(
             fetchChannelListUsecase: mockFetchChannelListUsecase,
-            fetchChannelInfoUsecase: mockFetchChannelInfoUsecase,
-            makeBroadcastUsecase: mockmakeBroadcastUsecase,
-            fetchAllBroadcastUsecase: mockFetchAllBroadcastUsecase,
-            deleteBroadCastUsecase: mockDeleteBroadcastUsecase
+            fetchAllBroadcastUsecase: mockFetchAllBroadcastUsecase
         )
         let mockFactory = MockLiveStreamViewControllerFractoryImpl()
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: mockFactory)

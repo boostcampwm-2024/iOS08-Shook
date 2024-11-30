@@ -7,6 +7,7 @@ import LiveStationDomainInterface
 import LiveStreamFeature
 import LiveStreamFeatureInterface
 import MainFeature
+import MainFeatureInterface
 import ThirdPartyLibModule
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -55,13 +56,13 @@ extension SceneDelegate {
         let deleteChannelUsecaseImpl = DeleteChannelUsecaseImpl(repository: liveStationRepository)
         DIContainer.shared.register(DeleteChannelUsecase.self, dependency: deleteChannelUsecaseImpl)
         
-        let fetchChannelInfoUsecaseImpl = FetchChannelInfoUsecaseImpl(repository: liveStationRepository)
+        let fetchChannelInfoUsecaseImpl: any FetchChannelInfoUsecase = FetchChannelInfoUsecaseImpl(repository: liveStationRepository)
         DIContainer.shared.register(FetchChannelInfoUsecase.self, dependency: fetchChannelInfoUsecaseImpl)
         
         let broadcastRepository = BroadcastRepositoryImpl()
-        let makeBroadcastUsecaseImpl = MakeBroadcastUsecaseImpl(repository: broadcastRepository)
+        let makeBroadcastUsecaseImpl: any MakeBroadcastUsecase = MakeBroadcastUsecaseImpl(repository: broadcastRepository)
         let fetchAllBroadcastUsecaseImpl = FetchAllBroadcastUsecaseImpl(repository: broadcastRepository)
-        let deleteBroadCastUsecaseImpl = DeleteBroadcastUsecaseImpl(repository: broadcastRepository)
+        let deleteBroadCastUsecaseImpl: DeleteBroadcastUsecase = DeleteBroadcastUsecaseImpl(repository: broadcastRepository)
         DIContainer.shared.register(MakeBroadcastUsecase.self, dependency: makeBroadcastUsecaseImpl)
         DIContainer.shared.register(FetchAllBroadcastUsecase.self, dependency: fetchAllBroadcastUsecaseImpl)
         DIContainer.shared.register(DeleteBroadcastUsecase.self, dependency: deleteBroadCastUsecaseImpl)
@@ -69,5 +70,19 @@ extension SceneDelegate {
         let fetchBroadcastUseCase: any FetchVideoListUsecase = FetchVideoListUsecaseImpl(repository: liveStationRepository)
         let liveStreamFactoryImpl = LiveStreamViewControllerFactoryImpl(fetchBroadcastUseCase: fetchBroadcastUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
+        
+        let settingFactoryImpl = SettingViewControllerFactoryImpl(
+            fetchChannelInfoUsecase: fetchChannelInfoUsecaseImpl,
+            makeBroadcastUsecase: makeBroadcastUsecaseImpl,
+            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl
+        )
+        DIContainer.shared.register(SettingViewControllerFactory.self, dependency: settingFactoryImpl)
+        
+        let broadcastViewControllerFactory = BroadcastViewControllerFactoryImpl(
+            fetchChannelInfoUsecase: fetchChannelInfoUsecaseImpl,
+            makeBroadcastUsecase: makeBroadcastUsecaseImpl,
+            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl
+        )
+        DIContainer.shared.register(BroadcastViewControllerFactory.self, dependency: broadcastViewControllerFactory)
     }
 }
