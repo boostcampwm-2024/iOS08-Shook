@@ -52,8 +52,6 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let output = Output()
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
-    private let createChannelUsecase: any CreateChannelUsecase
-    private let deleteChannelUsecase: any DeleteChannelUsecase
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     private let makeBroadcastUsecase: any MakeBroadcastUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
@@ -68,22 +66,18 @@ public class BroadcastCollectionViewModel: ViewModel {
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
     
     private let userName = UserDefaults.standard.string(forKey: "USER_NAME") ?? ""
-    private var channelName: String = ""
+    private var broadcastName: String = ""
     private var channelDescription: String = ""
-    private var channel: ChannelEntity?
+    private var channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
 
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        createChannelUsecase: CreateChannelUsecase,
-        deleteChannelUsecase: DeleteChannelUsecase,
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
         makeBroadcastUsecase: MakeBroadcastUsecase,
         fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
         deleteBroadCastUsecase: DeleteBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
-        self.createChannelUsecase = createChannelUsecase
-        self.deleteChannelUsecase = deleteChannelUsecase
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeBroadcastUsecase = makeBroadcastUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
@@ -104,7 +98,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self.output.streamingStartButtonIsActive.send(validness.isValid)
                 self.output.errorMessage.send(validness.errorMessage)
                 if validness.isValid {
-                    channelName = name
+                    broadcastName = name
                 }
             }
             .store(in: &cancellables)
@@ -123,9 +117,9 @@ public class BroadcastCollectionViewModel: ViewModel {
         
         input.didTapFinishStreamingButton
             .flatMap { [weak self] _ in
-                guard let self, let channel else { return Empty<(Void, Void), Error>().eraseToAnyPublisher() }
-                return deleteChannelUsecase.execute(channelID: channel.id)
-                    .zip(deleteBroadCastUsecase.execute(id: channel.id))
+                guard let self,
+                      let channelID else { return Empty<Void, Error>().eraseToAnyPublisher() }
+                return deleteBroadCastUsecase.execute(id: channelID)
                     .eraseToAnyPublisher()
             }
             .sink { _ in
@@ -135,16 +129,12 @@ public class BroadcastCollectionViewModel: ViewModel {
             .store(in: &cancellables)
         
         input.didTapStartBroadcastButton
-            .flatMap { [weak self] _ in
-                guard let self else { return Empty<ChannelEntity, Error>().eraseToAnyPublisher() }
-                output.isReadyToStream.send(false)
-                return createChannelUsecase.execute(name: channelName)
-            }
             .flatMap { [weak self] in
-                guard let self else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
-                channel = $0
-                return fetchChannelInfoUsecase.execute(channelID: $0.id)
-                    .zip(makeBroadcastUsecase.execute(id: $0.id, title: $0.name, owner: userName, description: channelDescription))
+                guard let self,
+                      let channelID else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
+                output.isReadyToStream.send(false)
+                return fetchChannelInfoUsecase.execute(channelID: channelID)
+                    .zip(makeBroadcastUsecase.execute(id: channelID, title: broadcastName, owner: userName, description: channelDescription))
                     .map { channelInfo, _ in channelInfo }
                     .eraseToAnyPublisher()
             }
@@ -168,7 +158,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                     let broadcast = broadcastInfoEntities.first { $0.id == channelEntity.id }
                     return Channel(
                         id: channelEntity.id,
-                        title: channelEntity.name,
+                        title: broadcast?.title ?? "Unknown",
                         thumbnailImageURLString: channelEntity.imageURLString,
                         owner: broadcast?.owner ?? "Unknown",
                         description: broadcast?.description ?? ""
@@ -210,15 +200,10 @@ public class BroadcastCollectionViewModel: ViewModel {
     /// - Parameter _:  방송 이름
     /// - Returns: (Bool, String?) - 유효 여부와 에러 메시지
     private func valid(_ value: String) -> (isValid: Bool, errorMessage: String?) {
-        let isLengthValid = 3...20 ~= value.count
-        let isCharactersValid = value.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" }
+        let trimmedValue = value.trimmingCharacters(in: .whitespaces)
         
-        if !isLengthValid && !isCharactersValid {
-            return (false, "3글자 이상,20글자 이하로 입력해 주세요. 특수문자는 언더바(_)만 가능합니다.")
-        } else if !isLengthValid {
-            return (false, "최소 3글자 이상, 최대 20글자 이하로 입력해 주세요.")
-        } else if !isCharactersValid {
-            return (false, "특수문자는 언더바(_)만 가능합니다.")
+        if trimmedValue.isEmpty {
+            return (false, "공백을 제외하고 최소 1글자 이상 입력해주세요.")
         } else {
             return (true, nil)
         }

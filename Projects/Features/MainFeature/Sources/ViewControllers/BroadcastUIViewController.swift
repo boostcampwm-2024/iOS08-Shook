@@ -100,7 +100,8 @@ public final class BroadcastUIViewController: BaseViewController<BroadcastCollec
     }
     
     private func didFinishBroadCast() {
-        dismiss(animated: false)
-        viewModelInput.didTapFinishStreamingButton.send()
+        dismiss(animated: false) { [weak self] in
+            self?.viewModelInput.didTapFinishStreamingButton.send()
+        }
     }
 }

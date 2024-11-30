@@ -25,7 +25,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
     
     private let confettiAnimationView = LottieAnimationView(name: "confetti", bundle: Bundle(for: DesignSystemResources.self))
     private let shookAnimationView = LottieAnimationView(name: "shook", bundle: Bundle(for: DesignSystemResources.self))
-    private lazy var loadingView = SHLoadingView(message: "아이디 등록 중")
+    private lazy var loadingView = SHLoadingView(message: "닉네임 등록 중")
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -62,6 +62,7 @@ public class SignUpViewController: BaseViewController<SignUpViewModel> {
             .store(in: &cancellables)
         
         output.isSaved
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isSaved in
                 if isSaved {
                     self?.textField.resignFirstResponder()
