@@ -3,7 +3,7 @@ import UIKit
 import Lottie
 
 public final class SHLoadingView: UIView {
-    private let message: String
+    public var message: String
     private let blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         let view = UIVisualEffectView(effect: blurEffect)
