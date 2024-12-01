@@ -102,7 +102,8 @@ public class BroadcastCollectionViewModel: ViewModel {
                     }
                 },
                 receiveValue: { [weak self] channels in
-                    self?.output.channels.send(channels)
+                    let filteredChannels = channels.filter { !($0.id == self?.channelID) }
+                    self?.output.channels.send(filteredChannels)
                 }
             )
             .store(in: &cancellables)
