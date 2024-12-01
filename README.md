@@ -81,5 +81,5 @@ Apple에서 제공하는 강력한 프레임워크들을 활용하여 안정성�
 
 ## 📝 링크
 
-[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://glacier-clerk-ea2.notion.site/12d3e69869be8084b1a2ca866607aa81?v=12d3e69869be80108898000c1d413efd&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [와이어프레임](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
+[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://gorgeous-tibia-3b6.notion.site/ce054a9c415d4bfe84789b985e7884e9?v=73d0a6b91b8845b8b2fbf5b8f573d547&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [피그마](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
 | -- | -- | -- | -- | -- | -- | -- |
