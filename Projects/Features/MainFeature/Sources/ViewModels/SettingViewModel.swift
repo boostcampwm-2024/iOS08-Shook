@@ -27,9 +27,11 @@ public class SettingViewModel: ViewModel {
     
     private var broadcastName: String = ""
     private var channelDescription: String = ""
-    private var channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
-    private let userName = UserDefaults.standard.string(forKey: "USER_NAME") ?? ""
-    private let rtmp = "RTMP_SEVICE_URL"
+    
+    private let channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
+    private let userName = UserDefaults.standard.string(forKey: "USER_NAME")
+    
+    private let rtmpKey = "RTMP_SEVICE_URL"
     private let streamKey = "STREAMING_KEY"
 
     let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")
@@ -69,8 +71,7 @@ public class SettingViewModel: ViewModel {
         
         input.didTapStartBroadcastButton
             .flatMap { [weak self] in
-                guard let self,
-                      let channelID else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
+                guard let self, let channelID, let userName else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
                 output.isReadyToStream.send(false)
                 return fetchChannelInfoUsecase.execute(channelID: channelID)
                     .zip(
@@ -87,7 +88,7 @@ public class SettingViewModel: ViewModel {
             .sink { _ in
             } receiveValue: { [weak self] channelInfo in
                 guard let self else { return }
-                sharedDefaults?.set(channelInfo.rtmpUrl, forKey: rtmp)
+                sharedDefaults?.set(channelInfo.rtmpUrl, forKey: rtmpKey)
                 sharedDefaults?.set(channelInfo.streamKey, forKey: streamKey)
                 output.isReadyToStream.send(true)
             }

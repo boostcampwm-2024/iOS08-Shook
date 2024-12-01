@@ -24,8 +24,9 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
-    let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
-    let isStreamingKey = "IS_STREAMING"
+    private let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+    private let isStreamingKey = "IS_STREAMING"
+    private let channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
     
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
