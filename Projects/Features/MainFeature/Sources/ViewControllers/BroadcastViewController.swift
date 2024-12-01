@@ -49,7 +49,9 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         view.addSubview(endBroadcastButton)
     }
     
-    public override func setupStyles() {        
+    public override func setupStyles() {
+        view.backgroundColor = .systemBackground
+        
         broadcastStatusStackView.axis = .vertical
         broadcastStatusStackView.spacing = 7
         broadcastStatusStackView.alignment = .center
