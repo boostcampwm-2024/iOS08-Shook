@@ -64,9 +64,8 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
             .sink { [weak self] isReady in
                 if isReady {
                     guard let broadcastPickerButton = self?.broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
-                    self?.removeLoadingView()
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                     broadcastPickerButton.sendActions(for: .touchUpInside)
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 } else {
                     self?.addLoadingView()
                     self?.disableButton()
