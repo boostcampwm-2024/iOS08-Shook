@@ -33,55 +33,31 @@ public struct Channel: Hashable {
 public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
-        let didWriteStreamingName: PassthroughSubject<String, Never> = .init()
-        let didWriteStreamingDescription: PassthroughSubject<String, Never> = .init()
-        let didTapBroadcastButton: PassthroughSubject<Void, Never> = .init()
-        let didTapFinishStreamingButton: PassthroughSubject<Void, Never> = .init()
-        let didTapStartBroadcastButton: PassthroughSubject<Void, Never> = .init()
+        let didTapBroadcastPicker: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
         let channels: PassthroughSubject<[Channel], Never> = .init()
-        let streamingStartButtonIsActive: PassthroughSubject<Bool, Never> = .init()
-        let errorMessage: PassthroughSubject<String?, Never> = .init()
         let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
         let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
-        let isReadyToStream: PassthroughSubject<Bool, Never> = .init()
     }
     
     private let output = Output()
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
-    private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
-    private let makeBroadcastUsecase: any MakeBroadcastUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
-    private let deleteBroadCastUsecase: any DeleteBroadcastUsecase
     
     private var cancellables = Set<AnyCancellable>()
     
-    let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
-    let isStreamingKey = "isStreaming"
-    private let rtmp = "RTMP_SEVICE_URL"
-    private let streamKey = "STREAMING_KEY"
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+    let isStreamingKey = "IS_STREAMING"
     
-    private let userName = UserDefaults.standard.string(forKey: "USER_NAME") ?? ""
-    private var broadcastName: String = ""
-    private var channelDescription: String = ""
-    private var channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
-
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        fetchChannelInfoUsecase: FetchChannelInfoUsecase,
-        makeBroadcastUsecase: MakeBroadcastUsecase,
-        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
-        deleteBroadCastUsecase: DeleteBroadcastUsecase
+        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
-        self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
-        self.makeBroadcastUsecase = makeBroadcastUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
-        self.deleteBroadCastUsecase = deleteBroadCastUsecase
     }
     
     public func transform(input: Input) -> Output {
@@ -90,60 +66,20 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self?.fetchData()
             }
             .store(in: &cancellables)
-       
-        input.didWriteStreamingName
-            .sink { [weak self] name in
-                guard let self else { return }
-                let validness = valid(name)
-                self.output.streamingStartButtonIsActive.send(validness.isValid)
-                self.output.errorMessage.send(validness.errorMessage)
-                if validness.isValid {
-                    broadcastName = name
-                }
-            }
-            .store(in: &cancellables)
         
-        input.didWriteStreamingDescription
-            .sink { [weak self] description in
-                self?.channelDescription = description
-            }
-            .store(in: &cancellables)
-        
-        input.didTapBroadcastButton
+        input.didTapBroadcastPicker
             .sink { [weak self] _ in
                 self?.output.showBroadcastUIView.send()
             }
             .store(in: &cancellables)
         
-        input.didTapFinishStreamingButton
-            .flatMap { [weak self] _ in
-                guard let self,
-                      let channelID else { return Empty<Void, Error>().eraseToAnyPublisher() }
-                return deleteBroadCastUsecase.execute(id: channelID)
-                    .eraseToAnyPublisher()
-            }
-            .sink { _ in
-            } receiveValue: { [weak self] _ in
-                self?.output.dismissBroadcastUIView.send()
-            }
-            .store(in: &cancellables)
-        
-        input.didTapStartBroadcastButton
-            .flatMap { [weak self] in
-                guard let self,
-                      let channelID else { return Empty<ChannelInfoEntity, Error>().eraseToAnyPublisher() }
-                output.isReadyToStream.send(false)
-                return fetchChannelInfoUsecase.execute(channelID: channelID)
-                    .zip(makeBroadcastUsecase.execute(id: channelID, title: broadcastName, owner: userName, description: channelDescription))
-                    .map { channelInfo, _ in channelInfo }
-                    .eraseToAnyPublisher()
-            }
-            .sink { _ in
-            } receiveValue: { [weak self] channelInfo in
-                guard let self else { return }
-                sharedDefaults.set(channelInfo.rtmpUrl, forKey: rtmp)
-                sharedDefaults.set(channelInfo.streamKey, forKey: streamKey)
-                output.isReadyToStream.send(true)
+        BroadcastState.shared.isBroadcasting
+            .sink { [weak self] isBroadcasting in
+                if isBroadcasting {
+                    self?.output.showBroadcastUIView.send()
+                } else {
+                    self?.output.dismissBroadcastUIView.send()
+                }
             }
             .store(in: &cancellables)
 
@@ -194,19 +130,6 @@ public class BroadcastCollectionViewModel: ViewModel {
                 }
             )
             .store(in: &cancellables)
-    }
-
-    /// 방송 이름이 유효한지 확인하는 메서드
-    /// - Parameter _:  방송 이름
-    /// - Returns: (Bool, String?) - 유효 여부와 에러 메시지
-    private func valid(_ value: String) -> (isValid: Bool, errorMessage: String?) {
-        let trimmedValue = value.trimmingCharacters(in: .whitespaces)
-        
-        if trimmedValue.isEmpty {
-            return (false, "공백을 제외하고 최소 1글자 이상 입력해주세요.")
-        } else {
-            return (true, nil)
-        }
     }
     
     private func loadAsyncImage(with imageURLString: String) -> AnyPublisher<UIImage?, URLError> {

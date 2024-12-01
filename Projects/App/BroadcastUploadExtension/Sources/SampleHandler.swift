@@ -5,7 +5,7 @@ import HaishinKit
 final class SampleHandler: RPBroadcastSampleHandler {
     // MARK: - App group
     private let sharedDefaults = UserDefaults(suiteName: "group.kr.codesquad.boostcamp9.Shook")!
-    private let isStreamingKey = "isStreaming"
+    private let isStreamingKey = "IS_STREAMING"
     
     // MARK: - HaishinKit
     private let mixer = MediaMixer()

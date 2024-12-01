@@ -6,9 +6,9 @@ import BaseFeature
 import DesignSystem
 import EasyLayoutModule
 
-public final class SettingUIViewController: BaseViewController<BroadcastCollectionViewModel> {
+public final class SettingUIViewController: BaseViewController<SettingViewModel> {
     deinit {
-        viewModel.sharedDefaults.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
+        viewModel.sharedDefaults?.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
     }
     
     private let settingTableView = UITableView()
@@ -21,7 +21,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     
     private var broadcastPicker = RPSystemBroadcastPickerView()
     
-    private let viewModelInput = BroadcastCollectionViewModel.Input()
+    private let viewModelInput = SettingViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
     
     public override func observeValue(
@@ -79,8 +79,8 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
         closeBarButton.image = DesignSystemAsset.Image.xmark24.image
         closeBarButton.tintColor = .gray
         
-        viewModel.sharedDefaults.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
-        viewModel.sharedDefaults.set(false, forKey: viewModel.isStreamingKey)
+        viewModel.sharedDefaults?.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
+        viewModel.sharedDefaults?.set(false, forKey: viewModel.isStreamingKey)
         
         navigationItem.title = "방송설정"
         navigationItem.rightBarButtonItem = closeBarButton
@@ -150,7 +150,7 @@ public final class SettingUIViewController: BaseViewController<BroadcastCollecti
     }
     
     private func didStartBroadCast() {
-        viewModelInput.didTapBroadcastButton.send()
+        BroadcastState.shared.isBroadcasting.send(true)
         dismiss(animated: true)
     }
     
