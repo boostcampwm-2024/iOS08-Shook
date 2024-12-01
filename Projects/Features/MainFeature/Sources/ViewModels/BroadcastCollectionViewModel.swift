@@ -4,6 +4,7 @@ import UIKit
 import BaseFeatureInterface
 import BroadcastDomainInterface
 import LiveStationDomainInterface
+import MainFeatureInterface
 
 public struct Channel: Hashable {
     let id: String
@@ -47,6 +48,8 @@ public class BroadcastCollectionViewModel: ViewModel {
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
     
+    private let broadcastState: BroadcastStateProtocol
+    
     private var cancellables = Set<AnyCancellable>()
     
     let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
@@ -54,10 +57,12 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase
+        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
+        broadcastState: BroadcastStateProtocol = BroadcastState.shared
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
+        self.broadcastState = broadcastState
     }
     
     public func transform(input: Input) -> Output {
@@ -73,7 +78,7 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
-        BroadcastState.shared.isBroadcasting
+        broadcastState.isBroadcasting
             .sink { [weak self] isBroadcasting in
                 if isBroadcasting {
                     self?.output.showBroadcastUIView.send()
