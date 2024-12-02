@@ -109,7 +109,6 @@ final class ChattingListView: BaseView {
         self.addGestureRecognizer(tapGesture)
         
         $isScrollFixed
-            .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
             .sink { [weak self] in
                 self?.updateRecentChatButtonConstraint(isHidden: $0)
             }
@@ -137,9 +136,7 @@ final class ChattingListView: BaseView {
     }
     
     private func scrollToBottom() {
-        let lastRowIndex = chatListView.numberOfRows(inSection: 0) - 1
-        guard lastRowIndex >= 0,
-              let indexPath = lastIndexPath() else { return }
+        guard let indexPath = lastIndexPath() else { return }
         chatListView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
@@ -183,7 +180,7 @@ extension ChattingListView: ChatInputFieldAction {
 }
 
 extension ChattingListView: UITableViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard let lastIndexPath = lastIndexPath(),
               let indexPathList = chatListView.indexPathsForVisibleRows else { return }
         isScrollFixed = indexPathList.contains(lastIndexPath)
