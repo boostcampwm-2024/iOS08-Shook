@@ -90,7 +90,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     public override func setupStyles() {
         view.backgroundColor = .black
         
-        infoView.configureUI(with: (_title, _owner + (description.isEmpty ? " " : " • ") + _description))
+        infoView.configureUI(with: (_title, _owner + (_description.isEmpty ? " " : " • ") + _description))
         print("description: ", _description)
         bottomGuideView.backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
