@@ -293,7 +293,6 @@ extension BroadcastCollectionViewController {
         navigationController?.present(settingNavigationController, animated: true)
     }
     
-    @objc
     private func showBroadcastUIView() {
         guard let broadcastViewController = broadcastFactory?.make() else { return }
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -303,7 +302,6 @@ extension BroadcastCollectionViewController {
         broadcastViewController.didMove(toParent: self)
     }
     
-    @objc
     private func dismissBroadcastView() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
