@@ -37,6 +37,7 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
     public override func setupViews() {
         broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         broadcastPicker.preferredExtension = viewModel.extensionBundleID
+        broadcastPicker.showsMicrophoneButton = false
         
         finshBroadcastButton.addSubview(broadcastPicker)
         
