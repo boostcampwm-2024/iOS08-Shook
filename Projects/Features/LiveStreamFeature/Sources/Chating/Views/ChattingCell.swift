@@ -21,6 +21,7 @@ final class ChattingCell: BaseTableViewCell {
         nameLabel.font = .setFont(.caption1(weight: .bold))
 
         detailLabel.font = .setFont(.caption1())
+        detailLabel.numberOfLines = 0
     }
     
     override func setupLayouts() {

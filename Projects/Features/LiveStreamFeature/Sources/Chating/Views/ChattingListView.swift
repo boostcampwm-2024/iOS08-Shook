@@ -59,6 +59,7 @@ final class ChattingListView: BaseView {
         chatListView.register(ChattingCell.self, forCellReuseIdentifier: ChattingCell.identifier)
         chatListView.register(SystemAlarmCell.self, forCellReuseIdentifier: SystemAlarmCell.identifier)
         chatListView.backgroundView = chatEmptyView
+        chatListView.bounces = false
     }
     
     override func setupStyles() {
