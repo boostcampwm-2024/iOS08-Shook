@@ -4,13 +4,22 @@
 # Shook
 잘하면 재밌고, 못하면 더 재밌는 실시간 게임 스트리밍!
 
-</div>
 
 ![shook_thumbnail](https://github.com/user-attachments/assets/ae77a4c5-0f33-458c-b61b-6249d26a7a5d)
 
-## ⭐️ 서비스 소개
 언제 어디서든 쉽게 모바일 게임 스트리밍을 할 수 있는 실시간 스트리밍 애플리케이션입니다.  
 Shook은 게임 스트리밍의 장벽을 낮추고, 누구나 쉽고 재미있게 스트리밍을 시작할 수 있는 환경을 제공합니다.
+
+</div>
+
+## ⭐️ 서비스 소개
+
+실시간으로 스트리밍하는 방송을 확인하고, 스트리머와 소통해 보세요! <br>
+채팅을 직접 입력하거나 하트 이모티콘을 활용해 간단한 반응을 남길 수도 있어요.
+
+![description1](https://github.com/user-attachments/assets/e3e624c4-6e8c-434e-b0b2-3a89047d6ace)
+
+
 
 ## 🧑🏻‍💻 팀원
 
