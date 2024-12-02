@@ -130,6 +130,13 @@ final class ChatInputField: BaseView {
         heartButton.addTarget(self, action: #selector(didTapHeartButton), for: .touchUpInside)
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if heartButton.bounds.insetBy(dx: -30, dy: -30).contains(point) {
+            return heartButton
+        }
+        return super.hitTest(point, with: event)
+    }
+    
     @objc
     private func didTapHeartButton() {
         let generator = UIImpactFeedbackGenerator(style: .light)
@@ -142,7 +149,6 @@ final class ChatInputField: BaseView {
             self?.heartLayer.birthRate = 0
         }
         layer.addSublayer(heartLayer)
-        
     }
 }
 
