@@ -60,6 +60,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
         super.viewDidLoad()
         setupDataSource()
         input.fetch.send()
+        registerObserver()
     }
     
     public override func setupViews() {
@@ -113,19 +114,15 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
                 self?.applySnapshot(with: channels)
             }
             .store(in: &cancellables)
-        
-        output.showBroadcastUIView
-            .sink { [weak self] _ in
-                self?.showBroadcastUIView()
-            }
-            .store(in: &cancellables)
-        
-        output.dismissBroadcastUIView
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.dismissBroadcastView()
-            }
-            .store(in: &cancellables)
+    }
+    
+    private func registerObserver() {
+        NotificationCenter.default.addObserver(forName: NotificationName.startStreaming, object: nil, queue: nil) { [weak self] _ in
+            self?.showBroadcastUIView()
+        }
+        NotificationCenter.default.addObserver(forName: NotificationName.finishStreaming, object: nil, queue: nil) { [weak self] _ in
+            self?.dismissBroadcastView()
+        }
     }
 }
 
@@ -296,6 +293,7 @@ extension BroadcastCollectionViewController {
         navigationController?.present(settingNavigationController, animated: true)
     }
     
+    @objc
     private func showBroadcastUIView() {
         guard let broadcastViewController = broadcastFactory?.make() else { return }
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -305,16 +303,20 @@ extension BroadcastCollectionViewController {
         broadcastViewController.didMove(toParent: self)
     }
     
+    @objc
     private func dismissBroadcastView() {
-        guard let broadcastViewController = children.first(where: { $0 is BroadcastViewController }) else { return }
-        UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
-            broadcastViewController.view.alpha = 0 }, completion: { _ in
-                broadcastViewController.willMove(toParent: nil)
-                broadcastViewController.view.removeFromSuperview()
-                broadcastViewController.removeFromParent()
-            }
-        )
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        input.fetch.send()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard let broadcastViewController = children.first(where: { $0 is BroadcastViewController }) else { return }
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
+                broadcastViewController.view.alpha = 0 }, completion: { _ in
+                    broadcastViewController.willMove(toParent: nil)
+                    broadcastViewController.view.removeFromSuperview()
+                    broadcastViewController.removeFromParent()
+                }
+            )
+            navigationController?.setNavigationBarHidden(false, animated: false)
+            input.fetch.send()
+        }
     }
 }

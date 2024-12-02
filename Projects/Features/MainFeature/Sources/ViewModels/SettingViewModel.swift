@@ -104,7 +104,7 @@ public class SettingViewModel: ViewModel {
             }
             .sink { _ in
             } receiveValue: { [weak self] _ in
-                //self?.broadcastState.isBroadcasting.send(false)
+                NotificationCenter.default.post(name: NotificationName.finishStreaming, object: self)
             }
             .store(in: &cancellables)
         

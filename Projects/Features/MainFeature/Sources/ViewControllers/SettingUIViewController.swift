@@ -151,6 +151,7 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     }
     
     private func didStartBroadCast() {
+        NotificationCenter.default.post(name: NotificationName.startStreaming, object: self)
         dismiss(animated: true)
     }
     

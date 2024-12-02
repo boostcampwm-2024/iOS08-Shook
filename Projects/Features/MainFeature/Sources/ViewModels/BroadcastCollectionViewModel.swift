@@ -9,13 +9,10 @@ import MainFeatureInterface
 public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
-        let didTapBroadcastPicker: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
         let channels: PassthroughSubject<[Channel], Never> = .init()
-        let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
-        let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
     }
     
     private let output = Output()
@@ -43,22 +40,6 @@ public class BroadcastCollectionViewModel: ViewModel {
                 self?.fetchData()
             }
             .store(in: &cancellables)
-        
-        input.didTapBroadcastPicker
-            .sink { [weak self] _ in
-                self?.output.showBroadcastUIView.send()
-            }
-            .store(in: &cancellables)
-        
-//        broadcastState.isBroadcasting
-//            .sink { [weak self] isBroadcasting in
-//                if isBroadcasting {
-//                    self?.output.showBroadcastUIView.send()
-//                } else {
-//                    self?.output.dismissBroadcastUIView.send()
-//                }
-//            }
-//            .store(in: &cancellables)
 
         return output
     }
