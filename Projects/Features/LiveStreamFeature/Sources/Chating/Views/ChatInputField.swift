@@ -71,6 +71,8 @@ final class ChatInputField: BaseView {
         inputField.font = .setFont(.body2())
         inputField.backgroundColor = .clear
         inputField.textColor = .white
+        inputField.autocorrectionType = .no
+        inputField.spellCheckingType = .no
         
         placeholder.font = .setFont(.body2())
         placeholder.textColor = DesignSystemAsset.Color.gray.color
