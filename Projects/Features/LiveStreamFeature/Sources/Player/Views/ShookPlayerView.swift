@@ -32,6 +32,7 @@ final class ShookPlayerView: BaseView {
     private let indicatorView: UIActivityIndicatorView =  UIActivityIndicatorView()
     private var timeObserverToken: Any?
     private var subscription: Set<AnyCancellable> = .init()
+    private var isRegisterdObsever: Bool = false
     
     // MARK: - @Published
     @Published private var playingStateChangedPublisher: Bool?
@@ -65,6 +66,7 @@ final class ShookPlayerView: BaseView {
         player.replaceCurrentItem(with: playerItem)
         addObserver()
         player.play()
+        isRegisterdObsever = true
     }
     
     required init?(coder: NSCoder) {
@@ -72,7 +74,9 @@ final class ShookPlayerView: BaseView {
     }
     
     deinit {
-        removeObserver()
+        if isRegisterdObsever {
+            removeObserver()
+        }
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
