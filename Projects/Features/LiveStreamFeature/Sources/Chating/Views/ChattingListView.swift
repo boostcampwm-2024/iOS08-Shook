@@ -146,11 +146,11 @@ final class ChattingListView: BaseView {
     private func updateRecentChatButtonConstraint(isHidden: Bool) {
         UIView.animate(withDuration: 0.2) {
             if isHidden {
-                NSLayoutConstraint.activate(self.recentChatButtonHideConstraints)
                 NSLayoutConstraint.deactivate(self.recentChatButtonShowConstraints)
+                NSLayoutConstraint.activate(self.recentChatButtonHideConstraints)
             } else {
-                NSLayoutConstraint.activate(self.recentChatButtonShowConstraints)
                 NSLayoutConstraint.deactivate(self.recentChatButtonHideConstraints)
+                NSLayoutConstraint.activate(self.recentChatButtonShowConstraints)
             }
             self.layoutIfNeeded()
         }
