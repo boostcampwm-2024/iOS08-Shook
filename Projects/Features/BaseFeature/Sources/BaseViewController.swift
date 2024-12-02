@@ -23,6 +23,10 @@ open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
         setupBind()
     }
     
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
+    
     // MARK: - View Life Cycle
     open func setupBind() { }
     
