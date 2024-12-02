@@ -56,7 +56,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return output.isExpanded.value ? .landscapeLeft: .portrait
+        return output.isExpanded.value ? .landscapeRight: .portrait
     }
     
     public override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
