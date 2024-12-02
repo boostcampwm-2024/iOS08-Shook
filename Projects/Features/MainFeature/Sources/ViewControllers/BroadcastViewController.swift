@@ -14,7 +14,7 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
     private let broadcastStatusStackView = UIStackView()
     private let broadcastStatusImageView = UIImageView()
     private let broadcastStateText = UILabel()
-    private let endBroadcastButton = UIButton()
+    private let finshBroadcastButton = UIButton()
     
     private let viewModelInput = SettingViewModel.Input()
     
@@ -38,7 +38,7 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         broadcastPicker.preferredExtension = viewModel.extensionBundleID
         
-        endBroadcastButton.addSubview(broadcastPicker)
+        finshBroadcastButton.addSubview(broadcastPicker)
         
         viewModel.sharedDefaults?.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
         
@@ -46,10 +46,12 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         broadcastStatusStackView.addArrangedSubview(broadcastStateText)
         
         view.addSubview(broadcastStatusStackView)
-        view.addSubview(endBroadcastButton)
+        view.addSubview(finshBroadcastButton)
     }
     
-    public override func setupStyles() {        
+    public override func setupStyles() {
+        view.backgroundColor = .systemBackground
+        
         broadcastStatusStackView.axis = .vertical
         broadcastStatusStackView.spacing = 7
         broadcastStatusStackView.alignment = .center
@@ -58,11 +60,11 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         broadcastStateText.font = .setFont(.title())
         broadcastStateText.textColor = .white
 
-        endBroadcastButton.setTitle("방송종료", for: .normal)
-        endBroadcastButton.layer.cornerRadius = 16
-        endBroadcastButton.titleLabel?.font = .setFont(.body1())
-        endBroadcastButton.backgroundColor = DesignSystemAsset.Color.mainGreen.color
-        endBroadcastButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
+        finshBroadcastButton.setTitle("방송종료", for: .normal)
+        finshBroadcastButton.layer.cornerRadius = 16
+        finshBroadcastButton.titleLabel?.font = .setFont(.body1())
+        finshBroadcastButton.backgroundColor = DesignSystemAsset.Color.mainGreen.color
+        finshBroadcastButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
     }
     
     public override func setupLayouts() {
@@ -76,25 +78,25 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
                 .centerX(to: broadcastStatusStackView)
         }
         
-        endBroadcastButton.ezl.makeConstraint {
+        finshBroadcastButton.ezl.makeConstraint {
             $0.height(56)
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
         
         broadcastPicker.ezl.makeConstraint {
-            $0.center(to: endBroadcastButton)
-                .width(endBroadcastButton.frame.width)
-                .height(endBroadcastButton.frame.height)
+            $0.center(to: finshBroadcastButton)
+                .width(finshBroadcastButton.frame.width)
+                .height(finshBroadcastButton.frame.height)
         }
     }
     
     public override func setupActions() {
-        endBroadcastButton.addTarget(self, action: #selector(didTapEndButton), for: .touchUpInside)
+        finshBroadcastButton.addTarget(self, action: #selector(didTapFinishButton), for: .touchUpInside)
     }
     
     @objc
-    private func didTapEndButton() {
+    private func didTapFinishButton() {
         guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
         broadcastPickerButton.sendActions(for: .touchUpInside)
     }

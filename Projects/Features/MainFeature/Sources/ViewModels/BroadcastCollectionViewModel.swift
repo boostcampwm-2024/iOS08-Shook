@@ -5,31 +5,6 @@ import BaseFeatureInterface
 import BroadcastDomainInterface
 import LiveStationDomainInterface
 
-public struct Channel: Hashable {
-    let id: String
-    let name: String
-    var thumbnailImageURLString: String
-    var thumbnailImage: UIImage?
-    let owner: String
-    let description: String
-
-    public init(
-        id: String,
-        title: String,
-        thumbnailImageURLString: String = "",
-        thumbnailImage: UIImage? = nil,
-        owner: String = "",
-        description: String = ""
-    ) {
-        self.id = id
-        self.name = title
-        self.thumbnailImageURLString = thumbnailImageURLString
-        self.thumbnailImage = thumbnailImage
-        self.owner = owner
-        self.description = description
-    }
-}
-
 public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
@@ -49,8 +24,9 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
-    let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
-    let isStreamingKey = "IS_STREAMING"
+    private let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
+    private let isStreamingKey = "IS_STREAMING"
+    private let channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
     
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
@@ -126,7 +102,8 @@ public class BroadcastCollectionViewModel: ViewModel {
                     }
                 },
                 receiveValue: { [weak self] channels in
-                    self?.output.channels.send(channels)
+                    let filteredChannels = channels.filter { !($0.id == self?.channelID) }
+                    self?.output.channels.send(filteredChannels)
                 }
             )
             .store(in: &cancellables)
