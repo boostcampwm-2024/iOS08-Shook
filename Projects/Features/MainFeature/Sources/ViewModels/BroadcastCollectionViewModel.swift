@@ -9,22 +9,17 @@ import MainFeatureInterface
 public class BroadcastCollectionViewModel: ViewModel {
     public struct Input {
         let fetch: PassthroughSubject<Void, Never> = .init()
-        let didTapBroadcastPicker: PassthroughSubject<Void, Never> = .init()
     }
     
     public struct Output {
         let channels: PassthroughSubject<[Channel], Never> = .init()
-        let showBroadcastUIView: PassthroughSubject<Void, Never> = .init()
-        let dismissBroadcastUIView: PassthroughSubject<Void, Never> = .init()
     }
     
     private let output = Output()
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
-    
-    private let broadcastState: BroadcastStateProtocol
-    
+        
     private var cancellables = Set<AnyCancellable>()
     
     private let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
@@ -33,34 +28,16 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
-        broadcastState: BroadcastStateProtocol = BroadcastState.shared
+        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
-        self.broadcastState = broadcastState
     }
     
     public func transform(input: Input) -> Output {
         input.fetch
             .sink { [weak self] in
                 self?.fetchData()
-            }
-            .store(in: &cancellables)
-        
-        input.didTapBroadcastPicker
-            .sink { [weak self] _ in
-                self?.output.showBroadcastUIView.send()
-            }
-            .store(in: &cancellables)
-        
-        broadcastState.isBroadcasting
-            .sink { [weak self] isBroadcasting in
-                if isBroadcasting {
-                    self?.output.showBroadcastUIView.send()
-                } else {
-                    self?.output.dismissBroadcastUIView.send()
-                }
             }
             .store(in: &cancellables)
 
