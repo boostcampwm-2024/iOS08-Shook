@@ -58,7 +58,7 @@ extension SplashViewController {
             fetchAllBroadcastUsecase: fetchAllBroadcastUsecase
         )
         let viewController = BroadcastCollectionViewController(viewModel: viewModel, factory: factory, settingFactory: settingFactory, broadcastFactory: broadcastFactory)
-        let navigationController = UINavigationController(rootViewController: viewController)
+        let navigationController = BaseNavigationController(rootViewController: viewController)
         let createChannelUsecase = DIContainer.shared.resolve(CreateChannelUsecase.self)
 
         /// 유저의 이름이 저장되어 있지 않으면 유저 등록 뷰를 Navigation에 올림
