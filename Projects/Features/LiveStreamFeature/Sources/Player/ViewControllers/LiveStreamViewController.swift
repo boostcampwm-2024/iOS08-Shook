@@ -63,6 +63,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         super.viewWillTransition(to: size, with: coordinator)
         
         chattingList.isHidden = output.isExpanded.value
+        chattingList.endEditing(true)
         infoView.isHidden = output.isExpanded.value
         bottomGuideView.isHidden = output.isExpanded.value
         if output.isExpanded.value {
