@@ -65,7 +65,6 @@ final class ChattingListView: BaseView {
         titleLabel.font = .setFont(.body1())
         
         chatListView.backgroundColor = .clear
-        chatListView.keyboardDismissMode = .onDrag
         chatListView.allowsSelection = false
         chatListView.separatorStyle = .none
         
@@ -106,6 +105,9 @@ final class ChattingListView: BaseView {
     }
     
     override func setupActions() {
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.addGestureRecognizer(tapGesture)
+        
         $isScrollFixed
             .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
             .sink { [weak self] in
@@ -152,6 +154,11 @@ final class ChattingListView: BaseView {
             }
             self.layoutIfNeeded()
         }
+    }
+    
+    @objc
+    private func dismissKeyboard() {
+        endEditing(true)
     }
 }
 

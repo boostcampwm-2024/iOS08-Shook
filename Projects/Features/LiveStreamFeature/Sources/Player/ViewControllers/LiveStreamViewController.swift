@@ -159,6 +159,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .sink { [weak self] flag in
                 guard let self else { return }
                 self.playerView.playerControlViewAlphaAnimalation(flag)
+                view.endEditing(true)
             }
             .store(in: &subscription)
         
