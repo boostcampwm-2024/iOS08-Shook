@@ -4,6 +4,7 @@ import Foundation
 import BaseFeatureInterface
 import BroadcastDomainInterface
 import LiveStationDomainInterface
+import MainFeatureInterface
 
 public class SettingViewModel: ViewModel {
     public struct Input {
@@ -25,6 +26,8 @@ public class SettingViewModel: ViewModel {
     private let makeBroadcastUsecase: any MakeBroadcastUsecase
     private let deleteBroadCastUsecase: any DeleteBroadcastUsecase
     
+    private let broadcastState: BroadcastStateProtocol
+    
     private var broadcastName: String = ""
     private var channelDescription: String = ""
     private var channelID = UserDefaults.standard.string(forKey: "CHANNEL_ID")
@@ -39,11 +42,13 @@ public class SettingViewModel: ViewModel {
     public init(
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
         makeBroadcastUsecase: MakeBroadcastUsecase,
-        deleteBroadCastUsecase: DeleteBroadcastUsecase
+        deleteBroadCastUsecase: DeleteBroadcastUsecase,
+        broadcastState: BroadcastState
     ) {
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeBroadcastUsecase = makeBroadcastUsecase
         self.deleteBroadCastUsecase = deleteBroadCastUsecase
+        self.broadcastState = broadcastState
     }
     
     public func transform(input: Input) -> Output {
@@ -101,8 +106,8 @@ public class SettingViewModel: ViewModel {
                     .eraseToAnyPublisher()
             }
             .sink { _ in
-            } receiveValue: { _ in
-                BroadcastState.shared.isBroadcasting.send(false)
+            } receiveValue: { [weak self] _ in
+                self?.broadcastState.isBroadcasting.send(false)
             }
             .store(in: &cancellables)
         
