@@ -19,6 +19,7 @@ extension SettingsDictionary {
     
     static func makeProjectSetting() -> SettingsDictionary {
         return baseSetting
+            .marketingVersion("1.3")
 //            .swiftVersion("6.0")
     }
     

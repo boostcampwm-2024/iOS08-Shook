@@ -34,6 +34,7 @@ extension InfoPlist {
             "NSAppTransportSecurity": [
                 "NSAllowsArbitraryLoads": .boolean(true)
             ],
+            "CFBundleShortVersionString": "$(MARKETING_VERSION)",
             "SECRETS": [
                 "ACCESS_KEY": "$(ACCESS_KEY)",
                 "SECRET_KEY": "$(SECRET_KEY)",
