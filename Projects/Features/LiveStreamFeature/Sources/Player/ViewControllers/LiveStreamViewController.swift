@@ -220,8 +220,8 @@ extension LiveStreamViewController {
     private func infoViewConstraintAnimation(_ isShowed: Bool) {
         UIView.transition(with: view, duration: 0.3, options: .curveEaseInOut) {
             if isShowed {
-                self.unfoldedConstraint?.isActive = true
                 self.foldedConstraint?.isActive = false
+                self.unfoldedConstraint?.isActive = true
             } else {
                 self.unfoldedConstraint?.isActive = false
                 self.foldedConstraint?.isActive = true
