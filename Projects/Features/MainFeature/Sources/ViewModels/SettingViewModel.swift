@@ -25,9 +25,7 @@ public class SettingViewModel: ViewModel {
     private let fetchChannelInfoUsecase: any FetchChannelInfoUsecase
     private let makeBroadcastUsecase: any MakeBroadcastUsecase
     private let deleteBroadCastUsecase: any DeleteBroadcastUsecase
-    
-    private let broadcastState: BroadcastStateProtocol
-    
+        
     private var broadcastName: String = ""
     private var channelDescription: String = ""
     
@@ -44,13 +42,11 @@ public class SettingViewModel: ViewModel {
     public init(
         fetchChannelInfoUsecase: FetchChannelInfoUsecase,
         makeBroadcastUsecase: MakeBroadcastUsecase,
-        deleteBroadCastUsecase: DeleteBroadcastUsecase,
-        broadcastState: BroadcastState
+        deleteBroadCastUsecase: DeleteBroadcastUsecase
     ) {
         self.fetchChannelInfoUsecase = fetchChannelInfoUsecase
         self.makeBroadcastUsecase = makeBroadcastUsecase
         self.deleteBroadCastUsecase = deleteBroadCastUsecase
-        self.broadcastState = broadcastState
     }
     
     public func transform(input: Input) -> Output {
@@ -108,7 +104,7 @@ public class SettingViewModel: ViewModel {
             }
             .sink { _ in
             } receiveValue: { [weak self] _ in
-                self?.broadcastState.isBroadcasting.send(false)
+                //self?.broadcastState.isBroadcasting.send(false)
             }
             .store(in: &cancellables)
         

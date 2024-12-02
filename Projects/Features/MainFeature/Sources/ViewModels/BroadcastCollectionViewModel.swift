@@ -22,9 +22,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     private let fetchChannelListUsecase: any FetchChannelListUsecase
     private let fetchAllBroadcastUsecase: any FetchAllBroadcastUsecase
-    
-    private let broadcastState: BroadcastStateProtocol
-    
+        
     private var cancellables = Set<AnyCancellable>()
     
     private let extensionBundleID = "kr.codesquad.boostcamp9.Shook.BroadcastUploadExtension"
@@ -33,12 +31,10 @@ public class BroadcastCollectionViewModel: ViewModel {
     
     public init(
         fetchChannelListUsecase: FetchChannelListUsecase,
-        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase,
-        broadcastState: BroadcastStateProtocol = BroadcastState.shared
+        fetchAllBroadcastUsecase: FetchAllBroadcastUsecase
     ) {
         self.fetchChannelListUsecase = fetchChannelListUsecase
         self.fetchAllBroadcastUsecase = fetchAllBroadcastUsecase
-        self.broadcastState = broadcastState
     }
     
     public func transform(input: Input) -> Output {
@@ -54,15 +50,15 @@ public class BroadcastCollectionViewModel: ViewModel {
             }
             .store(in: &cancellables)
         
-        broadcastState.isBroadcasting
-            .sink { [weak self] isBroadcasting in
-                if isBroadcasting {
-                    self?.output.showBroadcastUIView.send()
-                } else {
-                    self?.output.dismissBroadcastUIView.send()
-                }
-            }
-            .store(in: &cancellables)
+//        broadcastState.isBroadcasting
+//            .sink { [weak self] isBroadcasting in
+//                if isBroadcasting {
+//                    self?.output.showBroadcastUIView.send()
+//                } else {
+//                    self?.output.dismissBroadcastUIView.send()
+//                }
+//            }
+//            .store(in: &cancellables)
 
         return output
     }
