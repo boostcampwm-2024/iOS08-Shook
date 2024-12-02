@@ -280,7 +280,7 @@ extension BroadcastCollectionViewController {
             }
         }
         
-        dataSource?.apply(snapshot, animatingDifferences: true) { [weak self] in
+        dataSource?.applySnapshotUsingReloadData(snapshot) { [weak self] in
             if self?.refreshControl.isRefreshing == true {
                 self?.refreshControl.endRefreshing()
             }
