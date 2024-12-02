@@ -5,6 +5,7 @@ import UIKit
 import BaseFeature
 import DesignSystem
 import EasyLayoutModule
+import MainFeatureInterface
 
 public final class SettingUIViewController: BaseViewController<SettingViewModel> {
     deinit {
@@ -21,8 +22,22 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     
     private var broadcastPicker = RPSystemBroadcastPickerView()
     
+    private let broadcastState: BroadcastStateProtocol
+    
     private let viewModelInput = SettingViewModel.Input()
     private var cancellables = Set<AnyCancellable>()
+    
+    public init(
+        viewModel: SettingViewModel,
+        broadcastState: BroadcastStateProtocol = BroadcastState.shared
+    ) {
+        self.broadcastState = broadcastState
+        super.init(viewModel: viewModel)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     public override func observeValue(
         forKeyPath keyPath: String?,
@@ -149,7 +164,7 @@ public final class SettingUIViewController: BaseViewController<SettingViewModel>
     }
     
     private func didStartBroadCast() {
-        BroadcastState.shared.isBroadcasting.send(true)
+        broadcastState.isBroadcasting.send(true)
         dismiss(animated: true)
     }
     

@@ -1,7 +1,11 @@
 import Combine
 
-final class BroadcastState {
-    static let shared = BroadcastState()
+import MainFeatureInterface
+
+public final class BroadcastState: BroadcastStateProtocol {
+    public static let shared = BroadcastState()
     
-    let isBroadcasting: PassthroughSubject<Bool, Never> = .init()
+    public let isBroadcasting: PassthroughSubject<Bool, Never> = .init()
+    
+    private init() {}
 }

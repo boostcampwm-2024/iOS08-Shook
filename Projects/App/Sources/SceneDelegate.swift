@@ -71,17 +71,21 @@ extension SceneDelegate {
         let liveStreamFactoryImpl = LiveStreamViewControllerFactoryImpl(fetchBroadcastUseCase: fetchBroadcastUseCase)
         DIContainer.shared.register(LiveStreamViewControllerFactory.self, dependency: liveStreamFactoryImpl)
         
+        let broadcastState: BroadcastState = BroadcastState.shared
+        
         let settingFactoryImpl = SettingViewControllerFactoryImpl(
             fetchChannelInfoUsecase: fetchChannelInfoUsecaseImpl,
             makeBroadcastUsecase: makeBroadcastUsecaseImpl,
-            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl
+            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl,
+            broadcastState: broadcastState
         )
         DIContainer.shared.register(SettingViewControllerFactory.self, dependency: settingFactoryImpl)
         
         let broadcastViewControllerFactory = BroadcastViewControllerFactoryImpl(
             fetchChannelInfoUsecase: fetchChannelInfoUsecaseImpl,
             makeBroadcastUsecase: makeBroadcastUsecaseImpl,
-            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl
+            deleteBroadCastUsecase: deleteBroadCastUsecaseImpl,
+            broadcastState: broadcastState
         )
         DIContainer.shared.register(BroadcastViewControllerFactory.self, dependency: broadcastViewControllerFactory)
     }
