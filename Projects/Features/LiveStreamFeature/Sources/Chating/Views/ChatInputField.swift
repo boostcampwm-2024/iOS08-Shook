@@ -69,6 +69,7 @@ final class ChatInputField: BaseView {
         clipView.layer.borderColor = UIColor.white.cgColor
         
         inputField.font = .setFont(.body2())
+        inputField.backgroundColor = .clear
         inputField.textColor = .white
         
         placeholder.font = .setFont(.body2())
