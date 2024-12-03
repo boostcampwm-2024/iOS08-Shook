@@ -1,5 +1,3 @@
-import UIKit
-
 public struct Channel: Hashable {
     let id: String
     let name: String
