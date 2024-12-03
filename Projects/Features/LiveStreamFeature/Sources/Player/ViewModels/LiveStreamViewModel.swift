@@ -12,7 +12,7 @@ public final class LiveStreamViewModel: ViewModel {
     private let chattingSocket: WebSocket
     private let channelID: String
     private let fetchVideoListUsecase: any FetchVideoListUsecase
-
+    
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
         let sliderValueDidChange: AnyPublisher<Float?, Never>
@@ -34,6 +34,7 @@ public final class LiveStreamViewModel: ViewModel {
         let isShowedInfoView: CurrentValueSubject<Bool, Never> = .init(false)
         let dismiss: PassthroughSubject<Void, Never> = .init()
         let videoURLString: PassthroughSubject<String, Never> = .init()
+        let showAlert: PassthroughSubject<Void, Never> = .init()
     }
     
     public init(
@@ -151,7 +152,15 @@ public final class LiveStreamViewModel: ViewModel {
     private func fetchVideoData(output: Output, channelID: String) {
         fetchVideoListUsecase.execute(channelID: channelID)
             .sink(
-                receiveCompletion: { _ in },
+                receiveCompletion: { commpletion in
+                    switch commpletion {
+                    case let .failure(error):
+                        output.showAlert.send(())
+                        
+                    case .finished:
+                        break
+                    }
+                },
                 receiveValue: { entityList in
                     let entity = entityList.filter { $0.name == "ABR" }.first
                     if let entity {
@@ -169,7 +178,13 @@ private extension LiveStreamViewModel {
         do {
             try chattingSocket.openWebSocket()
         } catch {
-            #warning("에러처리")
+            chattingSocket.send(data: ChatMessage(
+                type: .TERMINATE,
+                content: "채팅 연결이 끊겼습니다.",
+                sender: "SYSTEM",
+                roomId: channelID
+            )
+            )
         }
     }
     

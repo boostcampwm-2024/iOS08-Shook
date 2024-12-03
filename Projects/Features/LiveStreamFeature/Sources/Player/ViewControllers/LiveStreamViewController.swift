@@ -195,18 +195,25 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .store(in: &subscription)
         
         output.videoURLString
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] urlString in
-                guard let self, let url = URL(string: urlString) else { return }
-                DispatchQueue.main.async {
-                    self.playerView.fetchVideo(m3u8URL: url)
-                }
+                guard let self ,let url = URL(string: urlString) else { return }
+                self.playerView.fetchVideo(m3u8URL: url)
+                
+            }
+            .store(in: &subscription)
+        
+        output.showAlert
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.showDissmissAlert()
             }
             .store(in: &subscription)
     }
 }
 
 extension LiveStreamViewController {
-    func changeOrientation() {
+    private func changeOrientation() {
         let orientation: UIInterfaceOrientationMask = output.isExpanded.value ? .landscapeLeft: .portrait
         
         if #available(iOS 16.0, *) {
@@ -229,6 +236,16 @@ extension LiveStreamViewController {
             }
             self.view.layoutIfNeeded()
         }
+    }
+    
+    private func showDissmissAlert() {
+        let alert = UIAlertController(title: "방송 알림", message: "이미 종료된 방송입니다.", preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            self.dismiss(animated: true)
+        }
+        alert.addAction(action)
+        present(alert, animated: true)
     }
 }
 
