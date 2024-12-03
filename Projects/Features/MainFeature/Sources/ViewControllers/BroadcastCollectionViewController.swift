@@ -112,6 +112,7 @@ public class BroadcastCollectionViewController: BaseViewController<BroadcastColl
             .receive(on: DispatchQueue.main)
             .sink { [weak self] channels in
                 self?.applySnapshot(with: channels)
+                self?.refreshControl.endRefreshing()
             }
             .store(in: &cancellables)
     }
@@ -277,11 +278,7 @@ extension BroadcastCollectionViewController {
             }
         }
         
-        dataSource?.apply(snapshot, animatingDifferences: true) { [weak self] in
-            if self?.refreshControl.isRefreshing == true {
-                self?.refreshControl.endRefreshing()
-            }
-        }
+        dataSource?.applySnapshotUsingReloadData(snapshot)
     }
 }
 

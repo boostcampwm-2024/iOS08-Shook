@@ -75,6 +75,16 @@ final class ThumbnailView: BaseView {
         }
     }
     
+    func configure(with imageURLString: String) {
+        guard let url = URL(string: imageURLString) else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data else { return }
+            DispatchQueue.main.async {
+                self?.imageView.image = UIImage(data: data)
+            }
+        }.resume()
+    }
+    
     func configure(with image: UIImage?) {
         imageView.image = image
     }

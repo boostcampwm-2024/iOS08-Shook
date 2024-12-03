@@ -68,7 +68,7 @@ final class SmallBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     }
     
     func configure(channel: Channel) {
-        self.thumbnailView.configure(with: channel.thumbnailImage)
+        self.thumbnailView.configure(with: channel.thumbnailImageURLString)
         self.titleLabel.text = channel.name
         self.ownerLabel.text = channel.owner
         self.descriptionLabel.text = channel.description

@@ -63,7 +63,7 @@ final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailV
     }
     
     func configure(channel: Channel) {
-        self.thumbnailView.configure(with: channel.thumbnailImage)
+        self.thumbnailView.configure(with: channel.thumbnailImageURLString)
         self.titleLabel.text = channel.name
         self.descriptionLabel.text = channel.owner + (channel.description.isEmpty ? "" : " • \(channel.description)")
     }

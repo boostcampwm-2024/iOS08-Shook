@@ -47,7 +47,7 @@ public class BroadcastCollectionViewModel: ViewModel {
     private func fetchData() {
         fetchChannelListUsecase.execute()
             .zip(fetchAllBroadcastUsecase.execute())
-            .map { channelEntities, broadcastInfoEntities -> [Channel] in
+            .map { channelEntities, broadcastInfoEntities in
                 channelEntities.map { channelEntity in
                     let broadcast = broadcastInfoEntities.first { $0.id == channelEntity.id }
                     return Channel(
@@ -59,44 +59,13 @@ public class BroadcastCollectionViewModel: ViewModel {
                     )
                 }
             }
-            .flatMap { [weak self] channels -> AnyPublisher<[Channel], Never> in
-                guard let self else { return Just([]).eraseToAnyPublisher() }
-
-                return channels.publisher
-                    .flatMap { channel -> AnyPublisher<Channel, Never> in
-                        self.loadAsyncImage(with: channel.thumbnailImageURLString)
-                            .replaceError(with: nil)
-                            .map { image in
-                                var updatedChannel = channel
-                                updatedChannel.thumbnailImage = image
-                                return updatedChannel
-                            }
-                            .eraseToAnyPublisher()
-                    }
-                    .collect()
-                    .eraseToAnyPublisher()
-            }
             .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error): print("Error: \(error)")
-                    }
-                },
+                receiveCompletion: { _ in },
                 receiveValue: { [weak self] channels in
                     let filteredChannels = channels.filter { !($0.id == self?.channelID) }
                     self?.output.channels.send(filteredChannels)
                 }
             )
             .store(in: &cancellables)
-    }
-    
-    private func loadAsyncImage(with imageURLString: String) -> AnyPublisher<UIImage?, URLError> {
-        guard let url = URL(string: imageURLString) else {
-            return Just(nil).setFailureType(to: URLError.self).eraseToAnyPublisher()
-        }
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .map { data, _ in UIImage(data: data) }
-            .eraseToAnyPublisher()
     }
 }
