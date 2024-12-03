@@ -2,7 +2,6 @@ import UIKit
 
 protocol SHFontable {
     var font: UIFont { get }
-//    var lineHeight: CGFloat { get }
 }
 
 public extension UIFont {
@@ -23,7 +22,7 @@ public extension UIFont {
 
 public extension UIFont.SHFontSystem {
     enum SHFontWeight {
-        case bold , semiBold , regular, medium
+        case bold, semiBold, regular, medium
     }
     
     var font: UIFont {
@@ -54,7 +53,6 @@ public extension UIFont.SHFontSystem {
     }
     
 }
-
 
 private extension UIFont.SHFontSystem.SHFontWeight {
     var font: DesignSystemFontConvertible {

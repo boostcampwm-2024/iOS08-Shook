@@ -22,10 +22,10 @@ public class SoketTestViewController: UIViewController {
         
         button.setTitle("보내기", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addAction(UIAction(handler: { [weak self] _  in
+        button.addAction(UIAction { [weak self] _  in
             guard let self else { return }
             self.webSocket.send(data: ChatMessage(type: .CHAT, content: "HELLo", sender: "iOS", roomId: "1234"))
-        }), for: .touchUpInside)
+        }, for: .touchUpInside)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -61,10 +61,10 @@ public class SoketTestViewController: UIViewController {
 
 extension SoketTestViewController: URLSessionWebSocketDelegate {
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        print("open")
-        }
+        
+    }
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-      print("close")
+     
     }
 }
 

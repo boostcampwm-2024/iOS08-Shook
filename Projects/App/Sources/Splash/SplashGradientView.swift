@@ -51,4 +51,3 @@ final class SplashGradientView: UIView {
         gradientLayer.add(colorAnimation, forKey: "dynamicColorChange")
     }
 }
-

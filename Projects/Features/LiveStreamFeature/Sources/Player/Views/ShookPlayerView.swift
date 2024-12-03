@@ -183,7 +183,6 @@ extension ShookPlayerView {
     private func handlePlayItemStatus(_ status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay: // 성공
-            guard let playerItem else { return }
             guard let item = player.currentItem else {
                 return
             }
@@ -191,7 +190,6 @@ extension ShookPlayerView {
             let seekableDuration = item.seekableTimeRanges.last?.timeRangeValue.end.seconds ?? 0.0
             playerControlView.timeControlView.maxValue = Float(seekableDuration) // HLS 사용 시 seek 가능한 영역 갱신
         case.failed, .unknown:
-        #warning("에러")
             break
             
         @unknown default:

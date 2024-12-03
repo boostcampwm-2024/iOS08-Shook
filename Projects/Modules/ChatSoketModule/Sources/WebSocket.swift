@@ -42,10 +42,9 @@ public final class WebSocket: NSObject {
         guard let data = try? encoder.encode(data) else { return }
         
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
-        print("Send message \(taskMessage)")
+        
         self.webSocketTask?.send(taskMessage) { error in
-            guard let error = error else { return }
-            print("WebSOcket sending error: \(error)")
+            guard error != nil else { return }
         }
     }
     
@@ -60,7 +59,6 @@ public final class WebSocket: NSObject {
     public func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
         self.onReceiveClosure = onReceive
         self.webSocketTask?.receive { [weak self] result in
-            print("Receive \(result)")
             guard let self else { return }
             switch result {
             case let .success(message):
@@ -98,8 +96,7 @@ public final class WebSocket: NSObject {
     }
     private func ping() {
         self.webSocketTask?.sendPing { [weak self] error in
-            guard let error = error else { return }
-            print("Ping failed \(error)")
+            guard error != nil else { return }
             self?.startPing()
         }
     }
@@ -136,7 +133,6 @@ extension WebSocket: URLSessionWebSocketDelegate {
 extension WebSocket {
     func config(key: String) -> String {
         guard let secrets = Bundle.main.object(forInfoDictionaryKey: "SECRETS") as? [String: Any] else {
-            print("NO SECRETS")
             return ""
         }
         return secrets[key] as? String ?? "not found key"

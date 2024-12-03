@@ -1,6 +1,8 @@
 disabled_rules:
 - trailing_whitespace
 - line_length
+- identifier_name
+- type_name
   
 opt_in_rules:
 - empty_count
@@ -14,6 +16,8 @@ included:
 
 excluded:
 - /Tuist
+- '**/Project.swift'
+- '**/Derived/**'
 
 custom_rules:
   no_print_statements:
