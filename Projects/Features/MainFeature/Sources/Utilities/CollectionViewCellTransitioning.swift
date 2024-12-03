@@ -18,14 +18,27 @@ final class CollectionViewCellTransitioning: NSObject {
     let shrinkDuration: Double = 0.2
     
     private let blurEffectView = UIVisualEffectView()
-    private let dimmingView = UIView()
     private let backgroundView = UIView()
     
     override init() {
         super.init()
-        blurEffectView.effect = UIBlurEffect(style: .light)
-        dimmingView.backgroundColor = .black
+        blurEffectView.effect = UIBlurEffect(style: .dark)
         backgroundView.backgroundColor = .black
+    }
+}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+/// transition 속성을 변경하고 UIViewControllerAnimatedTransitioning를 채택한 자기 자신을 반환합니다.
+extension CollectionViewCellTransitioning: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        transition = .present
+        return self
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        transition = .dismiss
+        return self
     }
 }
 
@@ -39,7 +52,9 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
         let containerView = transitionContext.containerView
         containerView.subviews.forEach { $0.removeFromSuperview() }
         
-        addBackgroundViews(to: containerView)
+        blurEffectView.frame = containerView.frame
+        blurEffectView.alpha = transition.next.blurAlpha
+        containerView.addSubview(blurEffectView)
         
         let fromView = transitionContext.viewController(forKey: .from)
         let toView = transitionContext.viewController(forKey: .to)
@@ -90,31 +105,8 @@ extension CollectionViewCellTransitioning: UIViewControllerAnimatedTransitioning
     }
 }
 
-// MARK: - UIViewControllerTransitioningDelegate
-extension CollectionViewCellTransitioning: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-        transition = .present
-        return self
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
-        transition = .dismiss
-        return self
-    }
-}
-
 // MARK: - Methods
 extension CollectionViewCellTransitioning {
-    private func addBackgroundViews(to containerView: UIView) {
-        blurEffectView.frame = containerView.frame
-        blurEffectView.alpha = transition.next.blurAlpha
-        containerView.addSubview(blurEffectView)
-        
-        dimmingView.frame = containerView.frame
-        dimmingView.alpha = transition.next.dimmingAlpha
-        containerView.addSubview(dimmingView)
-    }
-    
     private func copy(of thumbnailView: ThumbnailView) -> ThumbnailView {
         let thumbnailViewCopy = ThumbnailView(with: thumbnailView.size)
         thumbnailViewCopy.configure(with: thumbnailView.imageView.image)
@@ -124,7 +116,6 @@ extension CollectionViewCellTransitioning {
     private func makeShrinkAnimator(of thumbnailView: ThumbnailView) -> UIViewPropertyAnimator {
         UIViewPropertyAnimator(duration: shrinkDuration, curve: .linear) {
             thumbnailView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            self.dimmingView.alpha = 0.8
         }
     }
     
@@ -146,7 +137,6 @@ extension CollectionViewCellTransitioning {
             }
             
             self.blurEffectView.alpha = self.transition.blurAlpha
-            self.dimmingView.alpha = self.transition.dimmingAlpha
             
             self.backgroundView.layer.cornerRadius = self.transition.next.cornerRadius
             self.backgroundView.frame = containerView.frame
