@@ -117,7 +117,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         }
         
         chattingList.ezl.makeConstraint {
-            $0.top(to: infoView.ezl.bottom, offset: 24)
+            $0.top(to: infoView.ezl.bottom)
                 .horizontal(to: view)
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
         }
@@ -133,6 +133,12 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
         playerView.addGestureRecognizer(panGesture)
         playerView.isUserInteractionEnabled = true
+        
+        playerView.playerGestureDidTap
+            .sink { [weak self] _ in
+                self?.view.endEditing(true)
+            }
+            .store(in: &subscription)
     }
     
     public override func setupBind() {
@@ -158,7 +164,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .sink { [weak self] flag in
                 guard let self else { return }
                 self.playerView.playerControlViewAlphaAnimalation(flag)
-                view.endEditing(true)
             }
             .store(in: &subscription)
         
