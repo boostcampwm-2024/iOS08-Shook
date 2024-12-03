@@ -18,6 +18,7 @@ final class ChattingListView: BaseView {
     private let recentChatButton = UIButton()
     
     @Published private var isScrollFixed = true
+    private var isAnimating = false
     
     private var recentChatButtonShowConstraints: [NSLayoutConstraint] = []
     private var recentChatButtonHideConstraints: [NSLayoutConstraint] = []
@@ -61,7 +62,6 @@ final class ChattingListView: BaseView {
         chatListView.register(ChattingCell.self, forCellReuseIdentifier: ChattingCell.identifier)
         chatListView.register(SystemAlarmCell.self, forCellReuseIdentifier: SystemAlarmCell.identifier)
         chatListView.backgroundView = chatEmptyView
-        chatListView.bounces = false
     }
     
     override func setupStyles() {
@@ -125,8 +125,8 @@ final class ChattingListView: BaseView {
         
         recentChatButton.addAction(
             UIAction { [weak self] _ in
-                self?.updateRecentChatButtonConstraint(isHidden: true)
                 self?.scrollToBottom()
+                self?.updateRecentChatButtonConstraint(isHidden: true)
             },
             for: .touchUpInside
         )
@@ -146,6 +146,7 @@ final class ChattingListView: BaseView {
     
     private func scrollToBottom() {
         guard let indexPath = lastIndexPath() else { return }
+        isAnimating = true
         chatListView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
@@ -189,9 +190,13 @@ extension ChattingListView: ChatInputFieldAction {
 }
 
 extension ChattingListView: UITableViewDelegate {
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        guard let lastIndexPath = lastIndexPath(),
-              let indexPathList = chatListView.indexPathsForVisibleRows else { return }
-        isScrollFixed = indexPathList.contains(lastIndexPath)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard !isAnimating else { return }
+        let offsetMaxY = scrollView.contentSize.height - scrollView.bounds.height
+        isScrollFixed = (offsetMaxY - 50...offsetMaxY) ~= scrollView.contentOffset.y || offsetMaxY < scrollView.contentOffset.y
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        isAnimating = false
     }
 }
