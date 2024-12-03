@@ -142,7 +142,7 @@ extension CollectionViewCellTransitioning {
     }
     
     /// Present, Dismiss 때 사용되는 애니메이션
-    private func makeExpandContractAnimator(of thumbnailView: ThumbnailView, in containerView: UIView, to frame: CGRect) -> UIViewPropertyAnimator {
+    private func makeScaleAndPositionAnimator(of thumbnailView: ThumbnailView, in containerView: UIView, to frame: CGRect) -> UIViewPropertyAnimator {
         /// 애니메이션 설정
         let springTiming = UISpringTimingParameters(dampingRatio: 0.75, initialVelocity: CGVector(dx: 0, dy: 2))
         let animator = UIViewPropertyAnimator(duration: transitionDuration - shrinkDuration, timingParameters: springTiming)
@@ -181,22 +181,25 @@ extension CollectionViewCellTransitioning {
     
     private func moveAndConvert(thumbnailView: ThumbnailView, containerView: UIView, to frame: CGRect, completion: @escaping () -> Void) {
         let shrinkAnimator = makeShrinkAnimator(of: thumbnailView)
-        let expandContractAnimator = makeExpandContractAnimator(of: thumbnailView, in: containerView, to: frame)
+        let scaleAndPositionAnimator = makeScaleAndPositionAnimator(of: thumbnailView, in: containerView, to: frame)
         
         switch transition {
         case .present:
             shrinkAnimator.startAnimation()
             
+            /// 축소 애니메이션 종료 후 확대 애니메이션
             shrinkAnimator.addCompletion { _ in
-                expandContractAnimator.startAnimation()
+                scaleAndPositionAnimator.startAnimation()
             }
             
         case .dismiss:
+            /// 썸네일 뷰의 위치를 먼저 잡고 축소 애니메이션
             thumbnailView.layoutIfNeeded()
-            expandContractAnimator.startAnimation()
+            scaleAndPositionAnimator.startAnimation()
         }
         
-        expandContractAnimator.addCompletion { _ in
+        /// 크기, 위치 애니메이션 종료 후
+        scaleAndPositionAnimator.addCompletion { _ in
             completion()
         }
     }
