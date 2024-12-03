@@ -75,10 +75,10 @@ Shook은 게임 스트리밍의 장벽을 낮추고, 누구나 쉽고 재미있�
 
 ### 🍎 First Party
 Apple에서 제공하는 강력한 프레임워크들을 활용하여 안정성과 효율성을 극대화했습니다.
-- **URLSession, WebSocket**: Apple의 네트워킹 프레임워크를 활용해 안정적이고 실시간 반응이 가능한 채팅 시스템 구현.
-- **Combine**: 비동기 데이터를 효율적으로 처리하고 뷰모델과 뷰 간의 데이터 바인딩을 구현하여 반응형 UI 제공.
 - **AVFoundation**: 커스텀 플레이어 구성으로 Shook 만의 스트리밍 경험을 제공.
+- **Combine**: 비동기 데이터를 효율적으로 처리하고 뷰모델과 뷰 간의 데이터 바인딩을 구현하여 반응형 UI 제공.
 - **ReplayKit, Broadcast Extension**: 실시간 SampleBuffer를 전송하여 모바일 게임 스트리밍을 안정적으로 구현.
+- **URLSession, WebSocket**: Apple의 네트워킹 프레임워크를 활용해 안정적이고 실시간 반응이 가능한 채팅 시스템 구현.
 
 ### 🍏 Third Party
 검증된 오픈소스 라이브러리를 활용하여 개발 효율을 높이고 사용자 경험을 향상했습니다.
@@ -89,17 +89,21 @@ Apple에서 제공하는 강력한 프레임워크들을 활용하여 안정성�
 ### 🎈 Our Party
 우리 팀의 전문성을 바탕으로 직접 설계하고 구현한 모듈들로, 프로젝트에 차별화된 강점을 더했습니다
 - **EasyLayout**: 레이아웃을 쉽고 직관적으로 구성할 수 있도록 설계된 커스텀 모듈. 기존의 Auto Layout에 비해 코드의 가독성과 유지보수성이 높아짐.
-- **NetworkModule**: 네트워크 요청 처리 및 데이터 핸들링을 단순화한 독자적 모듈. 프로젝트에 맞춤화된 통신 환경 제공.
+- **FastNetwork**: 네트워크 요청 처리 및 데이터 핸들링을 단순화한 독자적 모듈. 프로젝트에 맞춤화된 통신 환경 제공.
 
 ### ☁️ Cloud Integration
 클라이언트와 서버 간의 원활한 데이터 흐름과 실시간 스트리밍을 지원하기 위해 클라우드 기반 서비스를 적극적으로 활용했습니다.
-- **Spring Kotlin**: 서버 사이드 로직과 데이터 처리를 위해 Spring 프레임워크와 Kotlin 언어를 사용. WebSocket 기반의 실시간 채팅 및 스트리밍 제어 기능 구현.
+- **Spring (Kotlin)**: 서버 사이드 로직과 데이터 처리를 위해 Spring 프레임워크와 Kotlin 언어를 사용. WebSocket 기반의 실시간 채팅 및 스트리밍 제어 기능 구현.
 - **Naver Cloud LiveStation**: RTMP 스트리밍 지원 및 방송 송출 기능을 통해 대규모 실시간 스트리밍을 안정적으로 제공.
 - **Naver VPC (Virtual Private Cloud)**: Naver Cloud 플랫폼을 기반으로 안전하고 확장 가능한 네트워크 환경을 구축.
 
 ## 🚧 아키텍쳐
 
+### 🏛️ 앱 다이어그램
+![app-structure](https://github.com/user-attachments/assets/08a4dd78-5969-4ae5-858d-091317c6e226)
 
+### 🎨 앱 디자인 패턴
+![designPattern](https://github.com/user-attachments/assets/d7d05ded-75b7-485f-b79a-c767f8f4d973)
 
 ## ✨기능
 
@@ -113,5 +117,5 @@ Apple에서 제공하는 강력한 프레임워크들을 활용하여 안정성�
 
 ## 📝 링크
 
-[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [컨벤션](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/깃-컨벤션) | [회의록](https://gorgeous-tibia-3b6.notion.site/ce054a9c415d4bfe84789b985e7884e9?v=73d0a6b91b8845b8b2fbf5b8f573d547&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [피그마](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
-| -- | -- | -- | -- | -- | -- | -- |
+[Wiki](https://github.com/boostcampwm-2024/iOS08-Shook/wiki) | [그라운드 룰](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/그라운드-룰) | [회의록](https://gorgeous-tibia-3b6.notion.site/ce054a9c415d4bfe84789b985e7884e9?v=73d0a6b91b8845b8b2fbf5b8f573d547&pvs=4) | [브랜드디자인](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/BI) | [UX](https://github.com/boostcampwm-2024/iOS08-Shook/wiki/UX) | [피그마](https://www.figma.com/design/hkrLldcqJ3roPELQa2TSib/Shook?node-id=0-1&t=xLGZhOqOlpR9fV2s-1) |
+| -- | -- | -- | -- | -- | -- |
