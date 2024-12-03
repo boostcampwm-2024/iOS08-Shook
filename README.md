@@ -100,7 +100,7 @@ Apple에서 제공하는 강력한 프레임워크들을 활용하여 안정성�
 ## 🚧 아키텍쳐
 
 ### 🏛️ 앱 다이어그램
-![app-structure](https://github.com/user-attachments/assets/08a4dd78-5969-4ae5-858d-091317c6e226)
+![app_struct](https://github.com/user-attachments/assets/751a142f-c415-4aea-aa09-a68a0c4c34b6)
 
 ### 🎨 앱 디자인 패턴
 ![designPattern](https://github.com/user-attachments/assets/d7d05ded-75b7-485f-b79a-c767f8f4d973)
