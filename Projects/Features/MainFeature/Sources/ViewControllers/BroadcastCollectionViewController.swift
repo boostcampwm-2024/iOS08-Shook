@@ -132,6 +132,8 @@ extension BroadcastCollectionViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
         guard let viewController = factory?.make(channelID: channel.id, title: channel.name, owner: channel.owner, description: channel.description) else { return }
+
+        /// 히어로 애니메이션 전환 적용
         viewController.modalPresentationStyle = .overFullScreen
         viewController.transitioningDelegate = transitioning
         present(viewController, animated: true)
