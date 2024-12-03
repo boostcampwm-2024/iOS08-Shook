@@ -66,7 +66,6 @@ final class ChattingListView: BaseView {
         titleLabel.font = .setFont(.body1())
         
         chatListView.backgroundColor = .clear
-        chatListView.keyboardDismissMode = .onDrag
         chatListView.allowsSelection = false
         chatListView.separatorStyle = .none
         
@@ -107,8 +106,10 @@ final class ChattingListView: BaseView {
     }
     
     override func setupActions() {
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.addGestureRecognizer(tapGesture)
+        
         $isScrollFixed
-            .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
             .sink { [weak self] in
                 self?.updateRecentChatButtonConstraint(isHidden: $0)
             }
@@ -136,23 +137,26 @@ final class ChattingListView: BaseView {
     }
     
     private func scrollToBottom() {
-        let lastRowIndex = chatListView.numberOfRows(inSection: 0) - 1
-        guard lastRowIndex >= 0,
-              let indexPath = lastIndexPath() else { return }
+        guard let indexPath = lastIndexPath() else { return }
         chatListView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
     
     private func updateRecentChatButtonConstraint(isHidden: Bool) {
         UIView.animate(withDuration: 0.2) {
             if isHidden {
-                NSLayoutConstraint.activate(self.recentChatButtonHideConstraints)
                 NSLayoutConstraint.deactivate(self.recentChatButtonShowConstraints)
+                NSLayoutConstraint.activate(self.recentChatButtonHideConstraints)
             } else {
-                NSLayoutConstraint.activate(self.recentChatButtonShowConstraints)
                 NSLayoutConstraint.deactivate(self.recentChatButtonHideConstraints)
+                NSLayoutConstraint.activate(self.recentChatButtonShowConstraints)
             }
             self.layoutIfNeeded()
         }
+    }
+    
+    @objc
+    private func dismissKeyboard() {
+        endEditing(true)
     }
 }
 
@@ -177,7 +181,7 @@ extension ChattingListView: ChatInputFieldAction {
 }
 
 extension ChattingListView: UITableViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         guard let lastIndexPath = lastIndexPath(),
               let indexPathList = chatListView.indexPathsForVisibleRows else { return }
         isScrollFixed = indexPathList.contains(lastIndexPath)
