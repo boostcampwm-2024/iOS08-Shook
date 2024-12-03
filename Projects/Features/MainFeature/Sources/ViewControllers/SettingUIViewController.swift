@@ -176,7 +176,6 @@ extension SettingUIViewController: UITableViewDelegate, UITableViewDataSource {
             }
             return streamingNameCell
         } else {
-#warning("TextDidChange 변경하기")
             streamingDescriptionCell.configure(
                 label: "방송정보",
                 placeholder: placeholderStringOfCells[indexPath.row]

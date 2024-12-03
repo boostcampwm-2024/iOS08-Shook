@@ -47,7 +47,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
     }
     
     deinit {
-        print("Deinit \(Self.self)")
+    
     }
     
     public override func viewDidLoad() {
@@ -91,7 +91,6 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         view.backgroundColor = .black
         
         infoView.configureUI(with: (_title, _owner + (_description.isEmpty ? " " : " • ") + _description))
-        print("description: ", _description)
         bottomGuideView.backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
     
@@ -197,7 +196,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         output.videoURLString
             .receive(on: DispatchQueue.main)
             .sink { [weak self] urlString in
-                guard let self ,let url = URL(string: urlString) else { return }
+                guard let self, let url = URL(string: urlString) else { return }
                 self.playerView.fetchVideo(m3u8URL: url)
                 
             }

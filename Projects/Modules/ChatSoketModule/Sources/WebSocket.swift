@@ -42,7 +42,7 @@ public final class WebSocket: NSObject {
         guard let data = try? encoder.encode(data) else { return }
         
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
-        print("Send message \(taskMessage)")
+        
         self.webSocketTask?.send(taskMessage) { error in
             guard let error = error else { return }
             print("WebSOcket sending error: \(error)")

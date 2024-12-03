@@ -48,7 +48,6 @@ public final class LiveStreamViewModel: ViewModel {
     }
     
     deinit {
-        print("Deinit \(Self.self)")
         chattingSocket.closeWebSocket()
     }
     
@@ -154,7 +153,7 @@ public final class LiveStreamViewModel: ViewModel {
             .sink(
                 receiveCompletion: { commpletion in
                     switch commpletion {
-                    case let .failure(error):
+                    case .failure:
                         output.showAlert.send(())
                         
                     case .finished:

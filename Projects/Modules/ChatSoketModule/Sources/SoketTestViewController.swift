@@ -61,10 +61,10 @@ public class SoketTestViewController: UIViewController {
 
 extension SoketTestViewController: URLSessionWebSocketDelegate {
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        print("open")
-        }
+        
+    }
     public func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-      print("close")
+     
     }
 }
 

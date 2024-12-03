@@ -77,12 +77,7 @@ public class BroadcastCollectionViewModel: ViewModel {
                     .eraseToAnyPublisher()
             }
             .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error): print("Error: \(error)")
-                    }
-                },
+                receiveCompletion: { _ in },
                 receiveValue: { [weak self] channels in
                     let filteredChannels = channels.filter { !($0.id == self?.channelID) }
                     self?.output.channels.send(filteredChannels)
