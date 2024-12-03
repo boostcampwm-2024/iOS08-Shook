@@ -10,6 +10,7 @@ protocol ChatInputFieldAction {
 }
 
 final class ChattingListView: BaseView {
+    private let chattingContainerView = UIView()
     private let titleLabel = UILabel()
     private let chatListView = UITableView(frame: .zero, style: .plain)
     private let chatEmptyView = ChatEmptyView()
@@ -48,8 +49,9 @@ final class ChattingListView: BaseView {
     }
     
     override func setupViews() {
-        addSubview(titleLabel)
-        addSubview(chatListView)
+        addSubview(chattingContainerView)
+        chattingContainerView.addSubview(titleLabel)
+        chattingContainerView.addSubview(chatListView)
         addSubview(recentChatButton)
         addSubview(chatInputField)
         
@@ -77,15 +79,21 @@ final class ChattingListView: BaseView {
     }
     
     override func setupLayouts() {
+        chattingContainerView.ezl.makeConstraint {
+            $0.horizontal(to: self)
+                .top(to: self)
+                .bottom(to: chatInputField.ezl.top)
+        }
+        
         titleLabel.ezl.makeConstraint {
-            $0.top(to: self)
-                .leading(to: self, offset: 20)
+            $0.top(to: chattingContainerView, offset: 24)
+                .leading(to: chattingContainerView, offset: 20)
         }
         
         chatListView.ezl.makeConstraint {
-            $0.horizontal(to: self)
+            $0.horizontal(to: chattingContainerView)
                 .top(to: titleLabel.ezl.bottom, offset: 21)
-                .bottom(to: chatInputField.ezl.top)
+                .bottom(to: chattingContainerView)
         }
         
         chatInputField.ezl.makeConstraint {
@@ -107,7 +115,7 @@ final class ChattingListView: BaseView {
     
     override func setupActions() {
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        self.addGestureRecognizer(tapGesture)
+        chattingContainerView.addGestureRecognizer(tapGesture)
         
         $isScrollFixed
             .sink { [weak self] in

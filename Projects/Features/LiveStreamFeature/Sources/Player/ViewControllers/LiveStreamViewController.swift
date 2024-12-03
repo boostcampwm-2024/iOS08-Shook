@@ -117,7 +117,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
         }
         
         chattingList.ezl.makeConstraint {
-            $0.top(to: infoView.ezl.bottom, offset: 24)
+            $0.top(to: infoView.ezl.bottom)
                 .horizontal(to: view)
                 .bottom(to: view.keyboardLayoutGuide.ezl.top)
         }
