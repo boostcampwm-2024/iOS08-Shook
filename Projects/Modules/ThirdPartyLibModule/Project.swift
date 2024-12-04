@@ -8,7 +8,7 @@ let project = Project.module(
         .interface(module: .module(.ThirdPartyLibModule)),
         .implements(module: .module(.ThirdPartyLibModule), dependencies: [
             .module(target: .ThirdPartyLibModule, type: .interface),
-            .module(target: .EasyLayoutModule)
+            .module(target: .EasyLayout)
         ]),
         .tests(module: .module(.ThirdPartyLibModule), dependencies: [
             .module(target: .ThirdPartyLibModule)
