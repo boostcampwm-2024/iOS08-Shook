@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeature
 import BaseFeatureInterface
-import EasyLayoutModule
+import EasyLayout
 
 public final class MockLiveStreamViewModel: ViewModel {
     public struct Input { }

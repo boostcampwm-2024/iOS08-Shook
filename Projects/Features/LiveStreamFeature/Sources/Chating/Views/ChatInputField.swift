@@ -3,7 +3,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 final class ChatInputField: BaseView {
     private let heartButton = UIButton()

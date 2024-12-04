@@ -3,7 +3,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 private protocol TimeControlState {
     func updateSlider(to time: Float)

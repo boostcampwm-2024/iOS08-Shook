@@ -1,7 +1,7 @@
 import UIKit
 
 import BaseFeature
-import EasyLayoutModule
+import EasyLayout
 
 protocol ThumbnailViewContainer {
     var thumbnailView: ThumbnailView { get }

@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 final class ChattingCell: BaseTableViewCell {    
     private let nameLabel = UILabel()

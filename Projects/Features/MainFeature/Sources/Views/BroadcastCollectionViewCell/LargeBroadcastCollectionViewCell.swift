@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 final class LargeBroadcastCollectionViewCell: BaseCollectionViewCell, ThumbnailViewContainer {
     let thumbnailView = ThumbnailView(with: .large)

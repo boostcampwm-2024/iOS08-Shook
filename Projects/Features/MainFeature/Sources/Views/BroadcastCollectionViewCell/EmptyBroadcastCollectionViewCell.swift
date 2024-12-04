@@ -2,7 +2,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 final class EmptyBroadcastCollectionViewCell: BaseCollectionViewCell {
     private let imageView = UIImageView()

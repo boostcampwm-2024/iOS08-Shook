@@ -3,7 +3,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 public final class LiveStreamViewController: BaseViewController<LiveStreamViewModel> {
     private let chattingList = ChattingListView()

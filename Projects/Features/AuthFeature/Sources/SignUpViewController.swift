@@ -3,7 +3,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 import Lottie
 
 public class SignUpViewController: BaseViewController<SignUpViewModel> {

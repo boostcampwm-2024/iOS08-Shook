@@ -4,7 +4,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 protocol ShhokPlayerViewState {
     func updataePlayState(_ isPlaying: Bool)

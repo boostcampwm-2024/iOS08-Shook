@@ -1,6 +1,6 @@
 import UIKit
 
-import EasyLayoutModule
+import EasyLayout
 
 final class EasyLayoutDemoViewController: UIViewController {
     private let firstView: UIView = {

@@ -6,7 +6,7 @@ import BaseFeature
 import BaseFeatureInterface
 import BroadcastDomainInterface
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 import LiveStationDomainInterface
 import LiveStreamFeatureInterface
 import Lottie

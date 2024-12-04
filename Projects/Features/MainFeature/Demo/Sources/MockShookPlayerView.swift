@@ -2,7 +2,7 @@ import AVFoundation
 import UIKit
 
 import BaseFeature
-import EasyLayoutModule
+import EasyLayout
 
 public final class MockShookPlayerView: BaseView {
     private let player: AVPlayer = AVPlayer()

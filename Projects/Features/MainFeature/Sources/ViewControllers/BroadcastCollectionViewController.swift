@@ -4,7 +4,7 @@ import UIKit
 import BaseFeature
 import BaseFeatureInterface
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 import LiveStreamFeatureInterface
 import MainFeatureInterface
 

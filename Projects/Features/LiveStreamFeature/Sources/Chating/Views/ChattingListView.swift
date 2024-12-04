@@ -3,7 +3,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 
 protocol ChatInputFieldAction {
     var sendButtonDidTap: AnyPublisher<ChatInfo?, Never> { get }

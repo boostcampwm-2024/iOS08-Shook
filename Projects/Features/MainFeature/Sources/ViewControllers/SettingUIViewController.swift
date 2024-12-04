@@ -4,7 +4,7 @@ import UIKit
 
 import BaseFeature
 import DesignSystem
-import EasyLayoutModule
+import EasyLayout
 import MainFeatureInterface
 
 public final class SettingUIViewController: BaseViewController<SettingViewModel> {
