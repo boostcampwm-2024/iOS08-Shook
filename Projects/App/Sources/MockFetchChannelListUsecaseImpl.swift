@@ -54,7 +54,6 @@ final class MockChannelListFetcher {
 
             let randomBool = Bool.random()
             let image: Image = randomBool ? .ratio16x9 : .ratio4x3
-            let fetchedImage = await image.fetch()
 
             channels.append(ChannelEntity(id: UUID().uuidString, name: name))
         }

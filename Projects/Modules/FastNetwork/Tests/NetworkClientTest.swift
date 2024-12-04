@@ -16,10 +16,6 @@ final class NetworkClientTest: XCTestCase {
         client = NetworkClient(session: session, interceptors: interceptors)
     }
 
-    override func tearDown() {
-        super.tearDown()
-    }
-
     // MARK: - Success
 
     func test_success_response() async throws {
