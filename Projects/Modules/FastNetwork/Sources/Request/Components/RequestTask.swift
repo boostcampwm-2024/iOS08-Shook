@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - RequestTask
+
 public enum RequestTask {
     case empty
     case withParameters(
@@ -20,7 +22,7 @@ extension RequestTask {
         switch self {
         case .empty:
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+
         case let .withParameters(body, query, bodyEncoder, urlQueryEncoder):
             try configureParam(
                 request: &request,
@@ -29,7 +31,7 @@ extension RequestTask {
                 bodyEncoder: bodyEncoder,
                 urlQueryEncoder: urlQueryEncoder
             )
-        
+
         case let .withObject(body, query, urlQueryEncoder):
             try configureObject(
                 request: &request,
@@ -39,7 +41,7 @@ extension RequestTask {
             )
         }
     }
-    
+
     func configureParam(
         request: inout URLRequest,
         body: Parameters?,
@@ -50,12 +52,12 @@ extension RequestTask {
         if let body {
             try bodyEncoder.encode(request: &request, with: body)
         }
-        
+
         if let query {
             try urlQueryEncoder.encode(request: &request, with: query)
         }
     }
-        
+
     func configureObject(
         request: inout URLRequest,
         body: any Encodable,
@@ -64,7 +66,7 @@ extension RequestTask {
     ) throws {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(body)
-        
+
         if let query {
             try urlQueryEncoder.encode(request: &request, with: query)
         }

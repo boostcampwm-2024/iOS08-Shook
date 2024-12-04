@@ -1,15 +1,19 @@
 import LiveStationDomainInterface
 
+// MARK: - VideoListResponseDTO
+
 public struct VideoListResponseDTO: Decodable {
     let content: [VideoResponse]
 }
+
+// MARK: - VideoResponse
 
 public struct VideoResponse: Decodable {
     let name, url: String
 }
 
-extension VideoResponse {
-    public func toDomain() -> VideoEntity {
-        VideoEntity(name: self.name, videoURLString: self.url)
+public extension VideoResponse {
+    func toDomain() -> VideoEntity {
+        VideoEntity(name: name, videoURLString: url)
     }
 }

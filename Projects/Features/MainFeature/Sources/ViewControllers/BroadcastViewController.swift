@@ -10,21 +10,21 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
     deinit {
         viewModel.sharedDefaults?.removeObserver(self, forKeyPath: viewModel.isStreamingKey)
     }
-    
+
     private let broadcastStatusStackView = UIStackView()
     private let broadcastStatusImageView = UIImageView()
     private let broadcastStateText = UILabel()
     private let finshBroadcastButton = UIButton()
-    
+
     private let viewModelInput = SettingViewModel.Input()
-    
-    public override func setupBind() {
+
+    override public func setupBind() {
         _ = viewModel.transform(input: viewModelInput)
     }
-    
+
     private var broadcastPicker = RPSystemBroadcastPickerView()
-    
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == viewModel.isStreamingKey {
             if let newValue = change?[.newKey] as? Bool, !newValue {
                 didFinishBroadCast()
@@ -34,25 +34,25 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         }
     }
 
-    public override func setupViews() {
+    override public func setupViews() {
         broadcastPicker.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         broadcastPicker.preferredExtension = viewModel.extensionBundleID
         broadcastPicker.showsMicrophoneButton = false
-        
+
         finshBroadcastButton.addSubview(broadcastPicker)
-        
+
         viewModel.sharedDefaults?.addObserver(self, forKeyPath: viewModel.isStreamingKey, options: [.initial, .new], context: nil)
-        
+
         broadcastStatusStackView.addArrangedSubview(broadcastStatusImageView)
         broadcastStatusStackView.addArrangedSubview(broadcastStateText)
-        
+
         view.addSubview(broadcastStatusStackView)
         view.addSubview(finshBroadcastButton)
     }
-    
-    public override func setupStyles() {
+
+    override public func setupStyles() {
         view.backgroundColor = .systemBackground
-        
+
         broadcastStatusStackView.axis = .vertical
         broadcastStatusStackView.spacing = 7
         broadcastStatusStackView.alignment = .center
@@ -67,41 +67,41 @@ public final class BroadcastViewController: BaseViewController<SettingViewModel>
         finshBroadcastButton.backgroundColor = DesignSystemAsset.Color.mainGreen.color
         finshBroadcastButton.setTitleColor(DesignSystemAsset.Color.mainBlack.color, for: .normal)
     }
-    
-    public override func setupLayouts() {
+
+    override public func setupLayouts() {
         broadcastStatusStackView.ezl.makeConstraint {
             $0.horizontal(to: view.safeAreaLayoutGuide)
                 .centerY(to: view)
         }
-        
+
         broadcastStatusImageView.ezl.makeConstraint {
             $0.size(with: 117)
                 .centerX(to: broadcastStatusStackView)
         }
-        
+
         finshBroadcastButton.ezl.makeConstraint {
             $0.height(56)
                 .bottom(to: view.safeAreaLayoutGuide, offset: -23)
                 .horizontal(to: view, padding: 20)
         }
-        
+
         broadcastPicker.ezl.makeConstraint {
             $0.center(to: finshBroadcastButton)
                 .width(finshBroadcastButton.frame.width)
                 .height(finshBroadcastButton.frame.height)
         }
     }
-    
-    public override func setupActions() {
+
+    override public func setupActions() {
         finshBroadcastButton.addTarget(self, action: #selector(didTapFinishButton), for: .touchUpInside)
     }
-    
+
     @objc
     private func didTapFinishButton() {
         guard let broadcastPickerButton = broadcastPicker.subviews.first(where: { $0 is UIButton }) as? UIButton else { return }
         broadcastPickerButton.sendActions(for: .touchUpInside)
     }
-    
+
     private func didFinishBroadCast() {
         viewModelInput.didTapFinishStreamingButton.send()
         dismiss(animated: false)

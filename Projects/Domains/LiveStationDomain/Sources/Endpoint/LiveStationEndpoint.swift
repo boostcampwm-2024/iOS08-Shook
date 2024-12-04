@@ -4,6 +4,8 @@ import Foundation
 import BaseDomain
 import FastNetwork
 
+// MARK: - LiveStationEndpoint
+
 public enum LiveStationEndpoint {
     case fetchChannelList
     case receiveBroadcast(channelId: String)
@@ -13,15 +15,17 @@ public enum LiveStationEndpoint {
     case fetchChannelInfo(channelId: String)
 }
 
+// MARK: Endpoint
+
 extension LiveStationEndpoint: Endpoint {
     public var method: FastNetwork.HTTPMethod {
         switch self {
-        case .fetchChannelList, .receiveBroadcast, .fetchThumbnail, .fetchChannelInfo: .get
+        case .fetchChannelInfo, .fetchChannelList, .fetchThumbnail, .receiveBroadcast: .get
         case .makeChannel: .post
         case .deleteChannel: .delete
         }
     }
-    
+
     public var header: [String: String]? {
         let timestamp = String(Int(Date().timeIntervalSince1970 * 1000))
         return [
@@ -31,38 +35,38 @@ extension LiveStationEndpoint: Endpoint {
             "x-ncp-region_code": "KR"
         ]
     }
-    
+
     public var host: String {
         "livestation.apigw.ntruss.com"
     }
-    
+
     public var path: String {
         switch self {
         case .fetchChannelList, .makeChannel: "/api/v2/channels"
-        case let .receiveBroadcast(channelId), let .fetchThumbnail(channelId): "/api/v2/channels/\(channelId)/serviceUrls"
+        case let .fetchThumbnail(channelId), let .receiveBroadcast(channelId): "/api/v2/channels/\(channelId)/serviceUrls"
         case let .deleteChannel(channelId), let .fetchChannelInfo(channelId): "/api/v2/channels/\(channelId)"
         }
     }
-    
+
     public var requestTask: FastNetwork.RequestTask {
         switch self {
         case .fetchChannelList:
-            return .withParameters(
+            .withParameters(
                 query: ["channelStatus": "PUBLISHING"]
             )
-            
+
         case .receiveBroadcast:
-            return .withParameters(
+            .withParameters(
                 query: ["serviceUrlType": ServiceUrlType.timemachine.rawValue]
             )
-            
+
         case .fetchThumbnail:
-            return .withParameters(
+            .withParameters(
                 query: ["serviceUrlType": ServiceUrlType.thumbnail.rawValue]
             )
-            
+
         case let .makeChannel(channelName):
-            return .withParameters(
+            .withParameters(
                 body: [
                     "channelName": channelName,
                     "cdn": [
@@ -83,17 +87,17 @@ extension LiveStationEndpoint: Endpoint {
                     "timemachineMin": 360
                 ]
             )
-            
-        case .deleteChannel, .fetchChannelInfo: return .empty
+
+        case .deleteChannel, .fetchChannelInfo: .empty
         }
     }
 }
 
 private extension LiveStationEndpoint {
     func makeQueryString(with query: Parameters) -> String {
-        return "?" + query.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+        "?" + query.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
     }
-    
+
     func makeSignature(with timestamp: String) -> String {
         let space = " "
         let newLine = "\n"
@@ -101,13 +105,13 @@ private extension LiveStationEndpoint {
         let accessKey = config(key: .accessKey)
         let secretKey = config(key: .secretKey)
         let timestamp = timestamp
-        
+
         var url = path
         switch requestTask {
         case .empty:
             break
-            
-        case let .withParameters(_, query, _, _), let .withObject(_, query, _):
+
+        case let .withObject(_, query, _), let .withParameters(_, query, _, _):
             if let query {
                 let queryString = makeQueryString(with: query)
                 url.append(queryString)
@@ -119,7 +123,8 @@ private extension LiveStationEndpoint {
 
         // HMAC SHA256으로 서명 생성
         guard let keyData = secretKey.data(using: .utf8),
-              let messageData = message.data(using: .utf8) else {
+              let messageData = message.data(using: .utf8)
+        else {
             return ""
         }
 
@@ -132,7 +137,7 @@ private extension LiveStationEndpoint {
 
         let hmacData = Data(hmac)
         let base64Signature = hmacData.base64EncodedString()
-        
+
         return base64Signature
     }
 }

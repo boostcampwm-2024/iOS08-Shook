@@ -8,6 +8,6 @@ public enum HTTPMethod: String, CustomStringConvertible {
     case options
     case trace
     case patch
-    
+
     public var description: String { rawValue.uppercased() }
 }

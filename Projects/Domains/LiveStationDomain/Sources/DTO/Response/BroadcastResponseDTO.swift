@@ -1,15 +1,19 @@
 import LiveStationDomainInterface
 
+// MARK: - BroadcastResponseDTO
+
 public struct BroadcastResponseDTO: Decodable {
     let content: [BroadcastResponse]
 }
+
+// MARK: - BroadcastResponse
 
 public struct BroadcastResponse: Decodable {
     let name, url, resolution, videoBitrate, audioBitrate: String
 }
 
-extension BroadcastResponse {
-    public func toDomain() -> BroadcastEntity {
-        BroadcastEntity(name: self.name, urlString: self.url)
+public extension BroadcastResponse {
+    func toDomain() -> BroadcastEntity {
+        BroadcastEntity(name: name, urlString: url)
     }
 }

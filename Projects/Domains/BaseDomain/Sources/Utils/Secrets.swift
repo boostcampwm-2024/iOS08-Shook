@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - KeyKind
+
 public enum KeyKind: String {
     case secretKey = "SECRET_KEY"
     case accessKey = "ACCESS_KEY"

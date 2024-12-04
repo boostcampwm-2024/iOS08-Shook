@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - Anchorable
+
 public protocol Anchorable {
     var bottomAnchor: NSLayoutYAxisAnchor { get }
     var leadingAnchor: NSLayoutXAxisAnchor { get }
@@ -11,12 +13,16 @@ public protocol Anchorable {
     var centerYAnchor: NSLayoutYAxisAnchor { get }
 }
 
-extension Anchorable {
-    public var ezl: EasyLayout {
+public extension Anchorable {
+    var ezl: EasyLayout {
         EasyLayout(EasyConstraint(self))
     }
 }
 
+// MARK: - UIView + Anchorable
+
 extension UIView: Anchorable {}
+
+// MARK: - UILayoutGuide + Anchorable
 
 extension UILayoutGuide: Anchorable {}

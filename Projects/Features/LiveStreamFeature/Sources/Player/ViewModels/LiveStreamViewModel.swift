@@ -5,14 +5,15 @@ import BaseFeatureInterface
 import ChatSoketModule
 import LiveStationDomainInterface
 
+// MARK: - LiveStreamViewModel
+
 public final class LiveStreamViewModel: ViewModel {
-    
     private var subscription = Set<AnyCancellable>()
-    
+
     private let chattingSocket: WebSocket
     private let channelID: String
     private let fetchVideoListUsecase: any FetchVideoListUsecase
-    
+
     public struct Input {
         let expandButtonDidTap: AnyPublisher<Void?, Never>
         let sliderValueDidChange: AnyPublisher<Float?, Never>
@@ -24,7 +25,7 @@ public final class LiveStreamViewModel: ViewModel {
         let autoDissmissDidRegister: PassthroughSubject<Void, Never> = .init()
         let viewDidLoad: AnyPublisher<Void, Never>
     }
-    
+
     public struct Output {
         let isExpanded: CurrentValueSubject<Bool, Never> = .init(false)
         let isPlaying: CurrentValueSubject<Bool, Never> = .init(false)
@@ -36,7 +37,7 @@ public final class LiveStreamViewModel: ViewModel {
         let videoURLString: PassthroughSubject<String, Never> = .init()
         let showAlert: PassthroughSubject<Void, Never> = .init()
     }
-    
+
     public init(
         channelID: String,
         chattingSocket: WebSocket = .shared,
@@ -46,14 +47,14 @@ public final class LiveStreamViewModel: ViewModel {
         self.fetchVideoListUsecase = fetchVideoListUsecase
         self.chattingSocket = chattingSocket
     }
-    
+
     deinit {
         chattingSocket.closeWebSocket()
     }
-    
+
     public func transform(input: Input) -> Output {
         let output = Output()
-        
+
         input.expandButtonDidTap
             .compactMap { $0 }
             .sink {
@@ -63,7 +64,7 @@ public final class LiveStreamViewModel: ViewModel {
                 output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
-        
+
         input.sliderValueDidChange
             .compactMap { $0 }
             .map { Double($0) }
@@ -72,24 +73,24 @@ public final class LiveStreamViewModel: ViewModel {
                 output.time.send($0)
             }
             .store(in: &subscription)
-        
+
         input.playerStateDidChange
             .compactMap { $0 }
             .sink { flag in
                 output.isPlaying.send(flag)
             }
             .store(in: &subscription)
-        
+
         input.playerGestureDidTap
             .compactMap { $0 }
             .sink { _ in
                 let nextValue1 = !output.isShowedPlayerControl.value
                 output.isShowedPlayerControl.send(nextValue1)
-                
+
                 if nextValue1 {
                     input.autoDissmissDidRegister.send()
                 }
-                
+
                 if output.isExpanded.value {
                     output.isShowedInfoView.send(false)
                 } else {
@@ -97,7 +98,7 @@ public final class LiveStreamViewModel: ViewModel {
                 }
             }
             .store(in: &subscription)
-        
+
         input.playButtonDidTap
             .compactMap { $0 }
             .sink { _ in
@@ -105,13 +106,13 @@ public final class LiveStreamViewModel: ViewModel {
                 output.isPlaying.send(!output.isPlaying.value)
             }
             .store(in: &subscription)
-        
+
         input.dismissButtonDidTap
             .sink { _ in
                 output.dismiss.send()
             }
             .store(in: &subscription)
-        
+
         input.viewDidLoad
             .sink { [weak self] _ in
                 guard let self else { return }
@@ -121,7 +122,7 @@ public final class LiveStreamViewModel: ViewModel {
                 receciveChatMessage(output: output)
             }
             .store(in: &subscription)
-        
+
         input.chattingSendButtonDidTap
             .sink { [weak self] chatInfo in
                 guard let chatInfo,
@@ -136,7 +137,7 @@ public final class LiveStreamViewModel: ViewModel {
                 )
             }
             .store(in: &subscription)
-        
+
         input.autoDissmissDidRegister
             .debounce(for: .seconds(3), scheduler: DispatchQueue.main)
             .sink { _ in
@@ -144,10 +145,10 @@ public final class LiveStreamViewModel: ViewModel {
                 output.isShowedInfoView.send(false)
             }
             .store(in: &subscription)
-        
+
         return output
     }
-    
+
     private func fetchVideoData(output: Output, channelID: String) {
         fetchVideoListUsecase.execute(channelID: channelID)
             .sink(
@@ -155,7 +156,7 @@ public final class LiveStreamViewModel: ViewModel {
                     switch commpletion {
                     case .failure:
                         output.showAlert.send(())
-                        
+
                     case .finished:
                         break
                     }
@@ -167,13 +168,14 @@ public final class LiveStreamViewModel: ViewModel {
                     } else if let lowResolution = entityList.first?.videoURLString {
                         return output.videoURLString.send(lowResolution)
                     }
-                })
+                }
+            )
             .store(in: &subscription)
     }
 }
 
 private extension LiveStreamViewModel {
-    func openChattingSocket(output: Output) {
+    func openChattingSocket(output _: Output) {
         do {
             try chattingSocket.openWebSocket()
         } catch {
@@ -186,7 +188,7 @@ private extension LiveStreamViewModel {
             )
         }
     }
-    
+
     func sendEntryMessage() {
         guard let userName = UserDefaults.standard.string(forKey: "USER_NAME") else { return }
         chattingSocket.send(
@@ -198,7 +200,7 @@ private extension LiveStreamViewModel {
             )
         )
     }
-    
+
     func receciveChatMessage(output: Output) {
         chattingSocket.receive { chatMessage in
             guard let chatMessage else { return }

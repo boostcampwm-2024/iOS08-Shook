@@ -3,55 +3,62 @@ import UIKit
 import BaseFeature
 import EasyLayout
 
+// MARK: - ThumbnailViewContainer
+
 protocol ThumbnailViewContainer {
     var thumbnailView: ThumbnailView { get }
 }
 
+// MARK: - ThumbnailView
+
 final class ThumbnailView: BaseView {
     enum Size {
-        case large, small
+        case large
+        case small
     }
-    
+
     enum Transition {
-        case present, dismiss
+        case present
+        case dismiss
     }
-    
+
     let shadowView = UIView()
     let imageView = UIImageView()
-    
+
     var size: Size
-    
+
     init(with size: Size) {
         self.size = size
         super.init()
     }
-    
-    required init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func setupViews() {
         addSubview(shadowView)
         addSubview(imageView)
     }
-    
+
     override func setupStyles() {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = size == .large ? 16 : 12
     }
-    
+
     override func setupLayouts() {
         imageView.ezl.makeConstraint {
             $0.horizontal(to: self, padding: 16)
                 .vertical(to: self)
         }
-        
+
         shadowView.ezl.makeConstraint {
             $0.diagonal(to: self)
         }
     }
-    
+
     func updateStyles(for transition: Transition) {
         if transition == .present {
             imageView.layer.cornerRadius = 0
@@ -59,10 +66,10 @@ final class ThumbnailView: BaseView {
             imageView.layer.cornerRadius = size == .large ? 16 : 12
         }
     }
-    
+
     func updateLayouts(for transition: Transition) {
         removeImageViewConstraints()
-        
+
         if transition == .present {
             imageView.ezl.makeConstraint {
                 $0.diagonal(to: self)
@@ -74,7 +81,7 @@ final class ThumbnailView: BaseView {
             }
         }
     }
-    
+
     func configure(with imageURLString: String) {
         guard let url = URL(string: imageURLString) else { return }
         URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
@@ -84,16 +91,16 @@ final class ThumbnailView: BaseView {
             }
         }.resume()
     }
-    
+
     func configure(with image: UIImage?) {
         imageView.image = image
     }
-    
+
     private func removeImageViewConstraints() {
         if let superview = imageView.superview {
-            superview.constraints.forEach {
-                if $0.firstItem as? UIView == imageView || $0.secondItem as? UIView == imageView {
-                    superview.removeConstraint($0)
+            for constraint in superview.constraints {
+                if constraint.firstItem as? UIView == imageView || constraint.secondItem as? UIView == imageView {
+                    superview.removeConstraint(constraint)
                 }
             }
         }

@@ -4,10 +4,12 @@ import BaseFeature
 import DesignSystem
 import EasyLayout
 
+// MARK: - LiveStreamInfoView
+
 final class LiveStreamInfoView: BaseView {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
-    
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.addArrangedSubview(titleLabel)
@@ -17,23 +19,23 @@ final class LiveStreamInfoView: BaseView {
         stackView.spacing = 10
         return stackView
     }()
-    
+
     override func setupViews() {
-        self.addSubview(stackView)
-        self.backgroundColor = DesignSystemAsset.Color.darkGray.color
+        addSubview(stackView)
+        backgroundColor = DesignSystemAsset.Color.darkGray.color
     }
-    
+
     override func setupLayouts() {
         stackView.ezl.makeConstraint {
             $0.diagonal(to: self, padding: 20)
         }
     }
-    
+
     override func setupStyles() {
         titleLabel.font = .setFont(.body2())
         titleLabel.numberOfLines = 0
         titleLabel.textColor = .white
-        
+
         descriptionLabel.font = .setFont(.caption1())
         descriptionLabel.textColor = .white
         descriptionLabel.numberOfLines = 1

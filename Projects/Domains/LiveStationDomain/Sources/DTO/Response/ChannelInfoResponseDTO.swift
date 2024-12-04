@@ -7,9 +7,9 @@ struct ChannelInfoResponseDTO: Decodable {
         let streamKey: String
         let publishUrl: String
     }
-    
+
     let content: ContentResponseDTO
-    
+
     var toDomain: ChannelInfoEntity {
         ChannelInfoEntity(
             id: content.channelId,

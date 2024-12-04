@@ -1,7 +1,7 @@
 import UIKit
 
 open class BaseNavigationController: UINavigationController {
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         topViewController?.supportedInterfaceOrientations ?? .portrait
     }
 }

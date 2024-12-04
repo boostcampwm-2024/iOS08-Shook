@@ -6,33 +6,34 @@ open class BaseTableViewCell: UITableViewCell, ViewLifeCycle {
     public static var identifier: String {
         String(describing: Self.self)
     }
-    
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+
+    override public init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
         setupStyles()
         setupLayouts()
         setupActions()
     }
-    
-    required public init?(coder: NSCoder) {
+
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
         setupStyles()
         setupLayouts()
         setupActions()
     }
-    
-    // MARK: - View Life Cycle
-    open func setupViews() { }
 
-    open func setupLayouts() { }
-    
-    open func updateLayouts() { }
-    
-    open func setupStyles() { }
-    
-    open func updateStyles() { }
-    
-    open func setupActions() { }
+    // MARK: - View Life Cycle
+
+    open func setupViews() {}
+
+    open func setupLayouts() {}
+
+    open func updateLayouts() {}
+
+    open func setupStyles() {}
+
+    open func updateStyles() {}
+
+    open func setupActions() {}
 }
