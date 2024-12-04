@@ -6,14 +6,14 @@ FORMAT=$(which swiftformat)
 # 설치 확인
 if [[ -e "${FORMAT}" ]]; then
     echo "🚀  SwiftFormat 시작..."
-    echo "🔍  SwiftFormat 적용 경로: $(pwd)/Projects"
+    echo "🔍  SwiftFormat 적용 경로: ./Projects"
 else
     echo "SwiftFormat이 존재하지 않습니다. 설치해주세요 ! 'brew install swiftformat'"
     exit 1
 fi
 
 # 포맷팅 결과 ,
-RESULT=$($FORMAT ./IOS08Shook --config .swiftformat) 
+RESULT=$($FORMAT ./Projects --config .swiftformat) 
 
 if [ "$RESULT" == '' ]; then
     git add .
