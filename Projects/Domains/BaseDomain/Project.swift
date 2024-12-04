@@ -8,7 +8,7 @@ let project = Project.module(
         .interface(module: .domain(.BaseDomain)),
         .implements(module: .domain(.BaseDomain), dependencies: [
             .domain(target: .BaseDomain, type: .interface),
-            .module(target: .NetworkModule)
+            .module(target: .FastNetwork)
         ]),
         .testing(module: .domain(.BaseDomain), dependencies: [
             .domain(target: .BaseDomain, type: .interface)
