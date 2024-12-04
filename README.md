@@ -37,7 +37,8 @@ Shook은 게임 스트리밍의 장벽을 낮추고, 누구나 쉽고 재미있�
 
 <div align="center">
 
-![last](https://github.com/user-attachments/assets/bf0eb398-1899-4c2b-baec-058afd43daa8)
+![last](https://github.com/user-attachments/assets/636ed7b8-5421-4cd5-9898-5c3ee6543537)
+
 잘하면 재밌고, 못하면 더 재밌는 실시간 게임 스트리밍! <br>
 지금 바로 시작하세요!
 
