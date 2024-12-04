@@ -9,13 +9,13 @@ public final class BroadcastRepositoryImpl: BaseRepository<BroadcastEndpoint>, B
             .map { _ in () }
             .eraseToAnyPublisher()
     }
-    
+
     public func fetchAllBroadcast() -> AnyPublisher<[BroadcastInfoEntity], any Error> {
         request(.fetchAll, type: [BroadcastDTO].self)
             .map { $0.map { BroadcastInfoEntity(id: $0.id, title: $0.title, owner: $0.owner, description: $0.description) } }
             .eraseToAnyPublisher()
     }
-    
+
     public func deleteBroadcast(id: String) -> AnyPublisher<Void, any Error> {
         request(.delete(id: id), type: BaseDTO.self)
             .map { _ in () }

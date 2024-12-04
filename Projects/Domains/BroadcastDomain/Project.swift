@@ -8,14 +8,14 @@ let project = Project.module(
         .interface(module: .domain(.BroadcastDomain)),
         .implements(module: .domain(.BroadcastDomain), dependencies: [
             .domain(target: .BroadcastDomain, type: .interface),
-            .domain(target: .BaseDomain)
+            .domain(target: .BaseDomain),
         ]),
         .testing(module: .domain(.BroadcastDomain), dependencies: [
-            .domain(target: .BroadcastDomain, type: .interface)
+            .domain(target: .BroadcastDomain, type: .interface),
         ]),
         .tests(module: .domain(.BroadcastDomain), dependencies: [
             .domain(target: .BroadcastDomain),
-            .domain(target: .BroadcastDomain, type: .testing)
-        ])
+            .domain(target: .BroadcastDomain, type: .testing),
+        ]),
     ]
 )

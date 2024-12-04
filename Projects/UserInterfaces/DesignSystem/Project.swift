@@ -13,10 +13,10 @@ let project = Project.module(
                 resources: .resources,
                 dependencies: [
                     .userInterface(target: .DesignSystem, type: .interface),
-                    .SPM.Lottie
+                    .SPM.Lottie,
                 ]
             )
         ),
-        .interface(module: .userInterface(.DesignSystem))
+        .interface(module: .userInterface(.DesignSystem)),
     ]
 )

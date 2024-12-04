@@ -13,32 +13,34 @@ import Lottie
 import MainFeature
 import MainFeatureInterface
 
+// MARK: - SplashViewController
+
 public final class SplashViewController: BaseViewController<EmptyViewModel> {
     private let splashGradientView = SplashGradientView()
     private let splashAnimationView = LottieAnimationView(name: "splash", bundle: Bundle(for: DesignSystemResources.self))
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
     }
-    
-    public override func viewDidAppear(_ animated: Bool) {
+
+    override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         splashAnimationView.play { [weak self] _ in
             self?.moveToMainView()
         }
     }
-    
-    public override func setupViews() {
+
+    override public func setupViews() {
         view.addSubview(splashGradientView)
         view.addSubview(splashAnimationView)
     }
-    
-    public override func setupLayouts() {
+
+    override public func setupLayouts() {
         splashGradientView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
-        
+
         splashAnimationView.ezl.makeConstraint {
             $0.diagonal(to: view)
         }
@@ -46,6 +48,7 @@ public final class SplashViewController: BaseViewController<EmptyViewModel> {
 }
 
 // MARK: - View Transition
+
 extension SplashViewController {
     private func moveToMainView() {
         let fetchChannelListUsecase = DIContainer.shared.resolve(FetchChannelListUsecase.self)
@@ -66,10 +69,10 @@ extension SplashViewController {
             let singUpViewModel = SignUpViewModel(createChannelUsecase: createChannelUsecase)
             navigationController.viewControllers.append(SignUpViewController(viewModel: singUpViewModel))
         }
-        
+
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else { return }
-        
+
         UIView.transition(with: window, duration: 0.4, options: .transitionCrossDissolve) {
             window.rootViewController = navigationController
         }

@@ -1,8 +1,8 @@
 import Foundation
 
 public enum HTTPError: String, LocalizedError {
-    
     // MARK: 400..<500 , Client Error
+
     case badRequest /// 400
     case unauthorized /// 401
     case paymentRequired /// 402
@@ -10,14 +10,16 @@ public enum HTTPError: String, LocalizedError {
     case notFound /// 404
     case methodNotAllowed /// 405
     case conflict /// 409
-    
+
     // MARK: 500..<600 Server Error
+
     case internalServerError /// 500
     case badGateway /// 502
-    
+
     // MARK: Extra
+
     case underlying
-    
+
     init(statuscode: Int) {
         switch statuscode {
         case 400: self = .badRequest
@@ -32,6 +34,6 @@ public enum HTTPError: String, LocalizedError {
         default: self = .underlying
         }
     }
-    
+
     public var errorDescription: String? { rawValue }
 }

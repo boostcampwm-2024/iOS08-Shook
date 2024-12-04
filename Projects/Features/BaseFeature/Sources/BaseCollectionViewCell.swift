@@ -6,16 +6,16 @@ open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
     public static var identifier: String {
         String(describing: Self.self)
     }
-    
-    public override init(frame: CGRect) {
+
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
         setupStyles()
         setupLayouts()
         setupActions()
     }
-    
-    required public init?(coder: NSCoder) {
+
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
         setupStyles()
@@ -24,15 +24,16 @@ open class BaseCollectionViewCell: UICollectionViewCell, ViewLifeCycle {
     }
 
     // MARK: - View Life Cycle
-    open func setupViews() { }
-    
-    open func setupStyles() { }
-    
-    open func updateStyles() { }
-    
-    open func setupLayouts() { }
-    
-    open func updateLayouts() { }
-    
-    open func setupActions() { }
+
+    open func setupViews() {}
+
+    open func setupStyles() {}
+
+    open func updateStyles() {}
+
+    open func setupLayouts() {}
+
+    open func updateLayouts() {}
+
+    open func setupActions() {}
 }

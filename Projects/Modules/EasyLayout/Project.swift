@@ -7,7 +7,7 @@ let project = Project.module(
     targets: [
         .implements(module: .module(.EasyLayout)),
         .demo(module: .module(.EasyLayout), dependencies: [
-            .module(target: .EasyLayout)
-        ])
+            .module(target: .EasyLayout),
+        ]),
     ]
 )

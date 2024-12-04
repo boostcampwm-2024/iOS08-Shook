@@ -4,17 +4,18 @@ import BaseFeatureInterface
 
 open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
     public var viewModel: VM
-    
+
     public init(viewModel: VM) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
-    required public init?(coder: NSCoder) {
+
+    @available(*, unavailable)
+    public required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    open override func viewDidLoad() {
+
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupStyles()
@@ -22,23 +23,24 @@ open class BaseViewController<VM: ViewModel>: UIViewController, ViewLifeCycle {
         setupActions()
         setupBind()
     }
-    
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         .portrait
     }
-    
+
     // MARK: - View Life Cycle
-    open func setupBind() { }
-    
-    open func setupViews() { }
-    
-    open func setupStyles() { }
-    
-    open func updateStyles() { }
-    
-    open func setupLayouts() { }
-    
-    open func updateLayouts() { }
-    
-    open func setupActions() { }
+
+    open func setupBind() {}
+
+    open func setupViews() {}
+
+    open func setupStyles() {}
+
+    open func updateStyles() {}
+
+    open func setupLayouts() {}
+
+    open func updateLayouts() {}
+
+    open func setupActions() {}
 }

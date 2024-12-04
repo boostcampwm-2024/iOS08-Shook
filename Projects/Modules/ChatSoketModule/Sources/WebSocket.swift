@@ -1,30 +1,34 @@
 import Foundation
 
+// MARK: - WebSocketError
+
 enum WebSocketError: Error {
     case invalidURL
 }
 
+// MARK: - WebSocket
+
 public final class WebSocket: NSObject {
     public static let shared = WebSocket()
-    
+
     var url: URL?
     var onReceiveClosure: ((ChatMessage?) -> Void)?
     weak var delegate: URLSessionWebSocketDelegate?
-    
+
     private var webSocketTask: URLSessionWebSocketTask? {
         didSet { oldValue?.cancel(with: .goingAway, reason: nil) }
     }
-    
+
     private var timer: Timer?
     private let encoder: JSONEncoder = .init()
     private let decoder: JSONDecoder = .init()
-    
-    private override init() {}
-    
+
+    override private init() {}
+
     public func openWebSocket() throws {
-        url = URL(string: "ws:/\(host):\(port)/ws/chat" )
-        guard let url = url else { throw WebSocketError.invalidURL }
-        
+        url = URL(string: "ws:/\(host):\(port)/ws/chat")
+        guard let url else { throw WebSocketError.invalidURL }
+
         let urlSession = URLSession(
             configuration: .default,
             delegate: self,
@@ -32,75 +36,79 @@ public final class WebSocket: NSObject {
         )
         let webSocketTask = urlSession.webSocketTask(with: url)
         webSocketTask.resume()
-        
+
         self.webSocketTask = webSocketTask
-        
-        self.startPing()
+
+        startPing()
     }
 
     public func send(data: ChatMessage) {
         guard let data = try? encoder.encode(data) else { return }
-        
+
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
-        
-        self.webSocketTask?.send(taskMessage) { error in
+
+        webSocketTask?.send(taskMessage) { error in
             guard error != nil else { return }
         }
     }
-    
+
     public func closeWebSocket() {
-        self.timer?.invalidate()
-        self.onReceiveClosure = nil
-        self.delegate = nil
-        self.webSocketTask?.cancel(with: .goingAway, reason: nil)
-        self.webSocketTask = nil
+        timer?.invalidate()
+        onReceiveClosure = nil
+        delegate = nil
+        webSocketTask?.cancel(with: .goingAway, reason: nil)
+        webSocketTask = nil
     }
-    
+
     public func receive(onReceive: @escaping ((ChatMessage?) -> Void)) {
-        self.onReceiveClosure = onReceive
-        self.webSocketTask?.receive { [weak self] result in
+        onReceiveClosure = onReceive
+        webSocketTask?.receive { [weak self] result in
             guard let self else { return }
             switch result {
             case let .success(message):
                 switch message {
                 case let .string(string):
-                    guard let data =  string.data(using: .utf8) else {
+                    guard let data = string.data(using: .utf8) else {
                         onReceive(nil)
                         return
                     }
                     let message = try? decoder.decode(ChatMessage.self, from: data)
                     onReceive(message)
-                   
+
                 case let .data(data):
                     let message = try? decoder.decode(ChatMessage.self, from: data)
                     onReceive(message)
-                    
+
                 @unknown default:
                     onReceive(nil)
                 }
-                
+
             case .failure:
-                self.closeWebSocket()
+                closeWebSocket()
             }
             receive(onReceive: onReceive)
         }
     }
-    
+
     private func startPing() {
-        self.timer?.invalidate()
-        self.timer = Timer.scheduledTimer(
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(
             withTimeInterval: 10,
-            repeats: true) { [weak self] _ in
-                self?.ping()
-            }
+            repeats: true
+        ) { [weak self] _ in
+            self?.ping()
+        }
     }
+
     private func ping() {
-        self.webSocketTask?.sendPing { [weak self] error in
+        webSocketTask?.sendPing { [weak self] error in
             guard error != nil else { return }
             self?.startPing()
         }
     }
 }
+
+// MARK: URLSessionWebSocketDelegate
 
 extension WebSocket: URLSessionWebSocketDelegate {
     public func urlSession(
@@ -108,20 +116,20 @@ extension WebSocket: URLSessionWebSocketDelegate {
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
     ) {
-        self.delegate?.urlSession?(
+        delegate?.urlSession?(
             session,
             webSocketTask: webSocketTask,
             didOpenWithProtocol: `protocol`
         )
     }
-    
+
     public func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
         reason: Data?
     ) {
-        self.delegate?.urlSession?(
+        delegate?.urlSession?(
             session,
             webSocketTask: webSocketTask,
             didCloseWith: closeCode,
@@ -137,12 +145,12 @@ extension WebSocket {
         }
         return secrets[key] as? String ?? "not found key"
     }
-    
+
     var host: String {
-        return config(key: "HOST")
+        config(key: "HOST")
     }
-    
+
     var port: String {
-        return config(key: "PORT")
+        config(key: "PORT")
     }
 }

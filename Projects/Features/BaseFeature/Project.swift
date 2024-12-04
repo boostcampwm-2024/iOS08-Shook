@@ -9,18 +9,18 @@ let project = Project.module(
         .implements(module: .feature(.BaseFeature), dependencies: [
             .feature(target: .BaseFeature, type: .interface),
             .userInterface(target: .DesignSystem),
-            .module(target: .ThirdPartyLibModule)
+            .module(target: .ThirdPartyLibModule),
         ]),
         .testing(module: .feature(.BaseFeature), dependencies: [
-            .feature(target: .BaseFeature, type: .interface)
+            .feature(target: .BaseFeature, type: .interface),
         ]),
         .tests(module: .feature(.BaseFeature), dependencies: [
             .feature(target: .BaseFeature),
-            .feature(target: .BaseFeature, type: .testing)
+            .feature(target: .BaseFeature, type: .testing),
         ]),
         .demo(module: .feature(.BaseFeature), dependencies: [
             .feature(target: .BaseFeature),
-            .feature(target: .BaseFeature, type: .testing)
-        ])
+            .feature(target: .BaseFeature, type: .testing),
+        ]),
     ]
 )

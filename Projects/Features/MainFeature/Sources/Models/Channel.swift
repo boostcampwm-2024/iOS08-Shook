@@ -13,7 +13,7 @@ public struct Channel: Hashable {
         description: String = ""
     ) {
         self.id = id
-        self.name = title
+        name = title
         self.thumbnailImageURLString = thumbnailImageURLString
         self.owner = owner
         self.description = description

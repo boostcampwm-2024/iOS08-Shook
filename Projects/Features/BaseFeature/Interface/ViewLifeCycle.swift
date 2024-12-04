@@ -21,7 +21,7 @@ public protocol ViewLifeCycle {
     /// 스타일을 업데이트하는 메서드입니다.
     /// 테마나 외관 설정이 변경되었을 때 이 메서드를 호출하여 변경 사항을 반영하세요.
     func updateStyles()
-    
+
     /// 액션을 초기화하는 메서드입니다.
     /// 이 메서드에서 버튼 클릭 이벤트, 제스처, 사용자 상호작용에 대한 동작을 설정하세요.
     func setupActions()

@@ -3,11 +3,15 @@ import Foundation
 import BaseDomain
 import FastNetwork
 
+// MARK: - BroadcastEndpoint
+
 public enum BroadcastEndpoint {
     case make(id: String, title: String, owner: String, description: String)
     case fetchAll
     case delete(id: String)
 }
+
+// MARK: Endpoint
 
 extension BroadcastEndpoint: Endpoint {
     public var method: FastNetwork.HTTPMethod {
@@ -17,25 +21,25 @@ extension BroadcastEndpoint: Endpoint {
         case .delete: .delete
         }
     }
-    
+
     public var header: [String: String]? {
         [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         ]
     }
-    
+
     public var scheme: String {
         "http"
     }
-    
+
     public var host: String {
         config(key: .host)
     }
-    
+
     public var port: Int? {
         Int(config(key: .port)) ?? 0
     }
-    
+
     public var path: String {
         switch self {
         case .make: "/broadcast"
@@ -43,7 +47,7 @@ extension BroadcastEndpoint: Endpoint {
         case let .delete(id): "/broadcast/delete/\(id)"
         }
     }
-    
+
     public var requestTask: FastNetwork.RequestTask {
         switch self {
         case let .make(id, title, owner, description): .withObject(
@@ -58,5 +62,4 @@ extension BroadcastEndpoint: Endpoint {
         case .delete: .empty
         }
     }
-    
 }

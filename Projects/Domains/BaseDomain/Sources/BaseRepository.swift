@@ -3,18 +3,20 @@ import Foundation
 
 import FastNetwork
 
+// MARK: - BaseRepository
+
 open class BaseRepository<E: Endpoint> {
-    private let decoder: JSONDecoder = JSONDecoder()
+    private let decoder: JSONDecoder = .init()
     private let client: NetworkClient<E>
-    
+
     public init() {
         var interceptors: [any Interceptor] = []
         #if DEBUG
-        interceptors.append(DefaultLoggingInterceptor())
+            interceptors.append(DefaultLoggingInterceptor())
         #endif
         client = NetworkClient(interceptors: interceptors)
     }
-    
+
     public final func request<T>(_ endpoint: E, type: T.Type) -> AnyPublisher<T, Error> where T: Decodable {
         performRequest(endpoint)
             .map(\.data)

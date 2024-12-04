@@ -1,16 +1,20 @@
 import LiveStationDomainInterface
 
+// MARK: - ChannelResponseDTO
+
 public struct ChannelResponseDTO: Decodable {
     let content: ChannelContentResponseDTO
 }
+
+// MARK: - ChannelContentResponseDTO
 
 public struct ChannelContentResponseDTO: Decodable {
     let channelId: String
     let channelName: String
 }
 
-extension ChannelContentResponseDTO {
-    public func toDomain() -> ChannelEntity {
-        ChannelEntity(id: self.channelId, name: self.channelName)
+public extension ChannelContentResponseDTO {
+    func toDomain() -> ChannelEntity {
+        ChannelEntity(id: channelId, name: channelName)
     }
 }

@@ -1,6 +1,6 @@
-import ProjectDescription
 import ConfigurationPlugin
-import TemplatePlugin
+import ProjectDescription
 import ProjectDescriptionHelpers
+import TemplatePlugin
 
 let project = Project.project
