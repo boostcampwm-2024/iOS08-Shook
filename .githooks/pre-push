@@ -13,7 +13,7 @@ else
 fi
 
 # 포맷팅 결과 ,
-RESULT=$($FORMAT ./IOS08Shook --config .swiftformat) 
+RESULT=$($FORMAT ./Projects --config .swiftformat) 
 
 if [ "$RESULT" == '' ]; then
     git add .
