@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import NetworkModule
+@testable import FastNetwork
 
 private struct Body: Encodable {
     let name: String

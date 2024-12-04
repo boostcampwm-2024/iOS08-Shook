@@ -1,6 +1,6 @@
 import Foundation
 
-import NetworkModule
+import FastNetwork
 
 enum MockEndpoint {
     case fetch
@@ -8,7 +8,7 @@ enum MockEndpoint {
 }
 
 extension MockEndpoint: Endpoint {
-    var method: NetworkModule.HTTPMethod {
+    var method: FastNetwork.HTTPMethod {
         switch self {
         case .fetch, .getwithParameters: .get
         }
@@ -31,7 +31,7 @@ extension MockEndpoint: Endpoint {
         }
     }
     
-    var requestTask: NetworkModule.RequestTask {
+    var requestTask: FastNetwork.RequestTask {
         switch self {
         case .fetch: .empty
             

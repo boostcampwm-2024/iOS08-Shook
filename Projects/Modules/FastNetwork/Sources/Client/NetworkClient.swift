@@ -1,6 +1,6 @@
 import Foundation
 
-import NetworkModuleInterface
+import FastNetworkInterface
 
 public final class NetworkClient<E: Endpoint>: Requestable {
     private let session: URLSession

@@ -1,7 +1,7 @@
 import XCTest
 
-@testable import NetworkModule
-@testable import NetworkModuleTesting
+@testable import FastNetwork
+@testable import FastNetworkTesting
 
 final class NetworkClientTest: XCTestCase {
     private var interceptors: [any Interceptor]!

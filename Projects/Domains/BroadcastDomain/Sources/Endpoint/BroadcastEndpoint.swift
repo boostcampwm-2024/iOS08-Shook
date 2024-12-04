@@ -1,7 +1,7 @@
 import Foundation
 
 import BaseDomain
-import NetworkModule
+import FastNetwork
 
 public enum BroadcastEndpoint {
     case make(id: String, title: String, owner: String, description: String)
@@ -10,7 +10,7 @@ public enum BroadcastEndpoint {
 }
 
 extension BroadcastEndpoint: Endpoint {
-    public var method: NetworkModule.HTTPMethod {
+    public var method: FastNetwork.HTTPMethod {
         switch self {
         case .make: .post
         case .fetchAll: .get
@@ -44,7 +44,7 @@ extension BroadcastEndpoint: Endpoint {
         }
     }
     
-    public var requestTask: NetworkModule.RequestTask {
+    public var requestTask: FastNetwork.RequestTask {
         switch self {
         case let .make(id, title, owner, description): .withObject(
                 body: BroadcastDTO(

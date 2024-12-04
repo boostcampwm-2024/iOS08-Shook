@@ -2,7 +2,7 @@ import CommonCrypto
 import Foundation
 
 import BaseDomain
-import NetworkModule
+import FastNetwork
 
 public enum LiveStationEndpoint {
     case fetchChannelList
@@ -14,7 +14,7 @@ public enum LiveStationEndpoint {
 }
 
 extension LiveStationEndpoint: Endpoint {
-    public var method: NetworkModule.HTTPMethod {
+    public var method: FastNetwork.HTTPMethod {
         switch self {
         case .fetchChannelList, .receiveBroadcast, .fetchThumbnail, .fetchChannelInfo: .get
         case .makeChannel: .post
@@ -44,7 +44,7 @@ extension LiveStationEndpoint: Endpoint {
         }
     }
     
-    public var requestTask: NetworkModule.RequestTask {
+    public var requestTask: FastNetwork.RequestTask {
         switch self {
         case .fetchChannelList:
             return .withParameters(

@@ -1,7 +1,7 @@
 import Combine
 import Foundation
 
-import NetworkModule
+import FastNetwork
 
 open class BaseRepository<E: Endpoint> {
     private let decoder: JSONDecoder = JSONDecoder()
