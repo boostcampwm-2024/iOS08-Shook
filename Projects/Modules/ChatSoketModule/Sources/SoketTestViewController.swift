@@ -35,7 +35,7 @@ public class SoketTestViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: button.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
 
         button.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

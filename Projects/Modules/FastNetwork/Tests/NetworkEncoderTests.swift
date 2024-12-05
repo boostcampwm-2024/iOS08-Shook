@@ -22,7 +22,7 @@ final class NetworkEncoderTests: XCTestCase {
         components?.queryItems = [
             URLQueryItem(name: "key1", value: "value1 ! #!@$**".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
             URLQueryItem(name: "key2", value: "\(123)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
-            URLQueryItem(name: "key3", value: "\(true)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
+            URLQueryItem(name: "key3", value: "\(true)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)),
         ]
         XCTAssertEqual(request.url?.absoluteString.sorted(), components?.url?.absoluteString.sorted())
     }

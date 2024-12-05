@@ -46,7 +46,7 @@ public final class SHRefreshControl: UIRefreshControl {
             animationView.centerXAnchor.constraint(equalTo: centerXAnchor),
             animationView.centerYAnchor.constraint(equalTo: centerYAnchor),
             animationView.widthAnchor.constraint(equalToConstant: 100),
-            animationView.heightAnchor.constraint(equalToConstant: 80)
+            animationView.heightAnchor.constraint(equalToConstant: 80),
         ])
     }
 }

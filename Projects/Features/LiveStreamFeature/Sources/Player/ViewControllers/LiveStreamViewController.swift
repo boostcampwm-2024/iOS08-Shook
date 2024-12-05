@@ -106,7 +106,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
 
         expandConstraints = [
             playerView.topAnchor.constraint(equalTo: view.topAnchor),
-            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
 
         unfoldedConstraint = infoView.topAnchor.constraint(equalTo: playerView.bottomAnchor)
