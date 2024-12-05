@@ -209,6 +209,7 @@ public final class LiveStreamViewController: BaseViewController<LiveStreamViewMo
             .store(in: &subscription)
 
         output.showAlert
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
                 showDissmissAlert()
