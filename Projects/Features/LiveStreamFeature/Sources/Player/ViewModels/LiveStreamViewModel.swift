@@ -56,7 +56,7 @@ public final class LiveStreamViewModel: ViewModel {
         let output = Output()
 
         input.expandButtonDidTap
-            .compactMap { $0 }
+            .compactMap(\.self)
             .sink {
                 let nextValue = !output.isExpanded.value
                 output.isExpanded.send(nextValue)
@@ -66,7 +66,7 @@ public final class LiveStreamViewModel: ViewModel {
             .store(in: &subscription)
 
         input.sliderValueDidChange
-            .compactMap { $0 }
+            .compactMap(\.self)
             .map { Double($0) }
             .sink {
                 input.autoDissmissDidRegister.send()
@@ -75,14 +75,14 @@ public final class LiveStreamViewModel: ViewModel {
             .store(in: &subscription)
 
         input.playerStateDidChange
-            .compactMap { $0 }
+            .compactMap(\.self)
             .sink { flag in
                 output.isPlaying.send(flag)
             }
             .store(in: &subscription)
 
         input.playerGestureDidTap
-            .compactMap { $0 }
+            .compactMap(\.self)
             .sink { _ in
                 let nextValue1 = !output.isShowedPlayerControl.value
                 output.isShowedPlayerControl.send(nextValue1)
@@ -100,7 +100,7 @@ public final class LiveStreamViewModel: ViewModel {
             .store(in: &subscription)
 
         input.playButtonDidTap
-            .compactMap { $0 }
+            .compactMap(\.self)
             .sink { _ in
                 input.autoDissmissDidRegister.send()
                 output.isPlaying.send(!output.isPlaying.value)

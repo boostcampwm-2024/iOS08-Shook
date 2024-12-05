@@ -42,7 +42,7 @@ public final class WebSocket: NSObject {
         startPing()
     }
 
-    public func send(data: ChatMessage) {
+    public func send(data _: ChatMessage) {
         guard let data = try? encoder.encode(data) else { return }
 
         let taskMessage = URLSessionWebSocketTask.Message.data(data)
