@@ -42,10 +42,10 @@ public final class WebSocket: NSObject {
         startPing()
     }
 
-    public func send(data _: ChatMessage) {
-        guard let data = try? encoder.encode(data) else { return }
+    public func send(data: ChatMessage) {
+        guard let encodedData = try? encoder.encode(data) else { return }
 
-        let taskMessage = URLSessionWebSocketTask.Message.data(data)
+        let taskMessage = URLSessionWebSocketTask.Message.data(encodedData)
 
         webSocketTask?.send(taskMessage) { error in
             guard error != nil else { return }

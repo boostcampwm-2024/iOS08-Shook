@@ -8,10 +8,10 @@ let project = Project.module(
         .interface(module: .domain(.LiveStationDomain)),
         .implements(module: .domain(.LiveStationDomain), dependencies: [
             .domain(target: .LiveStationDomain, type: .interface),
-            .domain(target: .BaseDomain),
+            .domain(target: .BaseDomain)
         ]),
         .testing(module: .domain(.LiveStationDomain), dependencies: [
-            .domain(target: .LiveStationDomain, type: .interface),
-        ]),
+            .domain(target: .LiveStationDomain, type: .interface)
+        ])
     ]
 )
