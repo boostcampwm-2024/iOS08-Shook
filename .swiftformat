@@ -6,6 +6,7 @@
 --exclude /Tuist
 
 # rules
+--disable trailingCommas
 --enable blockComments
 --enable markTypes
 --enable noExplicitOwnership

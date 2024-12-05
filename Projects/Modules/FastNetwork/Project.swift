@@ -7,18 +7,18 @@ let project = Project.module(
     targets: [
         .interface(module: .module(.FastNetwork)),
         .implements(module: .module(.FastNetwork), dependencies: [
-            .module(target: .FastNetwork, type: .interface),
+            .module(target: .FastNetwork, type: .interface)
         ]),
         .testing(module: .module(.FastNetwork), dependencies: [
-            .module(target: .FastNetwork, type: .interface),
+            .module(target: .FastNetwork, type: .interface)
         ]),
         .tests(module: .module(.FastNetwork), dependencies: [
             .module(target: .FastNetwork),
-            .module(target: .FastNetwork, type: .testing),
+            .module(target: .FastNetwork, type: .testing)
         ]),
         .demo(module: .module(.FastNetwork), dependencies: [
             .module(target: .FastNetwork),
-            .module(target: .FastNetwork, type: .testing),
-        ]),
+            .module(target: .FastNetwork, type: .testing)
+        ])
     ]
 )

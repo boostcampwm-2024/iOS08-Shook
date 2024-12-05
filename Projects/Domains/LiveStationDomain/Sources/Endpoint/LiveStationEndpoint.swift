@@ -32,7 +32,7 @@ extension LiveStationEndpoint: Endpoint {
             "x-ncp-apigw-timestamp": timestamp,
             "x-ncp-iam-access-key": config(key: .accessKey),
             "x-ncp-apigw-signature-v2": makeSignature(with: timestamp),
-            "x-ncp-region_code": "KR",
+            "x-ncp-region_code": "KR"
         ]
     }
 
@@ -75,16 +75,16 @@ extension LiveStationEndpoint: Endpoint {
                         "cdnDomain": config(key: .cdnDomain),
                         "profileId": config(key: .profileID),
                         "cdnInstanceNo": config(key: .cdnInstanceNo),
-                        "regionType": "KOREA",
+                        "regionType": "KOREA"
                     ],
                     "qualitySetId": 4430,
                     "useDvr": true,
                     "immediateOnAir": true,
                     "record": [
-                        "type": "MANUAL_UPLOAD",
+                        "type": "MANUAL_UPLOAD"
                     ],
                     "drmEnabledYn": false,
-                    "timemachineMin": 360,
+                    "timemachineMin": 360
                 ]
             )
 

@@ -52,10 +52,6 @@ final class MockChannelListFetcher {
                 "가나다라마바사아자차카타파하".randomElement()!
             })
 
-            let randomBool = Bool.random()
-            let image: Image = randomBool ? .ratio16x9 : .ratio4x3
-            let fetchedImage = await image.fetch()
-
             channels.append(ChannelEntity(id: UUID().uuidString, name: name))
         }
 

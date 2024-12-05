@@ -7,18 +7,18 @@ let project = Project.module(
     targets: [
         .interface(module: .module(.ChatSoketModule)),
         .implements(module: .module(.ChatSoketModule), dependencies: [
-            .module(target: .ChatSoketModule, type: .interface),
+            .module(target: .ChatSoketModule, type: .interface)
         ]),
         .testing(module: .module(.ChatSoketModule), dependencies: [
-            .module(target: .ChatSoketModule, type: .interface),
+            .module(target: .ChatSoketModule, type: .interface)
         ]),
         .tests(module: .module(.ChatSoketModule), dependencies: [
             .module(target: .ChatSoketModule),
-            .module(target: .ChatSoketModule, type: .testing),
+            .module(target: .ChatSoketModule, type: .testing)
         ]),
         .demo(module: .module(.ChatSoketModule), dependencies: [
             .module(target: .ChatSoketModule),
-            .module(target: .ChatSoketModule, type: .testing),
-        ]),
+            .module(target: .ChatSoketModule, type: .testing)
+        ])
     ]
 )

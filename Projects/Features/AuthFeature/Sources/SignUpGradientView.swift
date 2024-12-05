@@ -14,7 +14,7 @@ final class SignUpGradientView: UIView {
          CGColor(red: 31 / 255, green: 52 / 255, blue: 55 / 255, alpha: 1)],
 
         [CGColor(red: 0 / 255, green: 0 / 255, blue: 0 / 255, alpha: 1),
-         CGColor(red: 31 / 255, green: 52 / 255, blue: 55 / 255, alpha: 1)],
+         CGColor(red: 31 / 255, green: 52 / 255, blue: 55 / 255, alpha: 1)]
     ]
 
     override init(frame: CGRect) {

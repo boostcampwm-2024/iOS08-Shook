@@ -24,7 +24,7 @@ extension BroadcastEndpoint: Endpoint {
 
     public var header: [String: String]? {
         [
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         ]
     }
 

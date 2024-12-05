@@ -108,11 +108,11 @@ final class ChattingListView: BaseView {
         recentChatButton.translatesAutoresizingMaskIntoConstraints = false
         recentChatButtonShowConstraints = [
             recentChatButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            recentChatButton.bottomAnchor.constraint(equalTo: chatInputField.topAnchor, constant: -8),
+            recentChatButton.bottomAnchor.constraint(equalTo: chatInputField.topAnchor, constant: -8)
         ]
         recentChatButtonHideConstraints = [
             recentChatButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            recentChatButton.bottomAnchor.constraint(equalTo: chatInputField.bottomAnchor, constant: 0),
+            recentChatButton.bottomAnchor.constraint(equalTo: chatInputField.bottomAnchor, constant: 0)
         ]
         NSLayoutConstraint.activate(recentChatButtonHideConstraints)
     }

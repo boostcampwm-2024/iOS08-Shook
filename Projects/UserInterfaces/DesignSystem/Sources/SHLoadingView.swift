@@ -54,19 +54,19 @@ public final class SHLoadingView: UIView {
             blurEffectView.centerXAnchor.constraint(equalTo: centerXAnchor),
             blurEffectView.centerYAnchor.constraint(equalTo: centerYAnchor),
             blurEffectView.widthAnchor.constraint(equalToConstant: 200),
-            blurEffectView.heightAnchor.constraint(equalToConstant: 200),
+            blurEffectView.heightAnchor.constraint(equalToConstant: 200)
         ])
 
         NSLayoutConstraint.activate([
             animationView.centerXAnchor.constraint(equalTo: centerXAnchor),
             animationView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -24),
             animationView.widthAnchor.constraint(equalToConstant: 300),
-            animationView.heightAnchor.constraint(equalToConstant: 150),
+            animationView.heightAnchor.constraint(equalToConstant: 150)
         ])
 
         NSLayoutConstraint.activate([
             messageLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 56),
+            messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 56)
         ])
     }
 
