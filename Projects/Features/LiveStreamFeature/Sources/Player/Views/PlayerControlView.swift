@@ -131,7 +131,8 @@ extension PlayerControlView {
                        delay: .zero,
                        usingSpringWithDamping: 0.6,
                        initialSpringVelocity: 0.4,
-                       options: .allowUserInteraction) {
+                       options: .allowUserInteraction)
+        {
             if isPlaying {
                 self.playButton.configuration?.image = ImageConstants.pause.image
             } else {
